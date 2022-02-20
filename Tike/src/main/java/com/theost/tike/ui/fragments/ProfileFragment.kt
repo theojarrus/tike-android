@@ -1,12 +1,10 @@
 package com.theost.tike.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.theost.tike.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -29,7 +27,7 @@ class ProfileFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(context: Context): Fragment {
+        fun newInstance(): Fragment {
             return ProfileFragment()
         }
     }

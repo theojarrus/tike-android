@@ -1,4 +1,4 @@
-package com.theost.tike.widgets
+package com.theost.tike.ui.decorators
 
 import android.content.Context
 import android.content.res.Resources.Theme
@@ -19,7 +19,7 @@ class EventDecorator(private val context: Context) : DayViewDecorator {
             return typedValue.data
         }
 
-    override fun shouldDecorate(day: CalendarDay): Boolean = true
+    override fun shouldDecorate(day: CalendarDay): Boolean = false
 
     override fun decorate(view: DayViewFacade) {
         view.addSpan(DotSpan(6f, color))

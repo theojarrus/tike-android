@@ -1,4 +1,4 @@
-package com.theost.tike.widgets
+package com.theost.tike.ui.decorators
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

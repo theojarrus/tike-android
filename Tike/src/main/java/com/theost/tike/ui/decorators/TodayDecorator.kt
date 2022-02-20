@@ -1,4 +1,4 @@
-package com.theost.tike.widgets
+package com.theost.tike.ui.decorators
 
 import android.content.Context
 import android.text.style.TextAppearanceSpan

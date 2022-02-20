@@ -1,4 +1,4 @@
-package com.theost.tike.widgets
+package com.theost.tike.ui.decorators
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -14,7 +14,7 @@ class SelectionDecorator(context: Context) : DayViewDecorator {
     override fun shouldDecorate(day: CalendarDay): Boolean = true
 
     override fun decorate(view: DayViewFacade) {
-        if (drawable != null) view.setSelectionDrawable(drawable)
+        drawable?.let { view.setSelectionDrawable(drawable) }
     }
 
 }

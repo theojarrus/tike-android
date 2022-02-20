@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dayOfWeek"
+    style="@style/Theme.Tike.TextView.RobotoRegular"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <androidx.appcompat.widget.AppCompatTextView
-        style="@style/Theme.Tike.TextView.RobotoRegular"
-        android:id="@+id/dayOfWeek"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:textSize="12sp"
-        android:textAppearance="@style/Theme.Tike.Date.WeekDay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Вт" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:textAppearance="@style/Theme.Tike.Date.WeekDay"
+    android:textSize="12sp"
+    tools:text="Вт" />

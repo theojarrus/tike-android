@@ -1,7 +1,6 @@
 package com.theost.tike.ui.fragments
 
 import android.animation.LayoutTransition
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -11,22 +10,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.theost.tike.R
 import com.theost.tike.databinding.FragmentScheduleBinding
+import com.theost.tike.ui.adapters.DayAdapter
+import com.theost.tike.ui.decorators.*
+import com.theost.tike.ui.widgets.PagerNumerator
 import com.theost.tike.utils.DateUtils
-import com.theost.tike.widgets.*
 import java.util.*
 
 
 class ScheduleFragment : Fragment() {
 
+    private lateinit var dayDecorator: SelectedEventDecorator
+    private val pagerNumerator: PagerNumerator = PagerNumerator()
+
     private var _binding: FragmentScheduleBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var dayDecorator: DayDecorator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,24 +37,22 @@ class ScheduleFragment : Fragment() {
     ): View {
         _binding = FragmentScheduleBinding.inflate(layoutInflater)
 
+        binding.root.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         Locale.setDefault(Locale("ru"))
-        setupCalendar()
-        setupAnimations()
+
         setupToolbar()
+        setupCalendar()
+        setupPager()
 
         return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    private fun setupToolbar() {
+        setupToolbarItems()
+        updateToolbarDate()
     }
 
-    private fun setupAnimations() {
-        binding.root.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-    }
-
-    private fun updateToolbar(date: CalendarDay = CalendarDay.today()) {
+    private fun updateToolbarDate(date: CalendarDay = CalendarDay.today()) {
         binding.toolbar.title = DateUtils.formatMonthYear(date.month, date.year)
     }
 
@@ -74,9 +74,19 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    private fun setupToolbar() {
-        setupToolbarItems()
-        updateToolbar()
+    private fun setupPager() {
+        binding.daysPager.adapter = DayAdapter(childFragmentManager, lifecycle)
+        binding.daysPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                pagerNumerator.updatePosition(positionOffset)
+                switchCalendarSelection(pagerNumerator.pagerPosition)
+            }
+        })
     }
 
     private fun setupCalendar() {
@@ -87,6 +97,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setupCalendarViews() {
+        binding.calendarView.setHeaderTextAppearance(0)
         binding.calendarView.rootView.findViewById<LinearLayout>(R.id.header).visibility = View.GONE
         binding.weekDaysView.adapter = WeekDaysAdapter(
             resources.getStringArray(
@@ -100,7 +111,7 @@ class ScheduleFragment : Fragment() {
 
     private fun setupCalendarDecorators() {
         context?.let { context ->
-            dayDecorator = DayDecorator(context, CalendarDay.today())
+            dayDecorator = SelectedEventDecorator(context, CalendarDay.today())
             binding.calendarView.addDecorators(
                 SelectionDecorator(context),
                 EventDecorator(context),
@@ -111,9 +122,9 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun setupCalendarListeners() {
-        binding.calendarView.setOnMonthChangedListener { _, date -> updateToolbar(date) }
-        binding.calendarView.setOnDateChangedListener { _, date, selected ->
-            if (selected) switchDayFragment(date)
+        binding.calendarView.setOnMonthChangedListener { _, date -> updateToolbarDate(date) }
+        binding.calendarView.setOnDateChangedListener { _, date, _ ->
+            switchDayFragment(date)
             updateDayDecorator()
         }
     }
@@ -136,17 +147,30 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    private fun selectToday() {
-        binding.calendarView.currentDate = CalendarDay.today()
-        binding.calendarView.selectedDate = CalendarDay.today()
+    private fun selectDay(position: Int) {
+        pagerNumerator.pagerPosition = position
+        binding.daysPager.setCurrentItem(position, false)
     }
 
-    private fun switchDayFragment(date: CalendarDay) {
-        // todo
+    private fun selectToday() = selectDay(0)
+
+    private fun switchCalendarSelection(position: Int) {
+        val selectedDay = CalendarDay.from(CalendarDay.today().date.plusDays(position.toLong()))
+        binding.calendarView.currentDate = selectedDay
+        binding.calendarView.selectedDate = selectedDay
+    }
+
+    private fun switchDayFragment(selectedDay: CalendarDay) {
+        selectDay(selectedDay.date.dayOfYear - CalendarDay.today().date.dayOfYear)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {
-        fun newInstance(context: Context): Fragment {
+        fun newInstance(): Fragment {
             return ScheduleFragment()
         }
     }

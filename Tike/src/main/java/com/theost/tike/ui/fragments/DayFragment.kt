@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.theost.tike.databinding.FragmentInboxBinding
+import com.theost.tike.databinding.FragmentDayBinding
 
-class InboxFragment : Fragment() {
+class DayFragment : Fragment() {
 
-    private var _binding: FragmentInboxBinding? = null
+    private var _binding: FragmentDayBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +17,7 @@ class InboxFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInboxBinding.inflate(layoutInflater)
+        _binding = FragmentDayBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -28,7 +28,7 @@ class InboxFragment : Fragment() {
 
     companion object {
         fun newInstance(): Fragment {
-            return InboxFragment()
+            return DayFragment()
         }
     }
 
