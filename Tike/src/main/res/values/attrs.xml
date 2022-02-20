@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="mainBackgroundColor" format="reference|color" />
+    <attr name="secondaryBackgroundColor" format="reference|color" />
+    <attr name="bottomNavigationIconsColor" format="reference|color" />
+    <attr name="eventTitleColor" format="reference|color" />
+    <attr name="eventDividerColor" format="reference|color"/>
+    <attr name="eventBackgroundColor" format="reference|color" />
+</resources>

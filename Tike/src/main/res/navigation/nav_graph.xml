@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/scheduleFragment">
+
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.theost.tike.ui.fragments.ScheduleFragment"
+        android:label="@string/schedule"
+        tools:layout="@layout/fragment_schedule" />
+
+    <fragment
+        android:id="@+id/inboxFragment"
+        android:name="com.theost.tike.ui.fragments.InboxFragment"
+        android:label="@string/inbox"
+        tools:layout="@layout/fragment_inbox" />
+
+    <fragment
+        android:id="@+id/creationFragment"
+        android:name="com.theost.tike.ui.fragments.CreationFragment"
+        android:label="@string/creation"
+        tools:layout="@layout/fragment_creation" />
+
+    <fragment
+        android:id="@+id/dialogsFragment"
+        android:name="com.theost.tike.ui.fragments.DialogsFragment"
+        android:label="@string/dialogs"
+        tools:layout="@layout/fragment_dialogs" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.theost.tike.ui.fragments.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

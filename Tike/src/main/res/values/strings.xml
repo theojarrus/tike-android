@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Tike</string>
+    <string name="schedule">Расписание</string>
+    <string name="inbox">Заявки</string>
+    <string name="creation">Создание</string>
+    <string name="dialogs">Диалоги</string>
+    <string name="profile">Профиль</string>
+    <string name="calendar">Календарь</string>
+    <string name="time">Время</string>
+    <string name="edit">Редактировать</string>
+    <string name="today">Сегодня</string>
+
+    <string name="welcome_title">Добро пожаловать в Tike!</string>
+    <string name="welcome_text">Создайте аккаунт или авторизируйтесь, чтобы синхронизировать расписание</string>
+    <string name="auth_google">Продолжить с Google</string>
+</resources>

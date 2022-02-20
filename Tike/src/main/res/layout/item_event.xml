@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    app:cardBackgroundColor="?attr/eventBackgroundColor"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="0dp"
+    app:contentPadding="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/acceptEventButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="50dp"
+            app:elevation="0dp"
+            app:icon="@drawable/ic_check"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/green"
+            app:layout_constraintEnd_toStartOf="@+id/rejectEventButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/green" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rejectEventButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="50dp"
+            app:elevation="0dp"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/red"
+            app:layout_constraintEnd_toStartOf="@+id/editEventButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/red" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editEventButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="50dp"
+            app:elevation="0dp"
+            app:icon="@drawable/ic_edit"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="?attr/colorPrimary"
+            app:layout_constraintEnd_toStartOf="@+id/cancelEventButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="?attr/colorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelEventButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="50dp"
+            app:elevation="0dp"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="?attr/colorPrimary"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="?attr/colorPrimary" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/eventTitle"
+            style="@style/Theme.Tike.TextView.RobotoMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/eventTitleColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@id/guidelineContent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Заголовок" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/eventDescription"
+            style="@style/Theme.Tike.TextView.RobotoRegular"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/guidelineContent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventTitle"
+            tools:text="Это просто какое-то событие, здесь будет подробная информация о нём от его создателя" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:background="?attr/eventDividerColor"
+            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iconTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/time"
+            android:src="@drawable/ic_time"
+            app:layout_constraintBottom_toBottomOf="@+id/eventUsers"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/eventUsers" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/eventTime"
+            style="@style/Theme.Tike.TextView.RobotoMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/darker_gray"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/eventUsers"
+            app:layout_constraintStart_toEndOf="@+id/iconTime"
+            app:layout_constraintTop_toTopOf="@+id/eventUsers"
+            tools:text="12:40 - 14:50" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/eventUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:stackFromEnd="true"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_avatar" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
