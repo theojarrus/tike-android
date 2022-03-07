@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "694580831967",
+    "project_id": "tike-80550",
+    "storage_bucket": "tike-80550.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694580831967:android:55b83ad0931e820f77ab6a",
+        "android_client_info": {
+          "package_name": "com.theost.tike"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694580831967-0o64oh9un7phujriavp4p40h1ft3rk8d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theost.tike",
+            "certificate_hash": "c4f327970e70db7047a9a327195557a38bed6909"
+          }
+        },
+        {
+          "client_id": "694580831967-k64snkpmp1k6bb38bps6fifaoh7acq6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRm4GsiJ1XIOYJlzvE5He-Wy1pBbVVPuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "694580831967-k64snkpmp1k6bb38bps6fifaoh7acq6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
