@@ -18,7 +18,7 @@
         tools:layout="@layout/fragment_inbox" />
 
     <fragment
-        android:id="@+id/creationFragment"
+        android:id="@+id/addingFragment"
         android:name="com.theost.tike.ui.fragments.AddingFragment"
         android:label="@string/creation"
         tools:layout="@layout/fragment_adding" />

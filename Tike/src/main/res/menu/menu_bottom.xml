@@ -12,7 +12,7 @@
         android:icon="@drawable/ic_inbox"/>
 
     <item
-        android:id="@+id/creationFragment"
+        android:id="@+id/addingFragment"
         android:title="@string/creation"
         android:icon="@drawable/ic_creation"/>
 
