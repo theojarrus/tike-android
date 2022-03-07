@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
     app:cardBackgroundColor="?attr/eventBackgroundColor"
     app:cardCornerRadius="15dp"
     app:cardElevation="0dp"
@@ -102,7 +104,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/eventTitleColor"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@id/guidelineContent"
+            app:layout_constraintEnd_toStartOf="@id/acceptEventButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Заголовок" />
@@ -115,7 +117,7 @@
             android:layout_marginTop="4dp"
             android:textColor="@color/gray"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@id/guidelineContent"
+            app:layout_constraintEnd_toStartOf="@id/acceptEventButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventTitle"
             tools:text="Это просто какое-то событие, здесь будет подробная информация о нём от его создателя" />
@@ -128,27 +130,16 @@
             android:background="?attr/eventDividerColor"
             app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iconTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/time"
-            android:src="@drawable/ic_time"
-            app:layout_constraintBottom_toBottomOf="@+id/eventUsers"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/eventUsers" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/eventTime"
-            style="@style/Theme.Tike.TextView.RobotoMedium"
+            style="@style/Theme.Tike.TextView.RobotoRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/darker_gray"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/eventUsers"
-            app:layout_constraintStart_toEndOf="@+id/iconTime"
-            app:layout_constraintTop_toTopOf="@+id/eventUsers"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="12:40 - 14:50" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -158,19 +149,12 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="@id/divider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
             app:stackFromEnd="true"
             tools:itemCount="4"
             tools:listitem="@layout/item_avatar" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

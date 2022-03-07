@@ -10,9 +10,9 @@
         android:layout_marginBottom="28dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_logo"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_center"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineCenter"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/welcomeTitle"
@@ -23,9 +23,9 @@
         android:text="@string/welcome_title"
         android:textColor="?attr/colorOnSurface"
         android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start"
-        app:layout_constraintTop_toTopOf="@id/guideline_center" />
+        app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@id/guidelineCenter" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/welcomeText"
@@ -36,45 +36,38 @@
         android:gravity="center"
         android:text="@string/welcome_text"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/welcomeTitle" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/authGoogleButton"
+        style="@style/Theme.Tike.BlueButton.Iconified"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginBottom="16dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
         android:text="@string/auth_google"
-        android:textColor="@color/selector_button_blue_text"
-        android:theme="@style/Theme.Tike.BlueButton"
-        app:cornerRadius="15dp"
         app:icon="@drawable/ic_google"
-        app:iconGravity="start"
-        app:iconPadding="-24dp"
-        app:iconTint="@color/selector_button_blue_text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start" />
+        app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_center"
+        android:id="@+id/guidelineCenter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_start"
+        android:id="@+id/guidelineStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="16dp" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_end"
+        android:id="@+id/guidelineEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

@@ -7,7 +7,7 @@ class PagerNumerator {
     private var pagerScrollDirection: PagerScrollDirection = PagerScrollDirection.SCROLL_STAY
     private var pagerTempPositionOffset: Float = 0f
 
-    private fun updateScrollDirection(positionOffset: Float) {
+    private fun updateScrollDirection(positionOffset: Float): Boolean {
         if (positionOffset > 0.1) {
             pagerTempPositionOffset = positionOffset
             pagerScrollDirection = if (positionOffset > 0.5) {
@@ -16,43 +16,50 @@ class PagerNumerator {
                 PagerScrollDirection.SCROLL_NEXT
             }
         }
+        return false
     }
 
-    private fun calculateScroll(positionOffset: Float, calculateAction: () -> Unit) {
-        if (positionOffset < 0.1) {
+    private fun calculateScroll(positionOffset: Float, calculateAction: () -> Boolean): Boolean {
+        return if (positionOffset < 0.1) {
             pagerScrollDirection = PagerScrollDirection.SCROLL_STAY
             pagerTempPositionOffset = positionOffset
+            false
         } else {
-            calculateAction.invoke()
+            calculateAction()
         }
     }
 
-    private fun calculateScrollPrev(positionOffset: Float) {
-        calculateScroll(positionOffset) {
+    private fun calculateScrollPrev(positionOffset: Float): Boolean {
+        return calculateScroll(positionOffset) {
             if (pagerTempPositionOffset >= 0.5 && positionOffset < 0.5) {
                 pagerTempPositionOffset = positionOffset
                 pagerPosition -= 1
+                true
             } else if (pagerTempPositionOffset < 0.5 && positionOffset >= 0.5) {
                 pagerTempPositionOffset = positionOffset
                 pagerPosition += 1
-            }
+                true
+            } else false
         }
     }
 
-    private fun calculateScrollNext(positionOffset: Float) {
-        calculateScroll(positionOffset) {
+    private fun calculateScrollNext(positionOffset: Float): Boolean {
+        return calculateScroll(positionOffset) {
             if (pagerTempPositionOffset <= 0.5 && positionOffset > 0.5) {
                 pagerTempPositionOffset = positionOffset
                 pagerPosition += 1
+                true
             } else if (pagerTempPositionOffset > 0.5 && positionOffset <= 0.5) {
                 pagerTempPositionOffset = positionOffset
                 pagerPosition -= 1
-            }
+                true
+            } else false
         }
     }
 
-    fun updatePosition(positionOffset: Float) {
-        when (pagerScrollDirection) {
+    // Returns true if position was changed
+    fun updatePosition(positionOffset: Float): Boolean {
+        return when (pagerScrollDirection) {
             PagerScrollDirection.SCROLL_STAY -> updateScrollDirection(positionOffset)
             PagerScrollDirection.SCROLL_PREV -> calculateScrollPrev(positionOffset)
             PagerScrollDirection.SCROLL_NEXT -> calculateScrollNext(positionOffset)

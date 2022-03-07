@@ -17,7 +17,7 @@ class DialogsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDialogsBinding.inflate(layoutInflater)
+        _binding = FragmentDialogsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 

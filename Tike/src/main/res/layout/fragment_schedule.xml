@@ -35,6 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/weekDaysView"
         app:mcv_calendarMode="week"
         app:mcv_dateTextAppearance="@style/Theme.Tike.Date.Day"
+        app:mcv_headerTextAppearance="@null"
         app:mcv_showOtherDates="all"
         app:mcv_showWeekDays="false"
         app:mcv_weekDayTextAppearance="@style/Theme.Tike.Date.WeekDay" />
@@ -43,6 +44,7 @@
         android:id="@+id/daysPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calendarView" />
 

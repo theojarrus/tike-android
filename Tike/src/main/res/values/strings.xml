@@ -13,4 +13,28 @@
     <string name="welcome_title">Добро пожаловать в Tike!</string>
     <string name="welcome_text">Создайте аккаунт или авторизируйтесь, чтобы синхронизировать расписание</string>
     <string name="auth_google">Продолжить с Google</string>
+
+    <string name="done">Готово!</string>
+    <string name="no_events">На сегодня планов нет</string>
+
+    <string name="new_event">Новое событие</string>
+    <string name="create">Создать</string>
+    <string name="join">Присоединиться</string>
+
+    <string name="title">Название</string>
+    <string name="description">Описание</string>
+    <string name="participants">Участники</string>
+
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="year">Год</string>
+
+    <string name="begin">Начало</string>
+    <string name="end">Конец</string>
+
+    <string name="repeat">Повтор</string>
+
+    <string name="hint_title">Новое событие</string>
+    <string name="hint_description">Напишите здесь что-нибудь…</string>
 </resources>

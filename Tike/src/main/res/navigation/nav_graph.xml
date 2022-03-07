@@ -19,9 +19,9 @@
 
     <fragment
         android:id="@+id/creationFragment"
-        android:name="com.theost.tike.ui.fragments.CreationFragment"
+        android:name="com.theost.tike.ui.fragments.AddingFragment"
         android:label="@string/creation"
-        tools:layout="@layout/fragment_creation" />
+        tools:layout="@layout/fragment_adding" />
 
     <fragment
         android:id="@+id/dialogsFragment"

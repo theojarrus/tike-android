@@ -25,17 +25,95 @@
         <item name="android:windowBackground">@drawable/layout_splash_light</item>
     </style>
 
-    <style name="Theme.Tike.BlueButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@drawable/selector_button_blue_bg</item>
-        <item name="iconTint">@color/selector_button_blue_text</item>
-        <item name="android:textSize">16sp</item>
+    <style name="Theme.Tike.BlueButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/blue</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Toggle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeWidth">1dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/selector_toggle_text</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">15dp</item>
+        <item name="strokeColor">@color/blue</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Basic" parent="Theme.Tike.BlueButton">
+        <item name="android:backgroundTint">@color/selector_button_blue_bg</item>
+        <item name="android:textColor">@color/selector_button_blue_text</item>
+        <item name="strokeColor">@color/blue</item>
+        <item name="cornerRadius">15dp</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Iconified" parent="Theme.Tike.BlueButton.Basic">
+        <item name="iconTint">@color/selector_button_blue_text</item>
+        <item name="iconGravity">start</item>
+        <item name="iconPadding">-24dp</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Imaged" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="cornerRadius">15dp</item>
+        <item name="strokeColor">?attr/colorAccent</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Switch" parent="Theme.Tike.BlueButton">
+        <item name="android:backgroundTint">@color/selector_switch_blue_bg</item>
+        <item name="android:textColor">@color/selector_switch_blue_text</item>
+        <item name="strokeColor">@color/selector_switch_blue_bg</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Switch.Left" parent="Theme.Tike.BlueButton.Switch">
+        <item name="shapeAppearance">@style/Theme.Tike.BlueButton.Switch.LeftAppearance</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Switch.Right" parent="Theme.Tike.BlueButton.Switch">
+        <item name="shapeAppearance">@style/Theme.Tike.BlueButton.Switch.RightAppearance</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Switch.LeftAppearance">
+        <item name="cornerSizeTopLeft">15dp</item>
+        <item name="cornerSizeBottomLeft">15dp</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Switch.RightAppearance">
+        <item name="cornerSizeTopRight">15dp</item>
+        <item name="cornerSizeBottomRight">15dp</item>
+    </style>
+
+    <style name="Theme.Tike.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomStart">15dp</item>
+        <item name="boxCornerRadiusBottomEnd">15dp</item>
+        <item name="boxCornerRadiusTopStart">15dp</item>
+        <item name="boxCornerRadiusTopEnd">15dp</item>
+        <item name="hintEnabled">false</item>
+        <item name="boxStrokeColor">@color/blue</item>
+    </style>
+
+    <style name="Theme.Tike.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="Theme.Tike.Date.WeekDay" parent="Widget.MaterialComponents.TextView">
@@ -55,19 +133,24 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="Theme.Tike.TextView.RobotoMedium" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.Tike.TextView" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Theme.Tike.TextView.RobotoMedium" parent="Theme.Tike.TextView">
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
-    <style name="Theme.Tike.TextView.RobotoRegular" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.Tike.TextView.RobotoRegular" parent="Theme.Tike.TextView">
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
-    <style name="Theme.Tike.TextView.RobotoLight" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.Tike.TextView.RobotoLight" parent="Theme.Tike.TextView">
         <item name="android:fontFamily">@font/roboto_light</item>
     </style>
 
-    <style name="Theme.Tike.TextView.RobotoThin" parent="Widget.MaterialComponents.TextView">
+    <style name="Theme.Tike.TextView.RobotoThin" parent="Theme.Tike.TextView">
         <item name="android:fontFamily">@font/roboto_thin</item>
     </style>
 

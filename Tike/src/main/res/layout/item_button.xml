@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Theme.Tike.BlueButton.Imaged"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginEnd="10dp"
+    android:textColor="@color/black"
+    app:icon="@drawable/ic_add"
+    app:iconGravity="textStart" />

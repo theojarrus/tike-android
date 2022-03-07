@@ -17,7 +17,7 @@ class InboxFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInboxBinding.inflate(layoutInflater)
+        _binding = FragmentInboxBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
