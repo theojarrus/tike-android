@@ -47,6 +47,7 @@ class AddingFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        binding.addingPager.adapter = null
         _binding = null
     }
 

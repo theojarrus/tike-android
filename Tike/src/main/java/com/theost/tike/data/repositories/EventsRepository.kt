@@ -34,9 +34,7 @@ object EventsRepository {
                         emitter.onError(error)
                     }
                 }
-            emitter.setCancellable {
-                queryListener.remove()
-            }
+            emitter.setCancellable { queryListener.remove() }
         }.map { querySnapshot ->
             querySnapshot.toObjects(EventDto::class.java)
         }.map { events ->
