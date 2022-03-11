@@ -9,11 +9,19 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.theost.tike.R
 import com.theost.tike.databinding.ActivityHomeBinding
+import com.theost.tike.ui.interfaces.ActionsHolder
+import com.theost.tike.ui.interfaces.CalendarHolder
+import com.theost.tike.ui.interfaces.EventListener
+import com.theost.tike.ui.interfaces.PeopleResultListener
+import org.threeten.bp.LocalDate
 
-class HomeActivity : FragmentActivity() {
+class HomeActivity : FragmentActivity(), EventListener, ActionsHolder, CalendarHolder {
+
+    private var activeDate: LocalDate? = null
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navController: NavController
+    private lateinit var navHostFragment: NavHostFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +31,33 @@ class HomeActivity : FragmentActivity() {
         setupSmoothBottomMenu()
     }
 
+    override fun onEventCreated(date: LocalDate) {
+        activeDate = date
+        navController.navigateUp()
+    }
+
+    override fun getActiveDate(): LocalDate? {
+        return activeDate?.run { LocalDate.from(activeDate).also { activeDate = null } }
+    }
+
+    override fun openParticipantsAdding(
+        requestKey: String,
+        bundleKey: String,
+        addedIds: Set<String>,
+        peopleResultListener: PeopleResultListener
+    ) {
+        supportFragmentManager.setFragmentResultListener(requestKey, this) { _, bundle ->
+            peopleResultListener(bundle.getStringArrayList(bundleKey) ?: emptyList())
+        }
+        // todo
+        // new Fragment.newInstance(addedIds)
+        // setResult("requestKey", bundleOf("bundleKey" to "result"))
+    }
+
     private fun setupNavController() {
-        navController = (supportFragmentManager
+        navHostFragment = (supportFragmentManager
             .findFragmentById(R.id.fragmentContainer) as NavHostFragment)
-            .navController
+        navController = navHostFragment.navController
     }
 
     private fun setupSmoothBottomMenu() {

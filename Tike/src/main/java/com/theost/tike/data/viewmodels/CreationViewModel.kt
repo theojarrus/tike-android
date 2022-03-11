@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.ui.ListParticipant
 import com.theost.tike.data.repositories.EventsRepository
-import com.theost.tike.data.state.Status
+import com.theost.tike.data.models.state.Status
+import com.theost.tike.data.models.ui.mapToListParticipant
+import com.theost.tike.data.repositories.UsersRepository
 import io.reactivex.disposables.CompositeDisposable
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -32,6 +34,10 @@ class CreationViewModel : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     init {
+        init()
+    }
+
+    fun init() {
         val eventDateTime = LocalDateTime.now().plusHours(DATE_EVENT_DEFAULT_AFTER)
         val eventDate = eventDateTime.toLocalDate()
         val eventBeginTime = LocalTime.of(eventDateTime.hour, 0)
@@ -45,7 +51,7 @@ class CreationViewModel : ViewModel() {
 
     fun sendEventData(title: String, description: String, repeatMode: RepeatMode) {
         if (title.isNotEmpty() && description.isNotEmpty()) {
-            _sendingStatus.postValue(Status.LOADING)
+            _sendingStatus.postValue(Status.Loading)
 
             val participants = participants.value?.map { it.id } ?: emptyList()
             val date = eventDate.value?.toEpochDay() ?: -1
@@ -62,17 +68,47 @@ class CreationViewModel : ViewModel() {
                     endTime,
                     repeatMode.uiName
                 ).subscribe({
-                    _sendingStatus.postValue(Status.SUCCESS)
+                    _sendingStatus.postValue(Status.Success)
                 }, {
-                    _sendingStatus.postValue(Status.ERROR)
+                    _sendingStatus.postValue(Status.Error)
                 })
             )
         } else {
-            _sendingStatus.postValue(Status.ERROR)
+            _sendingStatus.postValue(Status.Error)
         }
     }
 
-    fun removeParticipant(participantId: Int) {
+    fun updateEventDate(year: Int, month: Int, day: Int) {
+        _eventDate.postValue(LocalDate.of(year, month, day))
+    }
+
+    fun updateEventBeginTime(hour: Int, minute: Int) {
+        _eventBeginTime.postValue(LocalTime.of(hour, minute))
+        _eventEndTime.postValue(LocalTime.of(hour, minute).plusHours(DATE_EVENT_DEFAULT_LENGTH))
+    }
+
+    fun updateEventEndTime(hour: Int, minute: Int) {
+        eventBeginTime.value?.let { beginTime ->
+            val endTime = LocalTime.of(hour, minute)
+            if (endTime.isAfter(beginTime)) _eventEndTime.postValue(endTime)
+        }
+    }
+
+    fun loadParticipants(usersIds: List<String>) {
+        compositeDisposable.add(
+            UsersRepository.getUsers(usersIds).subscribe({ users ->
+                val participants = (participants.value ?: emptyList()).toMutableList().run {
+                    addAll(users.map { user -> user.mapToListParticipant()})
+                    this
+                }.distinctBy { participant -> participant.id }
+                _participants.postValue(participants)
+            }, { error ->
+                error.printStackTrace()
+            })
+        )
+    }
+
+    fun removeParticipant(participantId: String) {
         participants.value?.let { participants ->
             _participants.postValue(
                 participants.toMutableList()
@@ -93,22 +129,6 @@ class CreationViewModel : ViewModel() {
             }
         } else {
             _participants.postValue(addedParticipants)
-        }
-    }
-
-    fun updateEventDate(year: Int, month: Int, day: Int) {
-        _eventDate.postValue(LocalDate.of(year, month, day))
-    }
-
-    fun updateEventBeginTime(hour: Int, minute: Int) {
-        _eventBeginTime.postValue(LocalTime.of(hour, minute))
-        _eventEndTime.postValue(LocalTime.of(hour, minute).plusHours(DATE_EVENT_DEFAULT_LENGTH))
-    }
-
-    fun updateEventEndTime(hour: Int, minute: Int) {
-        eventBeginTime.value?.let { beginTime ->
-            val endTime = LocalTime.of(hour, minute)
-            if (endTime.isAfter(beginTime)) _eventEndTime.postValue(endTime)
         }
     }
 

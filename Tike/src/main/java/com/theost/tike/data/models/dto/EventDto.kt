@@ -2,6 +2,8 @@ package com.theost.tike.data.models.dto
 
 import com.google.firebase.firestore.DocumentId
 import com.theost.tike.data.models.core.Event
+import com.theost.tike.data.models.core.User
+import com.theost.tike.data.models.ui.ListParticipant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
@@ -11,7 +13,7 @@ data class EventDto(
     val title: String = "",
     val description: String = "",
     val creatorId: Int = 0,
-    val participants: List<Int> = emptyList(),
+    val participants: List<String> = emptyList(),
     val participantsLimit: Int = 0,
     val date: Long = 0,
     val beginTime: Long = 0,

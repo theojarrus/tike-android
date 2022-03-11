@@ -37,4 +37,6 @@
 
     <string name="hint_title">Новое событие</string>
     <string name="hint_description">Напишите здесь что-нибудь…</string>
+
+    <string name="error_network">Ошибка загрзуки</string>
 </resources>

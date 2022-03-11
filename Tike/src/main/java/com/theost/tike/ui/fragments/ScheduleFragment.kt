@@ -20,11 +20,11 @@ import com.theost.tike.data.viewmodels.ScheduleViewModel
 import com.theost.tike.databinding.FragmentScheduleBinding
 import com.theost.tike.ui.adapters.core.DayAdapter
 import com.theost.tike.ui.decorators.*
+import com.theost.tike.ui.interfaces.CalendarHolder
 import com.theost.tike.ui.widgets.PagerNumerator
 import com.theost.tike.utils.DateUtils
 import org.threeten.bp.LocalDate
 import java.util.*
-
 
 class ScheduleFragment : Fragment() {
 
@@ -97,12 +97,7 @@ class ScheduleFragment : Fragment() {
 
         // Calendar Listeners
         binding.calendarView.setOnDateChangedListener { _, date, _ ->
-            if (!date.isBefore(CalendarDay.from(currentDate))) {
-                binding.calendarView.removeDecorator(dayDecorator)
-                changePagerDay(date.date.dayOfYear - CalendarDay.from(currentDate).date.dayOfYear)
-                dayDecorator.setDay(binding.calendarView.selectedDate)
-                binding.calendarView.addDecorator(dayDecorator)
-            } else selectToday()
+            if (!date.isBefore(CalendarDay.from(currentDate))) changeDay(date) else selectToday()
             updateToolbarDate()
         }
 
@@ -135,6 +130,16 @@ class ScheduleFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        val activeDate = (activity as CalendarHolder).getActiveDate()
+        if (activeDate != null) {
+            val activeDay = CalendarDay.from(activeDate)
+            changeDay(activeDay)
+            changeCalendarDay(activeDay)
+        }
+    }
+
     private fun switchCalendarMode() {
         TransitionManager.beginDelayedTransition(binding.calendarView)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -156,6 +161,13 @@ class ScheduleFragment : Fragment() {
     private fun selectToday() {
         changePagerDay(0)
         changeCalendarDay(CalendarDay.from(currentDate))
+    }
+
+    private fun changeDay(day: CalendarDay) {
+        binding.calendarView.removeDecorator(dayDecorator)
+        changePagerDay(day.date.dayOfYear - CalendarDay.from(currentDate).date.dayOfYear)
+        dayDecorator.setDay(binding.calendarView.selectedDate)
+        binding.calendarView.addDecorator(dayDecorator)
     }
 
     private fun changeCalendarDay(day: CalendarDay) {
@@ -180,4 +192,5 @@ class ScheduleFragment : Fragment() {
             return ScheduleFragment()
         }
     }
+
 }

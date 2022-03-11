@@ -18,9 +18,10 @@ class ButtonAdapterDelegate(private val clickListener: () -> Unit) : AdapterDele
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         item: DelegateItem,
-        position: Int
+        position: Int,
+        enabled: Boolean
     ) {
-        (holder as ViewHolder).bind()
+        (holder as ViewHolder).bind(enabled)
     }
 
     override fun isOfViewType(item: DelegateItem): Boolean = item is ListButton
@@ -30,8 +31,9 @@ class ButtonAdapterDelegate(private val clickListener: () -> Unit) : AdapterDele
         private val clickListener: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind() {
+        fun bind(enabled: Boolean) {
             binding.root.setOnClickListener { clickListener() }
+            binding.root.isEnabled = enabled
         }
 
     }

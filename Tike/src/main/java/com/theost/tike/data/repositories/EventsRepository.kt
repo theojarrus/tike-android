@@ -1,12 +1,16 @@
 package com.theost.tike.data.repositories
 
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.theost.tike.data.models.core.Event
 import com.theost.tike.data.models.dto.EventDto
+import com.theost.tike.data.models.dto.UserDto
 import com.theost.tike.data.models.dto.mapToEvent
+import com.theost.tike.data.models.dto.mapToUser
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 object EventsRepository {
@@ -35,8 +39,8 @@ object EventsRepository {
                     }
                 }
             emitter.setCancellable { queryListener.remove() }
-        }.map { querySnapshot ->
-            querySnapshot.toObjects(EventDto::class.java)
+        }.map { snapshot ->
+            snapshot.toObjects(EventDto::class.java)
         }.map { events ->
             events.map { entity -> entity.mapToEvent() }.sortedBy { event -> event.beginTime }
         }.subscribeOn(Schedulers.io())
@@ -45,7 +49,7 @@ object EventsRepository {
     fun addEvents(
         title: String,
         description: String,
-        participants: List<Int>,
+        participants: List<String>,
         date: Long,
         beginTime: Long,
         endTime: Long,

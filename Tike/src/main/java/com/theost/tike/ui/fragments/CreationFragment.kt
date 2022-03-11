@@ -6,26 +6,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.theost.tike.R
 import com.theost.tike.data.models.state.RepeatMode
+import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.ui.ListButton
-import com.theost.tike.data.models.ui.ListParticipant
 import com.theost.tike.data.viewmodels.CreationViewModel
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.ButtonAdapterDelegate
 import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
+import com.theost.tike.ui.interfaces.ActionsHolder
 import com.theost.tike.ui.interfaces.DelegateItem
+import com.theost.tike.ui.interfaces.EventListener
 import com.theost.tike.utils.DateUtils
 import com.theost.tike.utils.DisplayUtils
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
 class CreationFragment : Fragment() {
+
+    private val addedIds: MutableSet<String> = mutableSetOf()
 
     private var eventDate = LocalDate.now()
     private var eventBeginTime = LocalTime.now()
@@ -67,7 +71,11 @@ class CreationFragment : Fragment() {
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
-            adapter.submitList(mutableListOf<DelegateItem>(ListButton()).apply { addAll(participants) })
+            addedIds.addAll(participants.map { participant -> participant.id })
+            adapter.submitList(mutableListOf<DelegateItem>().apply {
+                addAll(participants)
+                add(ListButton())
+            })
         }
 
         viewModel.eventDate.observe(viewLifecycleOwner) { date ->
@@ -101,9 +109,43 @@ class CreationFragment : Fragment() {
             )
         }
 
+        viewModel.sendingStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                Status.Error -> hideLoading()
+                Status.Loading -> showLoading()
+                Status.Success -> onEventDataSent()
+            }
+        }
+
         updateCreateEventButton()
 
         return binding.root
+    }
+
+    private fun showLoading() {
+        binding.titleInput.isEnabled = false
+        binding.descriptionInput.isEnabled = false
+        binding.dateDayInput.isEnabled = false
+        binding.dateBeginInput.isEnabled = false
+        binding.dateEndInput.isEnabled = false
+        binding.repeatButtonsGroup.children.forEach { it.isEnabled = false }
+        adapter.setEnabled(false)
+
+        binding.createEventButton.visibility = View.INVISIBLE
+        binding.loadingBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.titleInput.isEnabled = true
+        binding.descriptionInput.isEnabled = true
+        binding.dateDayInput.isEnabled = true
+        binding.dateBeginInput.isEnabled = true
+        binding.dateEndInput.isEnabled = true
+        binding.repeatButtonsGroup.children.forEach { it.isEnabled = true }
+        adapter.setEnabled(true)
+
+        binding.createEventButton.visibility = View.VISIBLE
+        binding.loadingBar.visibility = View.GONE
     }
 
     private fun showDatePicker() {
@@ -143,11 +185,13 @@ class CreationFragment : Fragment() {
     }
 
     private fun openParticipantsAdding() {
-        // todo
-    }
-
-    private fun addParticipants(participants: List<ListParticipant>) {
-        viewModel.updateParticipants(participants)
+        (activity as ActionsHolder).openParticipantsAdding(
+            KEY_PEOPLE_REQUEST,
+            KEY_PEOPLE_BUNDLE,
+            addedIds
+        ) { usersIds ->
+            viewModel.loadParticipants(usersIds)
+        }
     }
 
     private fun checkIsNotEmptyInputFields(): Boolean {
@@ -156,7 +200,8 @@ class CreationFragment : Fragment() {
     }
 
     private fun updateCreateEventButton() {
-        binding.createEventButton.isVisible = checkIsNotEmptyInputFields()
+        binding.createEventButton.visibility =
+            if (checkIsNotEmptyInputFields()) View.VISIBLE else View.INVISIBLE
     }
 
     private fun sendEventData() {
@@ -173,12 +218,17 @@ class CreationFragment : Fragment() {
         viewModel.sendEventData(title = title, description = description, repeatMode = repeatMode)
     }
 
+    private fun onEventDataSent() = (activity as EventListener).onEventCreated(eventDate)
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
     companion object {
+        private const val KEY_PEOPLE_REQUEST = "request_users"
+        private const val KEY_PEOPLE_BUNDLE = "bundle_users"
+
         fun newInstance(): Fragment {
             return CreationFragment()
         }

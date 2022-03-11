@@ -11,6 +11,7 @@ import com.theost.tike.ui.interfaces.DelegateItem
 
 open class BaseAdapter : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(DelegateItemCallback()) {
     private val delegates: MutableList<AdapterDelegate> = mutableListOf()
+    private var isEnabled: Boolean = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType >= 0 && viewType < delegates.size) {
@@ -22,7 +23,7 @@ open class BaseAdapter : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(Dele
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         try {
-            delegates[getItemViewType(position)].onBindViewHolder(holder, getItem(position), position)
+            delegates[getItemViewType(position)].onBindViewHolder(holder, getItem(position), position, isEnabled)
         } catch (e: ArrayIndexOutOfBoundsException) {
             throw Exception("Can't find delegate for item at position $position: ${getItem(position)}")
         }
@@ -34,6 +35,13 @@ open class BaseAdapter : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(Dele
 
     override fun getItemViewType(position: Int): Int {
         return delegates.indexOfFirst { it.isOfViewType(currentList[position]) }
+    }
+
+    fun setEnabled(isEnabled: Boolean) {
+        if (this.isEnabled != isEnabled) {
+            this.isEnabled = isEnabled
+            notifyItemRangeChanged(0, itemCount)
+        }
     }
 
     private class EmptyViewHolder(context: Context) : RecyclerView.ViewHolder(View(context)) {}

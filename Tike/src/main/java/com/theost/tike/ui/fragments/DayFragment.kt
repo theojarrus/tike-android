@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.theost.tike.R
+import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.viewmodels.DayViewModel
 import com.theost.tike.databinding.FragmentDayBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
@@ -35,13 +38,12 @@ class DayFragment : Fragment() {
             if (binding.emptyDayView.root.isVisible) animateEmptyView()
         }
 
-        arguments?.let { arguments ->
-            viewModel.loadData(
-                LocalDate.ofYearDay(
-                    arguments.getInt(ARG_DATE_YEAR),
-                    arguments.getInt(ARG_DATE_DAY)
-                )
-            )
+        viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                Status.Error -> showErrorToast()
+                Status.Loading -> { /* do nothing */ }
+                Status.Success -> { /* do nothing */ }
+            }
         }
 
         binding.eventsList.adapter = adapter.apply {
@@ -51,14 +53,25 @@ class DayFragment : Fragment() {
         return binding.root
     }
 
-    private fun animateEventsList() {
-        binding.eventsList.alpha = 0f
-        binding.eventsList.animate().alpha(1.0f).duration = 500
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let { arguments ->
+            viewModel.loadData(
+                LocalDate.ofYearDay(
+                    arguments.getInt(ARG_DATE_YEAR),
+                    arguments.getInt(ARG_DATE_DAY)
+                )
+            )
+        }
     }
 
     private fun animateEmptyView() {
         binding.emptyDayView.root.alpha = 0f
         binding.emptyDayView.root.animate().alpha(1.0f).duration = 500
+    }
+
+    private fun showErrorToast() {
+        Toast.makeText(context, R.string.error_network, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

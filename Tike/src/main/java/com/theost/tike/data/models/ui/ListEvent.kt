@@ -9,13 +9,13 @@ data class ListEvent(
     val title: String,
     val description: String,
     val time: String,
-    val participants: List<Int>
+    val participants: List<ListParticipant>
 ) : DelegateItem {
     override fun id(): Any = id
     override fun content(): Any = title + description + time + participants
 }
 
-fun Event.mapToListEvent(): ListEvent {
+fun Event.mapToListEvent(participants: List<ListParticipant>): ListEvent {
     return ListEvent(
         id = id,
         title = title,

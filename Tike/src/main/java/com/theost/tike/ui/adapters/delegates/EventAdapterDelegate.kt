@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.theost.tike.data.models.ui.ListEvent
 import com.theost.tike.databinding.ItemEventBinding
+import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.interfaces.AdapterDelegate
 import com.theost.tike.ui.interfaces.DelegateItem
 
@@ -18,7 +19,8 @@ class EventAdapterDelegate : AdapterDelegate {
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         item: DelegateItem,
-        position: Int
+        position: Int,
+        enabled: Boolean
     ) {
         (holder as ViewHolder).bind(item as ListEvent)
     }
@@ -31,7 +33,10 @@ class EventAdapterDelegate : AdapterDelegate {
             binding.eventTitle.text = listEvent.title
             binding.eventDescription.text = listEvent.description
             binding.eventTime.text = listEvent.time
-            // todo
+            binding.eventUsers.adapter = BaseAdapter().apply {
+                addDelegate(ParticipantAvatarAdapterDelegate())
+                submitList(listEvent.participants)
+            }
         }
 
     }

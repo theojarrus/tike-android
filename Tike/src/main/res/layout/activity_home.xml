@@ -19,7 +19,7 @@
     <me.ibrahimsn.lib.SmoothBottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="68dp"
         app:textSize="0sp"
         app:iconSize="28dp"
         app:indicatorRadius="15dp"
