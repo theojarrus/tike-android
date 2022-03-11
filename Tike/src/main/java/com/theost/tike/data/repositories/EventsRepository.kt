@@ -42,11 +42,13 @@ object EventsRepository {
         }.map { snapshot ->
             snapshot.toObjects(EventDto::class.java)
         }.map { events ->
-            events.map { entity -> entity.mapToEvent() }.sortedBy { event -> event.beginTime }
+            events.map { entity -> entity.mapToEvent() }
+                .sortedBy { event -> event.endTime }
+                .sortedBy { event -> event.beginTime }
         }.subscribeOn(Schedulers.io())
     }
 
-    fun addEvents(
+    fun addEvent(
         title: String,
         description: String,
         participants: List<String>,

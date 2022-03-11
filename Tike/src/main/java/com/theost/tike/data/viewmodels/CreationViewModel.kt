@@ -59,7 +59,7 @@ class CreationViewModel : ViewModel() {
             val endTime = eventEndTime.value?.toNanoOfDay() ?: -1
 
             compositeDisposable.add(
-                EventsRepository.addEvents(
+                EventsRepository.addEvent(
                     title,
                     description,
                     participants,
