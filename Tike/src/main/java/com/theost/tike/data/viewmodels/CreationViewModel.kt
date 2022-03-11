@@ -58,28 +58,33 @@ class CreationViewModel : ViewModel() {
             val beginTime = eventBeginTime.value?.toNanoOfDay() ?: -1
             val endTime = eventEndTime.value?.toNanoOfDay() ?: -1
 
-            compositeDisposable.add(
-                EventsRepository.addEvent(
-                    title,
-                    description,
-                    participants,
-                    date,
-                    beginTime,
-                    endTime,
-                    repeatMode.uiName
-                ).subscribe({
-                    _sendingStatus.postValue(Status.Success)
-                }, {
-                    _sendingStatus.postValue(Status.Error)
-                })
-            )
+            if (eventDate.value?.isBefore(LocalDate.now()) != true) {
+                compositeDisposable.add(
+                    EventsRepository.addEvent(
+                        title,
+                        description,
+                        participants,
+                        date,
+                        beginTime,
+                        endTime,
+                        repeatMode.uiName
+                    ).subscribe({
+                        _sendingStatus.postValue(Status.Success)
+                    }, {
+                        _sendingStatus.postValue(Status.Error)
+                    })
+                )
+            } else {
+                _sendingStatus.postValue(Status.Error)
+            }
         } else {
             _sendingStatus.postValue(Status.Error)
         }
     }
 
     fun updateEventDate(year: Int, month: Int, day: Int) {
-        _eventDate.postValue(LocalDate.of(year, month, day))
+        val date = LocalDate.of(year, month, day)
+        if (!date.isBefore(LocalDate.now())) _eventDate.postValue(date)
     }
 
     fun updateEventBeginTime(hour: Int, minute: Int) {
