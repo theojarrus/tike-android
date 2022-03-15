@@ -1,4 +1,4 @@
-package com.theost.tike.data.viewmodels
+package com.theost.tike.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +19,9 @@ class CreationViewModel : ViewModel() {
     private val _sendingStatus = MutableLiveData<Status>()
     val sendingStatus: LiveData<Status> = _sendingStatus
 
+    private val _loadingStatus = MutableLiveData<Status>()
+    val loadingStatus: LiveData<Status> = _loadingStatus
+
     private val _eventDate = MutableLiveData<LocalDate>()
     val eventDate: LiveData<LocalDate> = _eventDate
 
@@ -31,13 +34,10 @@ class CreationViewModel : ViewModel() {
     private val _participants = MutableLiveData<List<ListParticipant>>()
     val participants: LiveData<List<ListParticipant>> = _participants
 
+    private var participantsIds = emptyList<String>()
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        init()
-    }
-
-    fun init() {
         val eventDateTime = LocalDateTime.now().plusHours(DATE_EVENT_DEFAULT_AFTER)
         val eventDate = eventDateTime.toLocalDate()
         val eventBeginTime = LocalTime.of(eventDateTime.hour, 0)
@@ -53,32 +53,38 @@ class CreationViewModel : ViewModel() {
         if (title.isNotEmpty() && description.isNotEmpty()) {
             _sendingStatus.postValue(Status.Loading)
 
-            val participants = participants.value?.map { it.id } ?: emptyList()
-            val date = eventDate.value?.toEpochDay() ?: -1
-            val beginTime = eventBeginTime.value?.toNanoOfDay() ?: -1
-            val endTime = eventEndTime.value?.toNanoOfDay() ?: -1
+            val weekDay = eventDate.value?.dayOfWeek?.value ?: 0
+            val monthDay = eventDate.value?.dayOfMonth ?: 0
+            val month = eventDate.value?.monthValue ?: 0
+            val year = eventDate.value?.year ?: 0
+            val beginTime = eventBeginTime.value?.toNanoOfDay() ?: 0
+            val endTime = eventEndTime.value?.toNanoOfDay() ?: 0
+            val participants = participants.value.orEmpty().map { user -> user.id }
 
-            if (eventDate.value?.isBefore(LocalDate.now()) != true) {
-                compositeDisposable.add(
-                    EventsRepository.addEvent(
-                        title,
-                        description,
-                        participants,
-                        date,
-                        beginTime,
-                        endTime,
-                        repeatMode.uiName
-                    ).subscribe({
-                        _sendingStatus.postValue(Status.Success)
-                    }, {
-                        _sendingStatus.postValue(Status.Error)
-                    })
-                )
-            } else {
-                _sendingStatus.postValue(Status.Error)
-            }
+            val creationDate = LocalDateTime.now().nano
+
+            compositeDisposable.add(
+                EventsRepository.addEvent(
+                    title = title,
+                    description = description,
+                    participants = participants,
+                    created = creationDate,
+                    modified = creationDate,
+                    weekDay = weekDay,
+                    monthDay = monthDay,
+                    month = month,
+                    year = year,
+                    beginTime = beginTime,
+                    endTime = endTime,
+                    repeatMode = repeatMode.uiName
+                ).subscribe({
+                    _sendingStatus.postValue(Status.Success)
+                }, { error ->
+                    _sendingStatus.postValue(Status.Error(error))
+                })
+            )
         } else {
-            _sendingStatus.postValue(Status.Error)
+            _sendingStatus.postValue(Status.Error(Throwable("Event description is empty!")))
         }
     }
 
@@ -99,41 +105,29 @@ class CreationViewModel : ViewModel() {
         }
     }
 
-    fun loadParticipants(usersIds: List<String>) {
-        compositeDisposable.add(
-            UsersRepository.getUsers(usersIds).subscribe({ users ->
-                val participants = (participants.value ?: emptyList()).toMutableList().run {
-                    addAll(users.map { user -> user.mapToListParticipant()})
-                    this
-                }.distinctBy { participant -> participant.id }
+    fun loadParticipants(usersIds: List<String> = emptyList()) {
+        if (usersIds != participantsIds) {
+            _loadingStatus.postValue(Status.Loading)
+            if (usersIds.isNotEmpty()) participantsIds = usersIds.toList()
+            compositeDisposable.add(UsersRepository.getUsers(participantsIds).subscribe({ users ->
+                val participants = users.map { user -> user.mapToListParticipant() }
+                    .distinctBy { participant -> participant.id }
                 _participants.postValue(participants)
+                _loadingStatus.postValue(Status.Success)
             }, { error ->
-                error.printStackTrace()
-            })
-        )
-    }
-
-    fun removeParticipant(participantId: String) {
-        participants.value?.let { participants ->
-            _participants.postValue(
-                participants.toMutableList()
-                    .filterNot { participant -> participant.id == participantId }
-                    .toList()
-            )
+                _loadingStatus.postValue(Status.Error(error))
+            }))
         }
     }
 
-    fun updateParticipants(addedParticipants: List<ListParticipant>) {
-        if (participants.value != null) {
-            participants.value?.let { participants ->
-                _participants.postValue(
-                    participants.toMutableList()
-                        .apply { addAll(addedParticipants) }
-                        .toList()
-                )
-            }
-        } else {
-            _participants.postValue(addedParticipants)
+    fun removeParticipant(userId: String) {
+        participants.value?.let { items ->
+            participantsIds = participantsIds.filterNot { id -> id == userId }
+            _participants.postValue(
+                items.toMutableList()
+                    .filterNot { participant -> participant.id == userId }
+                    .toList()
+            )
         }
     }
 

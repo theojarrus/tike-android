@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
 import com.theost.tike.ui.fragments.DayFragment
 import org.threeten.bp.LocalDate
+import kotlin.math.abs
 
 class DayAdapter(
     fragmentManager: FragmentManager,

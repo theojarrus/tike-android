@@ -11,7 +11,9 @@ data class UserDto(
     val nickName: String = "",
     val email: String = "",
     val phone: String = "",
-    val avatar: String = ""
+    val avatar: String = "",
+    val friends: List<String> = emptyList(),
+    val blocked: List<String> = emptyList()
 )
 
 fun UserDto.mapToUser(): User {
@@ -22,6 +24,8 @@ fun UserDto.mapToUser(): User {
         nickName = nickName,
         email = email,
         phone = phone,
-        avatar = avatar
+        avatar = avatar,
+        friends = friends,
+        blocked = blocked
     )
 }

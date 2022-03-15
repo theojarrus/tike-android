@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.theost.tike.R
 import com.theost.tike.data.models.state.Status
-import com.theost.tike.data.viewmodels.DayViewModel
+import com.theost.tike.ui.viewmodels.DayViewModel
 import com.theost.tike.databinding.FragmentDayBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.EventAdapterDelegate
@@ -40,7 +40,7 @@ class DayFragment : Fragment() {
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                Status.Error -> showErrorToast()
+                is Status.Error -> showErrorToast()
                 Status.Loading -> { /* do nothing */ }
                 Status.Success -> { /* do nothing */ }
             }
@@ -56,7 +56,7 @@ class DayFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { arguments ->
-            viewModel.loadData(
+            viewModel.loadEvents(
                 LocalDate.ofYearDay(
                     arguments.getInt(ARG_DATE_YEAR),
                     arguments.getInt(ARG_DATE_DAY)

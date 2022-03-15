@@ -8,7 +8,10 @@
     <string name="calendar">Календарь</string>
     <string name="time">Время</string>
     <string name="edit">Редактировать</string>
+
     <string name="today">Сегодня</string>
+    <string name="search">Поиск</string>
+    <string name="reset">Очистить</string>
 
     <string name="welcome_title">Добро пожаловать в Tike!</string>
     <string name="welcome_text">Создайте аккаунт или авторизируйтесь, чтобы синхронизировать расписание</string>
@@ -20,6 +23,7 @@
     <string name="new_event">Новое событие</string>
     <string name="create">Создать</string>
     <string name="join">Присоединиться</string>
+    <string name="add_participants">Добавить участников</string>
 
     <string name="title">Название</string>
     <string name="description">Описание</string>
@@ -39,4 +43,8 @@
     <string name="hint_description">Напишите здесь что-нибудь…</string>
 
     <string name="error_network">Ошибка загрзуки</string>
+
+    <string name="empty_people">Нет людей</string>
+
+    <string name="reload">Перезагрузить</string>
 </resources>

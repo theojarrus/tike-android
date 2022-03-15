@@ -26,10 +26,4 @@ class InboxFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        fun newInstance(): Fragment {
-            return InboxFragment()
-        }
-    }
-
 }

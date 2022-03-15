@@ -2,8 +2,6 @@ package com.theost.tike.data.models.dto
 
 import com.google.firebase.firestore.DocumentId
 import com.theost.tike.data.models.core.Event
-import com.theost.tike.data.models.core.User
-import com.theost.tike.data.models.ui.ListParticipant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
@@ -15,7 +13,12 @@ data class EventDto(
     val creatorId: Int = 0,
     val participants: List<String> = emptyList(),
     val participantsLimit: Int = 0,
-    val date: Long = 0,
+    val created: Long = 0,
+    val modified: Long = 0,
+    val weekDay: Int = 0,
+    val monthDay: Int = 0,
+    val month: Int = 0,
+    val year: Int = 0,
     val beginTime: Long = 0,
     val endTime: Long = 0,
     val repeatMode: String = ""
@@ -29,7 +32,7 @@ fun EventDto.mapToEvent(): Event {
         creatorId = creatorId,
         participants = participants,
         participantsLimit = participantsLimit,
-        date = LocalDate.ofEpochDay(date),
+        date = LocalDate.of(year, month, monthDay),
         beginTime = LocalTime.ofNanoOfDay(beginTime),
         endTime = LocalTime.ofNanoOfDay(endTime)
     )

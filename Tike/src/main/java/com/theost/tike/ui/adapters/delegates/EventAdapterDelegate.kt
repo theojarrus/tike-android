@@ -34,7 +34,7 @@ class EventAdapterDelegate : AdapterDelegate {
             binding.eventDescription.text = listEvent.description
             binding.eventTime.text = listEvent.time
             binding.eventUsers.adapter = BaseAdapter().apply {
-                addDelegate(ParticipantAvatarAdapterDelegate())
+                addDelegate(AvatarAdapterDelegate())
                 submitList(listEvent.participants)
             }
         }

@@ -26,10 +26,4 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        fun newInstance(): Fragment {
-            return ProfileFragment()
-        }
-    }
-
 }

@@ -16,11 +16,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.theost.tike.R
-import com.theost.tike.data.viewmodels.ScheduleViewModel
 import com.theost.tike.databinding.FragmentScheduleBinding
 import com.theost.tike.ui.adapters.core.DayAdapter
 import com.theost.tike.ui.decorators.*
 import com.theost.tike.ui.interfaces.CalendarHolder
+import com.theost.tike.ui.viewmodels.ScheduleViewModel
 import com.theost.tike.ui.widgets.PagerNumerator
 import com.theost.tike.utils.DateUtils
 import org.threeten.bp.LocalDate
@@ -46,9 +46,9 @@ class ScheduleFragment : Fragment() {
     ): View {
         _binding = FragmentScheduleBinding.inflate(layoutInflater, container, false)
 
-        viewModel.currentPosition.observe(viewLifecycleOwner) { position ->
-            pagerNumerator.pagerPosition = position
-        }
+        viewModel.currentPosition.observe(viewLifecycleOwner) { changePagerDay(it) }
+        viewModel.currentDay.observe(viewLifecycleOwner) { changeCalendarDay(it) }
+        viewModel.currentDate.observe(viewLifecycleOwner) { currentDate = it }
 
         // Locale
         Locale.setDefault(Locale("ru"))
@@ -116,16 +116,14 @@ class ScheduleFragment : Fragment() {
                 ) {
                     super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                     if (pagerNumerator.updatePosition(positionOffset)) {
-                        viewModel.updateCurrentPosition(pagerNumerator.pagerPosition)
-                        changeCalendarDay(CalendarDay.from(currentDate.plusDays(pagerNumerator.pagerPosition.toLong())))
+                        val day = CalendarDay.from(currentDate.plusDays(pagerNumerator.pagerPosition.toLong()))
+                        val pagerPosition = pagerNumerator.pagerPosition
+                        viewModel.updateCurrentDay(day, pagerPosition)
                     }
                 }
             })
             adapter = dayAdapter
         }
-
-        // Startup
-        selectToday()
 
         return binding.root
     }
@@ -133,11 +131,7 @@ class ScheduleFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val activeDate = (activity as CalendarHolder).getActiveDate()
-        if (activeDate != null) {
-            val activeDay = CalendarDay.from(activeDate)
-            changeDay(activeDay)
-            changeCalendarDay(activeDay)
-        }
+        if (activeDate != null) changeDay(CalendarDay.from(activeDate))
     }
 
     private fun switchCalendarMode() {
@@ -158,39 +152,35 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    private fun selectToday() {
-        changePagerDay(0)
-        changeCalendarDay(CalendarDay.from(currentDate))
-    }
-
-    private fun changeDay(day: CalendarDay) {
-        binding.calendarView.removeDecorator(dayDecorator)
-        changePagerDay(day.date.dayOfYear - CalendarDay.from(currentDate).date.dayOfYear)
-        dayDecorator.setDay(binding.calendarView.selectedDate)
-        binding.calendarView.addDecorator(dayDecorator)
+    private fun changePagerDay(position: Int) {
+        if (pagerNumerator.pagerPosition != position) {
+            pagerNumerator.pagerPosition = position
+            binding.daysPager.setCurrentItem(position, false)
+        }
     }
 
     private fun changeCalendarDay(day: CalendarDay) {
         binding.calendarView.currentDate = day
         binding.calendarView.selectedDate = day
+
+        binding.calendarView.removeDecorator(dayDecorator)
+        dayDecorator.setDay(day)
+        binding.calendarView.addDecorator(dayDecorator)
+
         updateToolbarDate()
     }
 
-    private fun changePagerDay(position: Int) {
-        pagerNumerator.pagerPosition = position
-        binding.daysPager.setCurrentItem(position, false)
+    private fun changeDay(day: CalendarDay) {
+        viewModel.updateCurrentDay(day, (day.date.toEpochDay() - currentDate.toEpochDay()).toInt())
+    }
+
+    private fun selectToday() {
+        viewModel.setToday()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.daysPager.adapter = null
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(): Fragment {
-            return ScheduleFragment()
-        }
     }
 
 }

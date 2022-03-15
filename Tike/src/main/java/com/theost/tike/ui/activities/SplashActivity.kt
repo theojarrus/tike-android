@@ -20,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startHomeActivity() {
-        startActivity(HomeActivity.newInstance(this))
+        startActivity(TikeActivity.newInstance(this))
     }
 
 }

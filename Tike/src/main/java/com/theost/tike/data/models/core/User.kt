@@ -7,5 +7,7 @@ data class User(
     val nickName: String,
     val email: String,
     val phone: String,
-    val avatar: String
+    val avatar: String,
+    val friends: List<String>,
+    val blocked: List<String>
 )

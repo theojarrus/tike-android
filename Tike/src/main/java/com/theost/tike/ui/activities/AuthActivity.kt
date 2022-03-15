@@ -19,7 +19,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun startHomeActivity() {
-        startActivity(HomeActivity.newInstance(this))
+        startActivity(TikeActivity.newInstance(this))
     }
 
     companion object {

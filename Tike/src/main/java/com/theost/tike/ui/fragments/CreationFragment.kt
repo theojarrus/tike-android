@@ -11,10 +11,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.theost.tike.R
+import com.theost.tike.data.extensions.getNavigationResult
+import com.theost.tike.data.extensions.removeNavigationResult
+import com.theost.tike.data.extensions.setNavigationResult
 import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.ui.ListButton
-import com.theost.tike.data.viewmodels.CreationViewModel
+import com.theost.tike.ui.viewmodels.CreationViewModel
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.ButtonAdapterDelegate
@@ -29,7 +32,7 @@ import org.threeten.bp.LocalTime
 
 class CreationFragment : Fragment() {
 
-    private val addedIds: MutableSet<String> = mutableSetOf()
+    private var addedIds: List<String> = emptyList()
 
     private var eventDate = LocalDate.now()
     private var eventBeginTime = LocalTime.now()
@@ -71,7 +74,7 @@ class CreationFragment : Fragment() {
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
-            addedIds.addAll(participants.map { participant -> participant.id })
+            addedIds = participants.map { participant -> participant.id }
             adapter.submitList(mutableListOf<DelegateItem>().apply {
                 addAll(participants)
                 add(ListButton())
@@ -111,10 +114,23 @@ class CreationFragment : Fragment() {
 
         viewModel.sendingStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                Status.Error -> hideLoading()
+                is Status.Error -> hideLoading()
                 Status.Loading -> showLoading()
                 Status.Success -> onEventDataSent()
             }
+        }
+
+        viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                is Status.Error -> { /* do nothing */ }
+                Status.Loading -> { /* do nothing */ }
+                Status.Success -> { /* do nothing */ }
+            }
+        }
+
+        getNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)?.let { usersIds ->
+            removeNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)
+            viewModel.loadParticipants(usersIds)
         }
 
         updateCreateEventButton()
@@ -186,12 +202,9 @@ class CreationFragment : Fragment() {
 
     private fun openParticipantsAdding() {
         (activity as ActionsHolder).openParticipantsAdding(
-            KEY_PEOPLE_REQUEST,
-            KEY_PEOPLE_BUNDLE,
-            addedIds
-        ) { usersIds ->
-            viewModel.loadParticipants(usersIds)
-        }
+            KEY_PARTICIPANTS_REQUEST,
+            addedIds.toList()
+        )
     }
 
     private fun checkIsNotEmptyInputFields(): Boolean {
@@ -226,8 +239,7 @@ class CreationFragment : Fragment() {
     }
 
     companion object {
-        private const val KEY_PEOPLE_REQUEST = "request_users"
-        private const val KEY_PEOPLE_BUNDLE = "bundle_users"
+        private const val KEY_PARTICIPANTS_REQUEST = "request_participants"
 
         fun newInstance(): Fragment {
             return CreationFragment()

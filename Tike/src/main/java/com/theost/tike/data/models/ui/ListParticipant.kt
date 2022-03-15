@@ -19,3 +19,13 @@ fun User.mapToListParticipant(): ListParticipant {
         avatar = avatar
     )
 }
+
+fun User.mapToListUser(selectedIds: List<String>): ListUser {
+    return ListUser(
+        id = id,
+        name = "$firstName $secondName",
+        nickName = nickName,
+        avatar = avatar,
+        isSelected = selectedIds.contains(id)
+    )
+}

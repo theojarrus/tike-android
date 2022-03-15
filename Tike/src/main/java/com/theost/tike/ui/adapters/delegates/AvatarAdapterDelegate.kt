@@ -10,7 +10,7 @@ import com.theost.tike.databinding.ItemAvatarBinding
 import com.theost.tike.ui.interfaces.AdapterDelegate
 import com.theost.tike.ui.interfaces.DelegateItem
 
-class ParticipantAvatarAdapterDelegate() : AdapterDelegate {
+class AvatarAdapterDelegate() : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemAvatarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
