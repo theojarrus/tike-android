@@ -13,18 +13,17 @@ import androidx.fragment.app.viewModels
 import com.theost.tike.R
 import com.theost.tike.data.extensions.getNavigationResult
 import com.theost.tike.data.extensions.removeNavigationResult
-import com.theost.tike.data.extensions.setNavigationResult
 import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.state.Status
-import com.theost.tike.data.models.ui.ListButton
-import com.theost.tike.ui.viewmodels.CreationViewModel
+import com.theost.tike.data.models.ui.ListAddButton
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
-import com.theost.tike.ui.adapters.delegates.ButtonAdapterDelegate
+import com.theost.tike.ui.adapters.delegates.AddButtonAdapterDelegate
 import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
 import com.theost.tike.ui.interfaces.ActionsHolder
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.interfaces.EventListener
+import com.theost.tike.ui.viewmodels.CreationViewModel
 import com.theost.tike.utils.DateUtils
 import com.theost.tike.utils.DisplayUtils
 import org.threeten.bp.LocalDate
@@ -70,14 +69,14 @@ class CreationFragment : Fragment() {
 
         binding.participantsList.adapter = adapter.apply {
             addDelegate(ParticipantAdapterDelegate { id -> viewModel.removeParticipant(id) })
-            addDelegate(ButtonAdapterDelegate { openParticipantsAdding() })
+            addDelegate(AddButtonAdapterDelegate { openParticipantsAdding() })
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
             addedIds = participants.map { participant -> participant.id }
             adapter.submitList(mutableListOf<DelegateItem>().apply {
                 addAll(participants)
-                add(ListButton())
+                add(ListAddButton())
             })
         }
 
@@ -114,17 +113,9 @@ class CreationFragment : Fragment() {
 
         viewModel.sendingStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                is Status.Error -> hideLoading()
+                Status.Error -> hideLoading()
                 Status.Loading -> showLoading()
                 Status.Success -> onEventDataSent()
-            }
-        }
-
-        viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
-            when (status) {
-                is Status.Error -> { /* do nothing */ }
-                Status.Loading -> { /* do nothing */ }
-                Status.Success -> { /* do nothing */ }
             }
         }
 
@@ -213,8 +204,7 @@ class CreationFragment : Fragment() {
     }
 
     private fun updateCreateEventButton() {
-        binding.createEventButton.visibility =
-            if (checkIsNotEmptyInputFields()) View.VISIBLE else View.INVISIBLE
+        binding.createEventButton.isEnabled = checkIsNotEmptyInputFields()
     }
 
     private fun sendEventData() {

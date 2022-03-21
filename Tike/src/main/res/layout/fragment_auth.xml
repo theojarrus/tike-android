@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"
@@ -16,12 +17,11 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/welcomeTitle"
+        style="@style/Theme.Tike.TextView.RobotoMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:fontFamily="@font/roboto_bold"
         android:text="@string/welcome_title"
-        android:textColor="?attr/colorOnSurface"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
@@ -29,19 +29,20 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/welcomeText"
-        android:layout_width="wrap_content"
+        style="@style/Theme.Tike.TextView.RobotoRegular"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/roboto_regular"
         android:gravity="center"
         android:text="@string/welcome_text"
+        android:textColor="@color/gray"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/welcomeTitle" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/authGoogleButton"
+        android:id="@+id/authUserButton"
         style="@style/Theme.Tike.BlueButton.Iconified"
         android:layout_width="0dp"
         android:layout_height="55dp"
@@ -51,6 +52,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart" />
+
+    <ProgressBar
+        android:id="@+id/loadingBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/authUserButton"
+        app:layout_constraintEnd_toEndOf="@id/authUserButton"
+        app:layout_constraintStart_toStartOf="@id/authUserButton"
+        app:layout_constraintTop_toTopOf="@id/authUserButton" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineCenter"

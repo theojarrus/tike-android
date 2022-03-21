@@ -7,7 +7,7 @@ data class Event(
     val id: String,
     val title: String,
     val description: String,
-    val creatorId: Int,
+    val creatorId: String,
     val participants: List<String>,
     val participantsLimit: Int,
     val date: LocalDate,

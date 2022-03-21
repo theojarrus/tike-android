@@ -40,7 +40,7 @@ class DayFragment : Fragment() {
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                is Status.Error -> showErrorToast()
+                Status.Error -> showErrorToast()
                 Status.Loading -> { /* do nothing */ }
                 Status.Success -> { /* do nothing */ }
             }

@@ -21,8 +21,13 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
-    <style name="Theme.Tike.Splash" parent="Theme.Tike">
-        <item name="android:windowBackground">@drawable/layout_splash_light</item>
+    <style name="Theme.Tike.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background_main_light</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Tike</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <style name="Theme.Tike.SearchView" parent="Widget.AppCompat.SearchView">

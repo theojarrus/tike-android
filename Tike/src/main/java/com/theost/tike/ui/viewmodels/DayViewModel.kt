@@ -3,6 +3,8 @@ package com.theost.tike.ui.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.ui.mapToListEvent
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.models.state.Status
@@ -27,29 +29,31 @@ class DayViewModel : ViewModel() {
 
     fun loadEvents(date: LocalDate) {
         if (!isListenerAttached) {
-            _loadingStatus.postValue(Status.Loading)
-            compositeDisposable.add(
-                EventsRepository.getEvents(date.year, date.monthValue, date.dayOfMonth)
-                    .switchMapSingle { events ->
-                        Observable.fromIterable(events).concatMapSingle { event ->
-                            if (event.participants.isNotEmpty()) {
-                                UsersRepository.getUsers(event.participants).map { users ->
-                                    event.mapToListEvent(users.map { user -> user.mapToListParticipant() })
+            Firebase.auth.uid?.let { userId ->
+                _loadingStatus.postValue(Status.Loading)
+                compositeDisposable.add(
+                    EventsRepository.getEvents(userId, date.year, date.monthValue, date.dayOfMonth)
+                        .switchMapSingle { events ->
+                            Observable.fromIterable(events).concatMapSingle { event ->
+                                if (event.participants.isNotEmpty()) {
+                                    UsersRepository.getUsers(event.participants).map { users ->
+                                        event.mapToListEvent(users.map { user -> user.mapToListParticipant() })
+                                    }
+                                } else {
+                                    Single.just(event.mapToListEvent(emptyList()))
                                 }
-                            } else {
-                                Single.just(event.mapToListEvent(emptyList()))
-                            }
-                        }.toList()
-                    }
-                    .subscribe({ events ->
-                        isListenerAttached = true
-                        _allData.postValue(events)
-                        _loadingStatus.postValue(Status.Success)
-                    }, { error ->
-                        _loadingStatus.postValue(Status.Error(error))
-                        error.printStackTrace()
-                    })
-            )
+                            }.toList()
+                        }
+                        .subscribe({ events ->
+                            isListenerAttached = true
+                            _allData.postValue(events)
+                            _loadingStatus.postValue(Status.Success)
+                        }, { error ->
+                            _loadingStatus.postValue(Status.Error)
+                            error.printStackTrace()
+                        })
+                )
+            }
         }
     }
 

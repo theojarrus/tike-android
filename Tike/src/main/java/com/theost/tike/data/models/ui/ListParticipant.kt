@@ -2,6 +2,7 @@ package com.theost.tike.data.models.ui
 
 import com.theost.tike.data.models.core.User
 import com.theost.tike.ui.interfaces.DelegateItem
+import com.theost.tike.utils.StringUtils
 
 data class ListParticipant(
     val id: String,
@@ -15,7 +16,7 @@ data class ListParticipant(
 fun User.mapToListParticipant(): ListParticipant {
     return ListParticipant(
         id = id,
-        name = "$firstName $secondName",
+        name = name,
         avatar = avatar
     )
 }
@@ -23,8 +24,8 @@ fun User.mapToListParticipant(): ListParticipant {
 fun User.mapToListUser(selectedIds: List<String>): ListUser {
     return ListUser(
         id = id,
-        name = "$firstName $secondName",
-        nickName = nickName,
+        name = name,
+        nick = nick,
         avatar = avatar,
         isSelected = selectedIds.contains(id)
     )

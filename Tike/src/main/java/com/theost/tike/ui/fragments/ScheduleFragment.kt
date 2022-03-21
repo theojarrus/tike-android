@@ -130,7 +130,7 @@ class ScheduleFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val activeDate = (activity as CalendarHolder).getActiveDate()
+        val activeDate = (activity as CalendarHolder).getPendingDate()
         if (activeDate != null) changeDay(CalendarDay.from(activeDate))
     }
 

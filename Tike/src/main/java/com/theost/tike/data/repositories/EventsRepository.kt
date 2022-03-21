@@ -11,6 +11,8 @@ import io.reactivex.schedulers.Schedulers
 
 object EventsRepository {
 
+    private const val FIREBASE_COLLECTION_USERS = "users"
+
     private const val FIREBASE_COLLECTION_EVENTS = "events"
     private const val FIREBASE_COLLECTION_EVENTS_COLLECTIONS = "collections"
 
@@ -38,10 +40,12 @@ object EventsRepository {
     private const val FIREBASE_DOCUMENT_EVENT_END_TIME = "endTime"
     private const val FIREBASE_DOCUMENT_EVENT_REPEAT_MODE = "repeatMode"
 
-    fun getEvents(year: Int, month: Int, day: Int): Observable<List<Event>> {
+    fun getEvents(userId: String, year: Int, month: Int, day: Int): Observable<List<Event>> {
         return Observable.create<QuerySnapshot> { emitter ->
             val queryListener =
-                FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_EVENTS)
+                FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
+                    .document(userId)
+                    .collection(FIREBASE_COLLECTION_EVENTS)
                     .document(FIREBASE_COLLECTION_EVENTS_COLLECTIONS)
                     .collection(FIREBASE_COLLECTION_EVENTS_PROPER)
                     .whereEqualTo(FIREBASE_DOCUMENT_EVENT_YEAR, year)
@@ -57,17 +61,19 @@ object EventsRepository {
             emitter.setCancellable { queryListener.remove() }
         }.map { snapshot ->
             snapshot.toObjects(EventDto::class.java)
-        }.map { events ->
-            events.map { entity -> entity.mapToEvent() }
+        }.map { entities ->
+            entities.map { entity -> entity.mapToEvent() }
                 .sortedBy { event -> event.endTime }
                 .sortedBy { event -> event.beginTime }
         }.subscribeOn(Schedulers.io())
     }
 
     fun addEvent(
+        creatorId: String,
         title: String,
         description: String,
         participants: List<String>,
+        participantsLimit: Int,
         created: Int,
         modified: Int,
         weekDay: Int,
@@ -79,25 +85,27 @@ object EventsRepository {
         repeatMode: String
     ): Completable {
         return Completable.fromAction {
-            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_EVENTS)
+            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
+                .document(creatorId)
+                .collection(FIREBASE_COLLECTION_EVENTS)
                 .document(FIREBASE_COLLECTION_EVENTS_COLLECTIONS)
                 .collection(FIREBASE_COLLECTION_EVENTS_PROPER)
                 .add(
-                    hashMapOf(
-                        FIREBASE_DOCUMENT_EVENT_TITLE to title,
-                        FIREBASE_DOCUMENT_EVENT_DESCRIPTION to description,
-                        FIREBASE_DOCUMENT_EVENT_CREATOR_ID to 0,
-                        FIREBASE_DOCUMENT_EVENT_PARTICIPANTS to participants,
-                        FIREBASE_DOCUMENT_EVENT_PARTICIPANTS_LIMIT to 100,
-                        FIREBASE_DOCUMENT_EVENT_CREATED to created,
-                        FIREBASE_DOCUMENT_EVENT_MODIFIED to modified,
-                        FIREBASE_DOCUMENT_EVENT_WEEK_DAY to weekDay,
-                        FIREBASE_DOCUMENT_EVENT_MONTH_DAY to monthDay,
-                        FIREBASE_DOCUMENT_EVENT_MONTH to month,
-                        FIREBASE_DOCUMENT_EVENT_YEAR to year,
-                        FIREBASE_DOCUMENT_EVENT_BEGIN_TIME to beginTime,
-                        FIREBASE_DOCUMENT_EVENT_END_TIME to endTime,
-                        FIREBASE_DOCUMENT_EVENT_REPEAT_MODE to repeatMode
+                    EventDto(
+                        title = title,
+                        description = description,
+                        creatorId = creatorId,
+                        participants = participants,
+                        participantsLimit = participantsLimit,
+                        created = created,
+                        modified = modified,
+                        weekDay = weekDay,
+                        monthDay = monthDay,
+                        month = month,
+                        year = year,
+                        beginTime = beginTime,
+                        endTime = endTime,
+                        repeatMode = repeatMode
                     )
                 )
         }.subscribeOn(Schedulers.io())

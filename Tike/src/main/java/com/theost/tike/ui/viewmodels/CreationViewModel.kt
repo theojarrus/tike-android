@@ -3,6 +3,8 @@ package com.theost.tike.ui.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.ui.ListParticipant
 import com.theost.tike.data.repositories.EventsRepository
@@ -63,28 +65,32 @@ class CreationViewModel : ViewModel() {
 
             val creationDate = LocalDateTime.now().nano
 
-            compositeDisposable.add(
-                EventsRepository.addEvent(
-                    title = title,
-                    description = description,
-                    participants = participants,
-                    created = creationDate,
-                    modified = creationDate,
-                    weekDay = weekDay,
-                    monthDay = monthDay,
-                    month = month,
-                    year = year,
-                    beginTime = beginTime,
-                    endTime = endTime,
-                    repeatMode = repeatMode.uiName
-                ).subscribe({
-                    _sendingStatus.postValue(Status.Success)
-                }, { error ->
-                    _sendingStatus.postValue(Status.Error(error))
-                })
-            )
+            Firebase.auth.currentUser?.uid?.let { userId ->
+                compositeDisposable.add(
+                    EventsRepository.addEvent(
+                        creatorId = userId,
+                        title = title,
+                        description = description,
+                        participants = participants,
+                        participantsLimit = 100,
+                        created = creationDate,
+                        modified = creationDate,
+                        weekDay = weekDay,
+                        monthDay = monthDay,
+                        month = month,
+                        year = year,
+                        beginTime = beginTime,
+                        endTime = endTime,
+                        repeatMode = repeatMode.uiName
+                    ).subscribe({
+                        _sendingStatus.postValue(Status.Success)
+                    }, {
+                        _sendingStatus.postValue(Status.Error)
+                    })
+                )
+            }
         } else {
-            _sendingStatus.postValue(Status.Error(Throwable("Event description is empty!")))
+            _sendingStatus.postValue(Status.Error)
         }
     }
 
@@ -114,9 +120,7 @@ class CreationViewModel : ViewModel() {
                     .distinctBy { participant -> participant.id }
                 _participants.postValue(participants)
                 _loadingStatus.postValue(Status.Success)
-            }, { error ->
-                _loadingStatus.postValue(Status.Error(error))
-            }))
+            }, { _loadingStatus.postValue(Status.Error) }))
         }
     }
 

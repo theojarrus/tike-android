@@ -4,6 +4,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.extensions.RxSearchObservable
 import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.ui.ListUser
@@ -29,21 +31,20 @@ class ParticipantsViewModel : ViewModel() {
     private var participantsCache = emptyList<ListUser>()
     private val compositeDisposable = CompositeDisposable()
 
-    private val userId: String = "asd" // todo replace
-
     fun loadUsers(addedIds: List<String>) {
         if (participantsCache.isEmpty()) {
-            _loadingStatus.postValue(Status.Loading)
-            compositeDisposable.add(UsersRepository.getUser(userId).flatMap { user ->
-                UsersRepository.getUsers(user.friends, user.blocked)
-            }.subscribe({ users ->
-                participantsCache = users.map { user -> user.mapToListUser(addedIds) }
-                _selectedIds.postValue(addedIds)
-                _participants.postValue(participantsCache)
-                _loadingStatus.postValue(Status.Success)
-            }, { error ->
-                _loadingStatus.postValue(Status.Error(error))
-            }))
+            Firebase.auth.currentUser?.uid?.let { userId ->
+                _loadingStatus.postValue(Status.Loading)
+                compositeDisposable.add(UsersRepository.getUser(userId).flatMap { user ->
+                    UsersRepository.getUsers(user.friends, user.blocked)
+                }.subscribe({ users ->
+                    participantsCache = users.map { user -> user.mapToListUser(addedIds) }
+                    _selectedIds.postValue(addedIds.filter { id -> users.map { user -> user.id }.contains(id) })
+                    _participants.postValue(participantsCache)
+                    _loadingStatus.postValue(Status.Success)
+                }, {
+                    _loadingStatus.postValue(Status.Error) }))
+            }
         }
     }
 
@@ -55,7 +56,8 @@ class ParticipantsViewModel : ViewModel() {
             .switchMapSingle { query ->
                 if (query.isNotEmpty()) {
                     Observable.fromIterable(participantsCache).filter { user ->
-                        user.name.lowercase().contains(query) || user.nickName.lowercase().contains(query)
+                        user.name.lowercase().contains(query) || user.nick.lowercase()
+                            .contains(query)
                     }.toList()
                 } else {
                     Single.just(participantsCache)
@@ -68,14 +70,15 @@ class ParticipantsViewModel : ViewModel() {
         )
     }
 
-    fun onItemClicked(userId: String, isSelected: Boolean) {
+    fun onParticipantItemClicked(userId: String, isSelected: Boolean) {
         compositeDisposable.add(Single.fromCallable {
             val ids = selectedIds.value.orEmpty().toMutableList()
             val users = participants.value.orEmpty()
 
             if (isSelected) ids.add(userId) else ids.remove(userId)
             val items = users.map { user -> user.copy(isSelected = ids.contains(user.id)) }
-            participantsCache = participantsCache.map { user -> user.copy(isSelected = ids.contains(user.id)) }
+            participantsCache =
+                participantsCache.map { user -> user.copy(isSelected = ids.contains(user.id)) }
 
             _selectedIds.postValue(ids.toList())
             _participants.postValue(items)

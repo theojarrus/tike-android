@@ -5,7 +5,7 @@ import com.theost.tike.ui.interfaces.DelegateItem
 data class ListUser(
     val id: String,
     val name: String,
-    val nickName: String,
+    val nick: String,
     val avatar: String,
     val isSelected: Boolean
 ) : DelegateItem {

@@ -9,6 +9,10 @@
     <string name="time">Время</string>
     <string name="edit">Редактировать</string>
 
+    <string name="auth">Авторизация</string>
+    <string name="registration">Регистрация</string>
+    <string name="registration_title">Почти готово!</string>
+
     <string name="today">Сегодня</string>
     <string name="search">Поиск</string>
     <string name="reset">Очистить</string>
@@ -16,6 +20,10 @@
     <string name="welcome_title">Добро пожаловать в Tike!</string>
     <string name="welcome_text">Создайте аккаунт или авторизируйтесь, чтобы синхронизировать расписание</string>
     <string name="auth_google">Продолжить с Google</string>
+
+    <string name="question_name">Как тебя зовут?</string>
+    <string name="question_nick">Придумай ник</string>
+    <string name="question_activities">Чем ты занимаешься?</string>
 
     <string name="done">Готово!</string>
     <string name="no_events">На сегодня планов нет</string>
@@ -28,6 +36,8 @@
     <string name="title">Название</string>
     <string name="description">Описание</string>
     <string name="participants">Участники</string>
+
+    <string name="add_vacancy">Добавить свободное место</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>
@@ -42,9 +52,15 @@
     <string name="hint_title">Новое событие</string>
     <string name="hint_description">Напишите здесь что-нибудь…</string>
 
+    <string name="hint_name">Имя Фамилия</string>
+    <string name="hint_nick">nick.name</string>
+
+    <string name="error_name_format">Некорректный формат имени</string>
+    <string name="error_nick_format">Некорректный формат ника</string>
+    <string name="error_nick_exist">Такой ник уже существует</string>
+
     <string name="error_network">Ошибка загрзуки</string>
-
+    <string name="error_auth">Ошибка авторизации</string>
     <string name="empty_people">Нет людей</string>
-
     <string name="reload">Перезагрузить</string>
 </resources>

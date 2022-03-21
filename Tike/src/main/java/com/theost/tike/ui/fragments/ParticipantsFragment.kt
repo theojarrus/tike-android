@@ -43,8 +43,8 @@ class ParticipantsFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
 
         viewModel.participants.observe(viewLifecycleOwner) { users ->
-            adapter.submitList(users)
             binding.emptyView.isGone = users.isNotEmpty()
+            adapter.submitList(users)
         }
 
         viewModel.selectedIds.observe(viewLifecycleOwner) { ids ->
@@ -72,9 +72,13 @@ class ParticipantsFragment : Fragment() {
             activity?.onBackPressed()
         }
 
+        binding.reloadButton.setOnClickListener {
+            viewModel.loadUsers(args.addedIds.toList())
+        }
+
         binding.participantsList.adapter = adapter.apply {
             addDelegate(UserAdapterDelegate { userId, isSelected ->
-                viewModel.onItemClicked(userId, isSelected)
+                viewModel.onParticipantItemClicked(userId, isSelected)
             })
         }
 
@@ -97,24 +101,26 @@ class ParticipantsFragment : Fragment() {
 
     private fun showLoading() {
         binding.loadingBar.isGone = false
-        binding.addParticipantsButton.isVisible = false
+        binding.addParticipantsButton.visibility = View.INVISIBLE
     }
 
     private fun hideLoading() {
         binding.loadingBar.isGone = true
-        binding.addParticipantsButton.isVisible = true
+        binding.addParticipantsButton.visibility = View.VISIBLE
     }
 
     private fun showError() {
-        binding.addParticipantsButton.isVisible = false
+        binding.addParticipantsButton.visibility = View.INVISIBLE
         binding.reloadButton.isGone = false
         binding.errorView.isGone = false
+        binding.emptyView.isGone = true
     }
 
     private fun hideError() {
-        binding.addParticipantsButton.isVisible = true
+        binding.addParticipantsButton.visibility = View.VISIBLE
         binding.reloadButton.isGone = true
         binding.errorView.isGone = true
+        binding.emptyView.isGone = false
     }
 
     override fun onDestroy() {

@@ -38,7 +38,7 @@ class UserAdapterDelegate(
 
         fun bind(listUser: ListUser) {
             binding.userName.text = listUser.name
-            binding.userNick.text = listUser.nickName
+            binding.userNick.text = listUser.nick
 
             Glide.with(binding.root)
                 .load(listUser.avatar)
