@@ -43,8 +43,8 @@ class ParticipantsFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
 
         viewModel.participants.observe(viewLifecycleOwner) { users ->
-            binding.emptyView.isGone = users.isNotEmpty()
             adapter.submitList(users)
+            binding.emptyView.isGone = users.isNotEmpty()
         }
 
         viewModel.selectedIds.observe(viewLifecycleOwner) { ids ->
@@ -120,7 +120,6 @@ class ParticipantsFragment : Fragment() {
         binding.addParticipantsButton.visibility = View.VISIBLE
         binding.reloadButton.isGone = true
         binding.errorView.isGone = true
-        binding.emptyView.isGone = false
     }
 
     override fun onDestroy() {
