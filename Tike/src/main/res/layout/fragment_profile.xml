@@ -9,8 +9,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/profile" />
 
@@ -99,6 +99,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="?attr/colorOnPrimary"
                     app:strokeColor="?attr/colorOnPrimary" />
 
                 <com.google.android.material.button.MaterialButton
@@ -108,11 +109,29 @@
                     android:layout_height="52dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="5dp"
+                    android:visibility="gone"
                     app:icon="@drawable/ic_friend_remove"
                     app:iconTint="?attr/colorOnPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="?attr/colorOnPrimary"
+                    app:strokeColor="?attr/colorOnPrimary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/profileConsiderFriendButton"
+                    style="@style/Theme.Tike.BlueButton.Imaged.Action"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="5dp"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_consider"
+                    app:iconTint="?attr/colorOnPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="?attr/colorOnPrimary"
                     app:strokeColor="?attr/colorOnPrimary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

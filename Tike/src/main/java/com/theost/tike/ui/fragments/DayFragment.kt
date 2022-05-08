@@ -1,16 +1,21 @@
 package com.theost.tike.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.data.models.state.ActionMode.CANCEL
+import com.theost.tike.data.models.state.ActionMode.EDIT
 import com.theost.tike.databinding.FragmentDayBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.EventAdapterDelegate
 import com.theost.tike.ui.extensions.load
+import com.theost.tike.ui.utils.DisplayUtils.showConfirmationDialog
+import com.theost.tike.ui.utils.LogUtils.LOG_FRAGMENT_DAY
 import com.theost.tike.ui.viewmodels.DayViewModel
 import com.theost.tike.ui.widgets.StateFragment
 import org.threeten.bp.LocalDate
@@ -33,7 +38,15 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
         }
 
         binding.eventsList.adapter = adapter.apply {
-            addDelegate(EventAdapterDelegate())
+            addDelegate(EventAdapterDelegate() { id, mode ->
+                when (mode) {
+                    EDIT -> TODO()
+                    CANCEL -> showConfirmationDialog(requireContext(), R.string.ask_event_delete) {
+                        viewModel.deleteEvent(id)
+                    }
+                    else -> Log.e(LOG_FRAGMENT_DAY, "Event action is not supported!")
+                }
+            })
         }
 
         arguments?.let { arguments ->

@@ -7,4 +7,6 @@ object LogUtils {
     const val LOG_VIEW_MODEL_SIGN_UP = "view_model_sign_up"
     const val LOG_VIEW_MODEL_DAY = "view_model_day"
     const val LOG_VIEW_MODEL_PARTICIPANTS = "view_model_participants"
+
+    const val LOG_FRAGMENT_DAY = "fragment_day"
 }

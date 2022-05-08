@@ -55,6 +55,9 @@
     <string name="hint_name">Имя Фамилия</string>
     <string name="hint_nick">nickname</string>
 
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+
     <string name="error_name_format">Некорректный формат имени</string>
     <string name="error_nick_format">Содержит недопустимые символы</string>
     <string name="error_nick_exist">Такой ник уже существует</string>
@@ -66,4 +69,6 @@
     <string name="reload">Перезагрузить</string>
     <string name="vacancy_count">Свободно: %d</string>
     <string name="write_message">Написать сообщение</string>
+    <string name="confirmation">Подтверждение</string>
+    <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
 </resources>

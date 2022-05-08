@@ -194,6 +194,11 @@ object EventsRepository {
             .subscribeOn(Schedulers.io())
     }
 
+    fun deleteEvent(uid: String, id: String): Completable {
+        return RxFirebaseFirestore.delete(provideProperEventsCollection(uid).document(id))
+            .subscribeOn(Schedulers.io())
+    }
+
     fun addEvent(
         uid: String,
         title: String,

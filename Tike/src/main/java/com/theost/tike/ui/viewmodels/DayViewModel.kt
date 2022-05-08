@@ -70,6 +70,14 @@ class DayViewModel : ViewModel() {
         )
     }
 
+    fun deleteEvent(id: String) {
+        compositeDisposable.add(
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMapCompletable { firebaseUser ->
+                EventsRepository.deleteEvent(firebaseUser.uid, id)
+            }.subscribe()
+        )
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
