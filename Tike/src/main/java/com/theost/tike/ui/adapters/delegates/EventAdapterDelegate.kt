@@ -6,7 +6,6 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.theost.tike.data.models.state.ActionMode
 import com.theost.tike.data.models.state.ActionMode.CANCEL
-import com.theost.tike.data.models.state.ActionMode.EDIT
 import com.theost.tike.data.models.ui.EventUi
 import com.theost.tike.databinding.ItemEventBinding
 import com.theost.tike.ui.extensions.load
@@ -42,7 +41,6 @@ class EventAdapterDelegate(private val clickListener: (String, ActionMode) -> Un
                 eventTitle.text = item.title
                 eventDescription.text = item.description
                 eventTime.text = item.time
-                editButton.setOnClickListener { clickListener(item.id, EDIT) }
                 cancelButton.setOnClickListener { clickListener(item.id, CANCEL) }
                 item.participants.let { participants ->
                     participants.getOrNull(0)?.avatar?.let {

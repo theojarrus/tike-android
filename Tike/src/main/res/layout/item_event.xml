@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:textColor="?attr/eventTitleColor"
-            app:layout_constraintEnd_toStartOf="@id/editButton"
+            app:layout_constraintEnd_toStartOf="@id/cancelButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Это новое событие" />
@@ -37,20 +37,10 @@
             android:layout_marginEnd="10dp"
             android:textColor="@color/gray"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@id/editButton"
+            app:layout_constraintEnd_toStartOf="@id/cancelButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventTitle"
             tools:text="Просто какое-то описание нового события, хехехехехе еххехехех" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/editButton"
-            style="@style/Theme.Tike.EventButton.Action"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="10dp"
-            app:icon="@drawable/ic_event_edit"
-            app:layout_constraintEnd_toStartOf="@id/cancelButton"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelButton"

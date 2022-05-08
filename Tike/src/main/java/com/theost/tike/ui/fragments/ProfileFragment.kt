@@ -10,8 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.databinding.FragmentProfileBinding
 import com.theost.tike.ui.extensions.load
+import com.theost.tike.ui.interfaces.NavigationHolder
 import com.theost.tike.ui.viewmodels.ProfileViewModel
 import com.theost.tike.ui.widgets.ToolbarStateFragment
 
@@ -23,7 +25,15 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.signOutButton.setOnClickListener { viewModel.signOut() }
+
         viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
+        viewModel.signingOutStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                Success -> (activity as? NavigationHolder)?.startAuthActivity()
+                else -> handleStatus(status)
+            }
+        }
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             binding.profileAvatar.load(user.avatar)

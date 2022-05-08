@@ -28,7 +28,7 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
 
         viewModel.authStatus.observe(this) { authStatus ->
             when (authStatus) {
-                SignedIn -> startTikeActivity(TikeActivity.newInstance(this))
+                SignedIn -> startTikeActivity(TikeActivity.newTaskInstance(this))
                 SigningUp -> startFragment(SignUpFragment.newInstance())
                 SignedOut -> startFragment(SignInFragment.newInstance())
             }
@@ -75,11 +75,7 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
     }
 
     private fun startTikeActivity(intent: Intent) {
-        startActivity(intent.apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-        })
+        startActivity(intent)
     }
 
     companion object {
@@ -89,6 +85,14 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
         fun newInstance(context: Context, authStatus: AuthStatus? = null): Intent {
             return Intent(context, AuthActivity::class.java).apply {
                 authStatus?.let { putExtra(EXTRA_KEY_AUTH_STATUS, it.name) }
+            }
+        }
+
+        fun newTaskInstance(context: Context, authStatus: AuthStatus? = null): Intent {
+            return newInstance(context, authStatus).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                        Intent.FLAG_ACTIVITY_NEW_TASK
             }
         }
     }

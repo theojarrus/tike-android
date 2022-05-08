@@ -1,5 +1,6 @@
 package com.theost.tike.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,12 +8,13 @@ import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.state.RepeatMode
-import com.theost.tike.data.models.ui.ParticipantUi
-import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.models.state.Status
+import com.theost.tike.data.models.ui.ParticipantUi
 import com.theost.tike.data.models.ui.mapToParticipantUi
+import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
 import com.theost.tike.ui.extensions.isPositive
+import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_CREATION
 import io.reactivex.disposables.CompositeDisposable
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -89,8 +91,9 @@ class CreationViewModel : ViewModel() {
                     )
                 }.subscribe({
                     _loadingStatus.postValue(Status.Success)
-                }, {
+                }, { error ->
                     _loadingStatus.postValue(Status.Error)
+                    Log.e(LOG_VIEW_MODEL_CREATION, error.toString())
                 })
         )
     }
@@ -129,8 +132,9 @@ class CreationViewModel : ViewModel() {
                     updateParticipantsLimit(participants.size)
                     _participants.postValue(participants)
                     _loadingStatus.postValue(Status.Success)
-                }, {
+                }, { error ->
                     _loadingStatus.postValue(Status.Error)
+                    Log.e(LOG_VIEW_MODEL_CREATION, error.toString())
                 })
             )
         }

@@ -1,5 +1,6 @@
 package com.theost.tike.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,13 +11,18 @@ import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.data.models.ui.UserUi
 import com.theost.tike.data.models.ui.mapToUserUi
+import com.theost.tike.data.repositories.AuthRepository
 import com.theost.tike.data.repositories.UsersRepository
+import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_PROFILE
 import io.reactivex.disposables.CompositeDisposable
 
 class ProfileViewModel : ViewModel() {
 
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
+
+    private val _signingOutStatus = MutableLiveData<Status>()
+    val signingOutStatus: LiveData<Status> = _signingOutStatus
 
     private val _user = MutableLiveData<UserUi>()
     val user: LiveData<UserUi> = _user
@@ -42,8 +48,9 @@ class ProfileViewModel : ViewModel() {
             }.subscribe({ user ->
                 _user.postValue(user.mapToUserUi())
                 _loadingStatus.postValue(Success)
-            }, {
+            }, { error ->
                 _loadingStatus.postValue(Error)
+                Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
             })
         )
     }
@@ -54,8 +61,21 @@ class ProfileViewModel : ViewModel() {
             UsersRepository.getUser(uid).subscribe({ user ->
                 _user.postValue(user.mapToUserUi())
                 _loadingStatus.postValue(Success)
-            }, {
+            }, { error ->
                 _loadingStatus.postValue(Error)
+                Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
+            })
+        )
+    }
+
+    fun signOut() {
+        _signingOutStatus.postValue(Loading)
+        compositeDisposable.add(
+            AuthRepository.signOut().subscribe({
+                _signingOutStatus.postValue(Success)
+            }, { error ->
+                _signingOutStatus.postValue(Error)
+                Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
             })
         )
     }
