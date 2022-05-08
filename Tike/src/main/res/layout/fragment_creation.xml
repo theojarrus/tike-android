@@ -297,15 +297,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/openParticipantsButton"
-                style="@style/Theme.Tike.BlueButton.Imaged"
+                style="@style/Theme.Tike.BlueButton.Imaged.Action"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/black"
-                app:icon="@drawable/ic_participants"
-                app:iconGravity="textStart"
-                app:iconTint="@color/blue"
+                app:icon="@drawable/ic_friends"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toEndOf="@id/counterLayout"
                 app:layout_constraintTop_toBottomOf="@id/participantsText" />

@@ -119,7 +119,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         rootView = binding.root,
         actionView = binding.createEventButton,
         loadingView = binding.loadingBar,
-        errorMessage = getString(R.string.error_unknown),
+        errorMessage = getString(R.string.error_network),
         disabledAdapter = adapter,
         disabledViews = listOf(
             binding.titleInput,

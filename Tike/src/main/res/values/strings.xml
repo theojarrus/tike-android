@@ -65,4 +65,5 @@
     <string name="empty_people">Нет людей</string>
     <string name="reload">Перезагрузить</string>
     <string name="vacancy_count">Свободно: %d</string>
+    <string name="write_message">Написать сообщение</string>
 </resources>

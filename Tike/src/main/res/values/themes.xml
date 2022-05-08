@@ -134,6 +134,21 @@
         <item name="strokeColor">?attr/colorAccent</item>
     </style>
 
+    <style name="Theme.Tike.BlueButton.Imaged.Action" parent="Theme.Tike.BlueButton.Imaged">
+        <item name="iconGravity">textStart</item>
+        <item name="iconTint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.Tike.BlueButton.Imaged.Action.Texted" parent="Theme.Tike.BlueButton.Imaged.Action">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="iconPadding">6dp</item>
+    </style>
+
     <style name="Theme.Tike.BlueButton.Switch" parent="Theme.Tike.BlueButton">
         <item name="android:backgroundTint">@color/selector_switch_blue_bg</item>
         <item name="android:textColor">@color/selector_switch_blue_text</item>
