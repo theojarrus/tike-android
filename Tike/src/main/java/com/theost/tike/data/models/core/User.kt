@@ -1,5 +1,8 @@
 package com.theost.tike.data.models.core
 
+import com.theost.tike.data.models.ui.ParticipantUi
+import com.theost.tike.data.models.ui.UserUi
+
 data class User(
     val id: String,
     val name: String,

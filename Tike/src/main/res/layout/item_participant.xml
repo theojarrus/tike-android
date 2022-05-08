@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="40dp"
+    android:layout_height="52dp"
     android:layout_marginEnd="10dp"
     android:background="@drawable/bg_round_corners"
+    android:orientation="horizontal"
     android:paddingStart="12dp"
     android:paddingTop="12dp"
     android:paddingEnd="8dp"
-    android:paddingBottom="12dp"
-    android:orientation="horizontal">
+    android:paddingBottom="12dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/participantAvatarLayout"
@@ -19,7 +19,7 @@
         app:cardCornerRadius="200dp"
         app:cardElevation="0dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/participantAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -30,23 +30,26 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/participantName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:fontFamily="@font/roboto_regular"
         android:includeFontPadding="false"
+        android:textSize="18sp"
         android:textColor="@color/selector_text"
         tools:text="Theo Jedi" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/removeParticipantButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="fitXY"
         android:layout_gravity="center_vertical"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_remove" />
+        android:src="@drawable/ic_cross" />
 
 </LinearLayout>

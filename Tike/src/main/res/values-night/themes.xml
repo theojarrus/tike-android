@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
     <style name="Theme.Tike" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/blue</item>
@@ -11,23 +10,18 @@
         <item name="eventTitleColor">@color/white</item>
         <item name="eventDividerColor">@color/dark_gray</item>
         <item name="eventBackgroundColor">@color/blue_darker_gray</item>
-        <item name="mainBackgroundColor">@color/background_main_dark</item>
+        <item name="primaryBackgroundColor">@color/background_main_dark</item>
         <item name="secondaryBackgroundColor">@color/background_secondary_dark</item>
-        <item name="bottomNavigationIconsColor">@color/white</item>
-        <item name="android:windowBackground">?attr/mainBackgroundColor</item>
-        <item name="android:statusBarColor">?attr/mainBackgroundColor</item>
-        <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
+        <item name="navigationIconsColor">@color/white</item>
+        <item name="android:windowBackground">?attr/primaryBackgroundColor</item>
+        <item name="android:statusBarColor">?attr/primaryBackgroundColor</item>
+        <item name="android:navigationBarColor">?attr/primaryBackgroundColor</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="splashLogo">@drawable/splash_logo_dark</item>
     </style>
 
-    <style name="Theme.Tike.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background_main_dark</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/Theme.Tike</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+    <style name="Theme.Tike.Splash" parent="Theme.Tike">
+        <item name="android:windowBackground">@drawable/splash_background_dark</item>
     </style>
-
 </resources>

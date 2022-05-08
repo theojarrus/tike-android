@@ -1,0 +1,15 @@
+package com.theost.tike.ui.decorators
+
+import android.graphics.drawable.Drawable
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.DayViewDecorator
+import com.prolificinteractive.materialcalendarview.DayViewFacade
+import org.threeten.bp.LocalDate
+
+/** Shows background of selected date **/
+class DayDecorator(val drawable: Drawable?) : DayViewDecorator {
+    override fun shouldDecorate(day: CalendarDay): Boolean = true
+    override fun decorate(view: DayViewFacade) {
+        drawable?.let { view.setSelectionDrawable(drawable) }
+    }
+}

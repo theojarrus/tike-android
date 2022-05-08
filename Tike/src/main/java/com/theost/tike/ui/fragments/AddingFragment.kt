@@ -1,53 +1,51 @@
 package com.theost.tike.ui.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.theost.tike.R
+import com.theost.tike.data.models.state.AddingMode.CREATING
+import com.theost.tike.data.models.state.AddingMode.JOINING
 import com.theost.tike.databinding.FragmentAddingBinding
-import com.theost.tike.ui.adapters.core.AddingAdapter
+import com.theost.tike.ui.adapters.pages.AddingPageAdapter
+import com.theost.tike.ui.viewmodels.AddingViewModel
 
-class AddingFragment : Fragment() {
+class AddingFragment : Fragment(R.layout.fragment_adding) {
 
-    private var _binding: FragmentAddingBinding? = null
-    private val binding get() = _binding!!
+    private val viewModel: AddingViewModel by viewModels()
+    private val binding: FragmentAddingBinding by viewBinding()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddingBinding.inflate(layoutInflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.addingPager.adapter = AddingAdapter(childFragmentManager, lifecycle)
-        binding.addingPager.isUserInputEnabled = false
-
-        binding.creationSwitchButton.setOnClickListener { view ->
-            switchAddingButtons(view.id)
-            switchFragment(AddingAdapter.ADDING_CREATION_POSITION)
+        with(binding.addingPager) {
+            adapter = AddingPageAdapter(childFragmentManager, lifecycle)
+            isUserInputEnabled = false
         }
 
-        binding.joiningSwitchButton.setOnClickListener { view ->
-            switchAddingButtons(view.id)
-            switchFragment(AddingAdapter.ADDING_JOINING_POSITION)
+        binding.creationSwitchButton.setOnClickListener { viewModel.setPosition(CREATING.position) }
+        binding.joiningSwitchButton.setOnClickListener { viewModel.setPosition(JOINING.position) }
+
+        viewModel.position.observe(viewLifecycleOwner) { position ->
+            if (binding.addingPager.currentItem != position) {
+                binding.addingPager.currentItem = position
+                when (position) {
+                    0 -> switchAddingButtons(R.id.creationSwitchButton)
+                    1 -> switchAddingButtons(R.id.joiningSwitchButton)
+                }
+            }
         }
-
-        return binding.root
     }
 
-    private fun switchAddingButtons(id: Int) {
-        binding.creationSwitchButton.isEnabled = binding.creationSwitchButton.id != id
-        binding.joiningSwitchButton.isEnabled = binding.joiningSwitchButton.id != id
+    private fun switchAddingButtons(checkedId: Int) {
+        binding.creationSwitchButton.isEnabled = binding.creationSwitchButton.id != checkedId
+        binding.joiningSwitchButton.isEnabled = binding.joiningSwitchButton.id != checkedId
     }
 
-    private fun switchFragment(position: Int) {
-        binding.addingPager.currentItem = position
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.addingPager.adapter = null
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
 }

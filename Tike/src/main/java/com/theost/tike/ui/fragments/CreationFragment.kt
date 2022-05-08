@@ -3,33 +3,31 @@ package com.theost.tike.ui.fragments
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
-import com.theost.tike.data.extensions.getNavigationResult
-import com.theost.tike.data.extensions.removeNavigationResult
 import com.theost.tike.data.models.state.RepeatMode
-import com.theost.tike.data.models.state.Status
-import com.theost.tike.data.models.ui.ListAddButton
+import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
-import com.theost.tike.ui.adapters.delegates.AddButtonAdapterDelegate
 import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
-import com.theost.tike.ui.interfaces.ActionsHolder
+import com.theost.tike.ui.extensions.getNavigationResult
+import com.theost.tike.ui.extensions.removeNavigationResult
 import com.theost.tike.ui.interfaces.DelegateItem
-import com.theost.tike.ui.interfaces.EventListener
+import com.theost.tike.ui.utils.DateUtils
+import com.theost.tike.ui.viewmodels.CalendarViewModel
 import com.theost.tike.ui.viewmodels.CreationViewModel
-import com.theost.tike.utils.DateUtils
-import com.theost.tike.utils.DisplayUtils
+import com.theost.tike.ui.widgets.StateFragment
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import java.lang.String.format
 
-class CreationFragment : Fragment() {
+class CreationFragment : StateFragment(R.layout.fragment_creation) {
 
     private var addedIds: List<String> = emptyList()
 
@@ -39,45 +37,50 @@ class CreationFragment : Fragment() {
 
     private val adapter: BaseAdapter = BaseAdapter()
 
+    private val calendarViewModel: CalendarViewModel by activityViewModels()
     private val viewModel: CreationViewModel by viewModels()
+    private val binding: FragmentCreationBinding by viewBinding()
 
-    private var _binding: FragmentCreationBinding? = null
-    private val binding get() = _binding!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCreationBinding.inflate(layoutInflater, container, false)
-
+        binding.openParticipantsButton.setOnClickListener { openParticipantsAdding() }
         binding.dateDayInput.setOnClickListener { showDatePicker() }
         binding.dateBeginInput.setOnClickListener { showBeginTimePicker() }
         binding.dateEndInput.setOnClickListener { showEndTimePicker() }
         binding.createEventButton.setOnClickListener { sendEventData() }
+        binding.numberPlusButton.setOnClickListener { viewModel.updateParticipantsLimit(1) }
+        binding.numberMinusButton.setOnClickListener { viewModel.updateParticipantsLimit(-1) }
 
         binding.titleInput.addTextChangedListener { updateCreateEventButton() }
         binding.descriptionInput.addTextChangedListener { updateCreateEventButton() }
 
-        binding.titleInput.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus && !binding.descriptionInput.hasFocus()) DisplayUtils.hideKeyboard(v)
-        }
-
-        binding.descriptionInput.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus && !binding.titleInput.hasFocus()) DisplayUtils.hideKeyboard(v)
-        }
-
         binding.participantsList.adapter = adapter.apply {
             addDelegate(ParticipantAdapterDelegate { id -> viewModel.removeParticipant(id) })
-            addDelegate(AddButtonAdapterDelegate { openParticipantsAdding() })
+        }
+
+        getNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)?.let { usersIds ->
+            removeNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)
+            viewModel.loadParticipants(usersIds)
+        }
+
+        viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                Success -> {
+                    calendarViewModel.setPendingDate(eventDate)
+                    findNavController().navigateUp()
+                }
+                else -> handleStatus(status)
+            }
+        }
+
+        viewModel.participantsLimit.observe(viewLifecycleOwner) { limit ->
+            binding.numberCounter.text = format(getString(R.string.vacancy_count), limit)
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
             addedIds = participants.map { participant -> participant.id }
-            adapter.submitList(mutableListOf<DelegateItem>().apply {
-                addAll(participants)
-                add(ListAddButton())
-            })
+            adapter.submitList(mutableListOf<DelegateItem>().apply { addAll(participants) })
         }
 
         viewModel.eventDate.observe(viewLifecycleOwner) { date ->
@@ -110,49 +113,31 @@ class CreationFragment : Fragment() {
                 )
             )
         }
-
-        viewModel.sendingStatus.observe(viewLifecycleOwner) { status ->
-            when (status) {
-                Status.Error -> hideLoading()
-                Status.Loading -> showLoading()
-                Status.Success -> onEventDataSent()
-            }
-        }
-
-        getNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)?.let { usersIds ->
-            removeNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)
-            viewModel.loadParticipants(usersIds)
-        }
-
-        updateCreateEventButton()
-
-        return binding.root
     }
 
-    private fun showLoading() {
-        binding.titleInput.isEnabled = false
-        binding.descriptionInput.isEnabled = false
-        binding.dateDayInput.isEnabled = false
-        binding.dateBeginInput.isEnabled = false
-        binding.dateEndInput.isEnabled = false
-        binding.repeatButtonsGroup.children.forEach { it.isEnabled = false }
-        adapter.setEnabled(false)
+    override fun bindState(): StateViews = StateViews(
+        rootView = binding.root,
+        actionView = binding.createEventButton,
+        loadingView = binding.loadingBar,
+        errorMessage = getString(R.string.error_unknown),
+        disabledAdapter = adapter,
+        disabledViews = listOf(
+            binding.titleInput,
+            binding.descriptionInput,
+            binding.dateDayInput,
+            binding.dateBeginInput,
+            binding.dateEndInput,
+            binding.repeatButtonsGroup
+        )
+    )
 
-        binding.createEventButton.visibility = View.INVISIBLE
-        binding.loadingBar.visibility = View.VISIBLE
+    private fun checkIsNotEmptyInputFields(): Boolean {
+        return binding.titleInput.text.toString().isNotEmpty()
+            .and(binding.descriptionInput.text.toString().isNotEmpty())
     }
 
-    private fun hideLoading() {
-        binding.titleInput.isEnabled = true
-        binding.descriptionInput.isEnabled = true
-        binding.dateDayInput.isEnabled = true
-        binding.dateBeginInput.isEnabled = true
-        binding.dateEndInput.isEnabled = true
-        binding.repeatButtonsGroup.children.forEach { it.isEnabled = true }
-        adapter.setEnabled(true)
-
-        binding.createEventButton.visibility = View.VISIBLE
-        binding.loadingBar.visibility = View.GONE
+    private fun updateCreateEventButton() {
+        binding.createEventButton.isEnabled = checkIsNotEmptyInputFields()
     }
 
     private fun showDatePicker() {
@@ -192,19 +177,12 @@ class CreationFragment : Fragment() {
     }
 
     private fun openParticipantsAdding() {
-        (activity as ActionsHolder).openParticipantsAdding(
-            KEY_PARTICIPANTS_REQUEST,
-            addedIds.toList()
+        findNavController().navigate(
+            AddingFragmentDirections.actionAddingFragmentToParticipantsFragment(
+                KEY_PARTICIPANTS_REQUEST,
+                addedIds.toTypedArray()
+            )
         )
-    }
-
-    private fun checkIsNotEmptyInputFields(): Boolean {
-        return binding.titleInput.text.toString().isNotEmpty()
-                && binding.descriptionInput.text.toString().isNotEmpty()
-    }
-
-    private fun updateCreateEventButton() {
-        binding.createEventButton.isEnabled = checkIsNotEmptyInputFields()
     }
 
     private fun sendEventData() {
@@ -221,19 +199,12 @@ class CreationFragment : Fragment() {
         viewModel.sendEventData(title = title, description = description, repeatMode = repeatMode)
     }
 
-    private fun onEventDataSent() = (activity as EventListener).onEventCreated(eventDate)
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     companion object {
+
         private const val KEY_PARTICIPANTS_REQUEST = "request_participants"
 
         fun newInstance(): Fragment {
             return CreationFragment()
         }
     }
-
 }

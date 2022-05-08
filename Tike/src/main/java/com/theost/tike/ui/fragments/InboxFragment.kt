@@ -5,25 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.theost.tike.R
 import com.theost.tike.databinding.FragmentInboxBinding
 
-class InboxFragment : Fragment() {
+class InboxFragment : Fragment(R.layout.fragment_inbox) {
 
-    private var _binding: FragmentInboxBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentInboxBinding by viewBinding()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentInboxBinding.inflate(layoutInflater, container, false)
-        return binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
 }

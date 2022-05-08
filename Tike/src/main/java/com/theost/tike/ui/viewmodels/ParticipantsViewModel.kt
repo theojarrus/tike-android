@@ -1,88 +1,84 @@
 package com.theost.tike.ui.viewmodels
 
-import androidx.appcompat.widget.SearchView
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.theost.tike.data.extensions.RxSearchObservable
 import com.theost.tike.data.models.state.Status
-import com.theost.tike.data.models.ui.ListUser
-import com.theost.tike.data.models.ui.mapToListUser
+import com.theost.tike.data.models.state.Status.Error
+import com.theost.tike.data.models.ui.UserUi
+import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.UsersRepository
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_PARTICIPANTS
+import com.theost.tike.ui.widgets.SearchStateViewModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 
-class ParticipantsViewModel : ViewModel() {
+class ParticipantsViewModel : SearchStateViewModel() {
 
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
 
-    private val _participants = MutableLiveData<List<ListUser>>()
-    val participants: LiveData<List<ListUser>> = _participants
+    private val _participants = MutableLiveData<List<UserUi>>()
+    val participants: LiveData<List<UserUi>> = _participants
 
-    private val _selectedIds = MutableLiveData<List<String>>()
-    val selectedIds: LiveData<List<String>> = _selectedIds
+    private val _selectedParticipants = MutableLiveData<List<String>>()
+    val selectedParticipants: LiveData<List<String>> = _selectedParticipants
 
-    private var participantsCache = emptyList<ListUser>()
+    private var cachedParticipants = emptyList<UserUi>()
     private val compositeDisposable = CompositeDisposable()
 
-    fun loadUsers(addedIds: List<String>) {
-        if (participantsCache.isEmpty()) {
-            Firebase.auth.currentUser?.uid?.let { userId ->
-                _loadingStatus.postValue(Status.Loading)
-                compositeDisposable.add(UsersRepository.getUser(userId).flatMap { user ->
-                    UsersRepository.getUsers(user.friends, user.blocked)
-                }.subscribe({ users ->
-                    participantsCache = users.map { user -> user.mapToListUser(addedIds) }
-                    _selectedIds.postValue(addedIds.filter { id -> users.map { user -> user.id }.contains(id) })
-                    _participants.postValue(participantsCache)
-                    _loadingStatus.postValue(Status.Success)
-                }, {
-                    _loadingStatus.postValue(Status.Error) }))
-            }
+    override fun bindSearchData(): List<Any> = cachedParticipants
+
+    override fun bindSearchFilter(): (Any, String) -> Boolean = { item, query ->
+        (item as? UserUi)?.let { user ->
+            user.name.lowercase().contains(query)
+                .or(user.nick.lowercase().contains(query))
+        } ?: false
+    }
+
+    override fun onDataLoaded(items: List<Any>) {
+        items.filterIsInstance<UserUi>().let { _participants.postValue(it.mapWithSelection()) }
+    }
+
+    override fun onDataLoadError(error: Throwable) {
+        Log.e(LOG_VIEW_MODEL_PARTICIPANTS, error.toString())
+    }
+
+    fun init(participants: List<String>) {
+        if (selectedParticipants.value == null) {
+            _selectedParticipants.value = participants
+            loadUsers()
         }
     }
 
-    fun setupSearch(searchView: SearchView) {
-        compositeDisposable.add(RxSearchObservable.fromView(searchView).subscribeOn(Schedulers.io())
-            .map { query -> query.trim() }
-            .distinctUntilChanged()
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .switchMapSingle { query ->
-                if (query.isNotEmpty()) {
-                    Observable.fromIterable(participantsCache).filter { user ->
-                        user.name.lowercase().contains(query) || user.nick.lowercase()
-                            .contains(query)
-                    }.toList()
-                } else {
-                    Single.just(participantsCache)
-                }
-            }
-            .subscribe(
-                { users -> _participants.postValue(users) },
-                { error -> error.printStackTrace() }
+    fun loadUsers() {
+        if (cachedParticipants.isEmpty()) {
+            compositeDisposable.add(
+                RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMap { firebaseUser ->
+                    UsersRepository.getUser(firebaseUser.uid).flatMap { databaseUser ->
+                        UsersRepository.getUsers(databaseUser.friends, databaseUser.blocked)
+                    }
+                }.subscribe({ users ->
+                    cachedParticipants = users.map { user -> user.mapToUserUi() }
+                    _participants.postValue(cachedParticipants.mapWithSelection())
+                    _loadingStatus.postValue(Status.Success)
+                }, { error ->
+                    _loadingStatus.postValue(Error)
+                    Log.e(LOG_VIEW_MODEL_PARTICIPANTS, error.toString())
+                })
             )
-        )
+        }
     }
 
-    fun onParticipantItemClicked(userId: String, isSelected: Boolean) {
-        compositeDisposable.add(Single.fromCallable {
-            val ids = selectedIds.value.orEmpty().toMutableList()
-            val users = participants.value.orEmpty()
-
-            if (isSelected) ids.add(userId) else ids.remove(userId)
-            val items = users.map { user -> user.copy(isSelected = ids.contains(user.id)) }
-            participantsCache =
-                participantsCache.map { user -> user.copy(isSelected = ids.contains(user.id)) }
-
-            _selectedIds.postValue(ids.toList())
-            _participants.postValue(items)
-        }.subscribeOn(Schedulers.computation()).subscribe())
+    fun selectParticipant(uid: String) {
+        val selectedIds = selectedParticipants.value.orEmpty().toMutableList()
+            .apply { if (contains(uid)) remove(uid) else add(uid) }
+        val items = participants.value.orEmpty()
+            .map { user -> user.copy(isSelected = selectedIds.contains(user.id)) }
+        _selectedParticipants.postValue(selectedIds)
+        _participants.postValue(items)
     }
 
     override fun onCleared() {
@@ -90,4 +86,7 @@ class ParticipantsViewModel : ViewModel() {
         compositeDisposable.clear()
     }
 
+    private fun List<UserUi>.mapWithSelection(): List<UserUi> = map { user ->
+        user.copy(isSelected = selectedParticipants.value.orEmpty().contains(user.id))
+    }
 }

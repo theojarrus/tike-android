@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
     <style name="Theme.Tike" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/blue</item>
@@ -11,23 +10,18 @@
         <item name="eventTitleColor">@color/light_blue_black</item>
         <item name="eventDividerColor">@color/lighter_gray</item>
         <item name="eventBackgroundColor">@color/blue_white</item>
-        <item name="mainBackgroundColor">@color/background_main_light</item>
+        <item name="primaryBackgroundColor">@color/background_main_light</item>
         <item name="secondaryBackgroundColor">@color/background_secondary_light</item>
-        <item name="bottomNavigationIconsColor">@color/lighter_gray</item>
-        <item name="android:windowBackground">?attr/mainBackgroundColor</item>
-        <item name="android:statusBarColor">?attr/mainBackgroundColor</item>
-        <item name="android:navigationBarColor">?attr/mainBackgroundColor</item>
+        <item name="navigationIconsColor">@color/lighter_gray</item>
+        <item name="android:windowBackground">?attr/primaryBackgroundColor</item>
+        <item name="android:statusBarColor">?attr/primaryBackgroundColor</item>
+        <item name="android:navigationBarColor">?attr/primaryBackgroundColor</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
-    <style name="Theme.Tike.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background_main_light</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        <item name="postSplashScreenTheme">@style/Theme.Tike</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+    <style name="Theme.Tike.Splash" parent="Theme.Tike">
+        <item name="android:windowBackground">@drawable/splash_background_light</item>
     </style>
 
     <style name="Theme.Tike.SearchView" parent="Widget.AppCompat.SearchView">
@@ -59,6 +53,17 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
+    <style name="Theme.Tike.CounterButton" parent="Theme.Tike.BlueButton">
+        <item name="android:backgroundTint">?attr/primaryBackgroundColor</item>
+        <item name="rippleColor">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="cornerRadius">15dp</item>
+        <item name="iconTint">?attr/colorPrimary</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">-2dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
     <style name="Theme.Tike.BlueButton.Toggle" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeWidth">1dp</item>
         <item name="android:textSize">16sp</item>
@@ -79,7 +84,7 @@
         <item name="android:insetBottom">0dp</item>
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
-        <item name="cornerRadius">50dp</item>
+        <item name="cornerRadius">10dp</item>
         <item name="elevation">0dp</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
@@ -99,7 +104,7 @@
     </style>
 
     <style name="Theme.Tike.EventButton.Reject" parent="Theme.Tike.EventButton">
-        <item name="icon">@drawable/ic_cross</item>
+        <item name="icon">@drawable/ic_close</item>
         <item name="iconTint">@color/red</item>
         <item name="strokeColor">@color/red</item>
         <item name="rippleColor">@color/red</item>
@@ -206,5 +211,4 @@
     <style name="Theme.Tike.TextView.RobotoThin" parent="Theme.Tike.TextView">
         <item name="android:fontFamily">@font/roboto_thin</item>
     </style>
-
 </resources>

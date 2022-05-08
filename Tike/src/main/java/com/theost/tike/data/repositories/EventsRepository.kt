@@ -1,75 +1,201 @@
 package com.theost.tike.data.repositories
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+import com.androidhuman.rxfirebase2.firestore.RxFirebaseFirestore
+import com.theost.tike.data.api.FirestoreApi.provideProperEventsCollection
+import com.theost.tike.data.models.core.Dates
 import com.theost.tike.data.models.core.Event
 import com.theost.tike.data.models.dto.EventDto
 import com.theost.tike.data.models.dto.mapToEvent
+import com.theost.tike.data.models.state.RepeatMode.*
+import com.theost.tike.ui.extensions.getOrNull
+import com.theost.tike.ui.extensions.isFalse
+import com.theost.tike.ui.extensions.toLongInt
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
 object EventsRepository {
 
-    private const val FIREBASE_COLLECTION_USERS = "users"
+    fun observeProperEventsDates(uid: String): Observable<Dates> {
+        return observeProperRepeatedDayEventsDates(uid).switchMap { hasDailyEvent ->
+            if (!hasDailyEvent) {
+                Observable.combineLatest(
+                    observeProperDateEventsDates(uid),
+                    observeProperRepeatedYearEventsDates(uid),
+                    observeProperRepeatedMonthEventsDates(uid),
+                    observeProperRepeatedWeekEventsDates(uid)
+                ) { days, yearDays, monthDays, weekDays ->
+                    Dates(
+                        days = days,
+                        yearDays = yearDays,
+                        monthDays = monthDays,
+                        weekDays = weekDays
+                    )
+                }
+            } else {
+                Observable.just(Dates(hasDailyEvent = hasDailyEvent))
+            }
+        }
+    }
 
-    private const val FIREBASE_COLLECTION_EVENTS = "events"
-    private const val FIREBASE_COLLECTION_EVENTS_COLLECTIONS = "collections"
-
-    private const val FIREBASE_COLLECTION_EVENTS_PROPER = "proper"
-    private const val FIREBASE_COLLECTION_EVENTS_REFERENCE = "reference"
-
-    private const val FIREBASE_COLLECTION_EVENTS_REFERENCE_ACTIVE = "active"
-    private const val FIREBASE_COLLECTION_EVENTS_REFERENCE_PENDING = "pending"
-
-    private const val FIREBASE_COLLECTION_EVENTS_REFERENCE_PENDING_CREATION = "creation"
-    private const val FIREBASE_COLLECTION_EVENTS_REFERENCE_PENDING_DELETION = "creation"
-
-    private const val FIREBASE_DOCUMENT_EVENT_TITLE = "title"
-    private const val FIREBASE_DOCUMENT_EVENT_DESCRIPTION = "description"
-    private const val FIREBASE_DOCUMENT_EVENT_CREATOR_ID = "creatorId"
-    private const val FIREBASE_DOCUMENT_EVENT_PARTICIPANTS = "participants"
-    private const val FIREBASE_DOCUMENT_EVENT_PARTICIPANTS_LIMIT = "participantsLimit"
-    private const val FIREBASE_DOCUMENT_EVENT_CREATED = "created"
-    private const val FIREBASE_DOCUMENT_EVENT_MODIFIED = "modified"
-    private const val FIREBASE_DOCUMENT_EVENT_WEEK_DAY = "weekDay"
-    private const val FIREBASE_DOCUMENT_EVENT_MONTH_DAY = "monthDay"
-    private const val FIREBASE_DOCUMENT_EVENT_MONTH = "month"
-    private const val FIREBASE_DOCUMENT_EVENT_YEAR = "year"
-    private const val FIREBASE_DOCUMENT_EVENT_BEGIN_TIME = "beginTime"
-    private const val FIREBASE_DOCUMENT_EVENT_END_TIME = "endTime"
-    private const val FIREBASE_DOCUMENT_EVENT_REPEAT_MODE = "repeatMode"
-
-    fun getEvents(userId: String, year: Int, month: Int, day: Int): Observable<List<Event>> {
-        return Observable.create<QuerySnapshot> { emitter ->
-            val queryListener =
-                FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                    .document(userId)
-                    .collection(FIREBASE_COLLECTION_EVENTS)
-                    .document(FIREBASE_COLLECTION_EVENTS_COLLECTIONS)
-                    .collection(FIREBASE_COLLECTION_EVENTS_PROPER)
-                    .whereEqualTo(FIREBASE_DOCUMENT_EVENT_YEAR, year)
-                    .whereEqualTo(FIREBASE_DOCUMENT_EVENT_MONTH, month)
-                    .whereEqualTo(FIREBASE_DOCUMENT_EVENT_MONTH_DAY, day)
-                    .addSnapshotListener { snapshot, error ->
-                        if (error == null) {
-                            snapshot?.let { emitter.onNext(snapshot) }
-                        } else {
-                            emitter.onError(error)
-                        }
-                    }
-            emitter.setCancellable { queryListener.remove() }
-        }.map { snapshot ->
-            snapshot.toObjects(EventDto::class.java)
-        }.map { entities ->
-            entities.map { entity -> entity.mapToEvent() }
-                .sortedBy { event -> event.endTime }
-                .sortedBy { event -> event.beginTime }
+    private fun observeProperDateEventsDates(uid: String): Observable<List<Triple<Int, Int, Int>>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, NEVER)
+        ).map { value ->
+            value.getOrNull()?.map { snapshot ->
+                snapshot.data.run {
+                    Triple(
+                        get(EventDto::year.name).toLongInt(),
+                        get(EventDto::month.name).toLongInt(),
+                        get(EventDto::monthDay.name).toLongInt()
+                    )
+                }
+            } ?: emptyList()
         }.subscribeOn(Schedulers.io())
     }
 
+    private fun observeProperRepeatedYearEventsDates(uid: String): Observable<List<Pair<Int, Int>>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, YEAR.name)
+        ).map { value ->
+            value.getOrNull()?.map { snapshot ->
+                snapshot.data.run {
+                    Pair(
+                        get(EventDto::month.name).toLongInt(),
+                        get(EventDto::monthDay.name).toLongInt()
+                    )
+                }
+            } ?: emptyList()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedMonthEventsDates(uid: String): Observable<List<Int>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, MONTH.name)
+        ).map { it.getOrNull()?.map { it.get(EventDto::monthDay.name).toLongInt() } ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedWeekEventsDates(uid: String): Observable<List<Int>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, WEEK.name)
+        ).map { value ->
+            value.getOrNull()?.map { it.get(EventDto::weekDay.name).toLongInt() } ?: emptyList()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedDayEventsDates(uid: String): Observable<Boolean> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, DAY.name)
+        ).map { it.getOrNull()?.isEmpty.isFalse() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun observeProperEvents(
+        uid: String,
+        year: Int,
+        month: Int,
+        dayOfMonth: Int,
+        dayOfWeek: Int
+    ): Observable<List<Event>> {
+        return Observable.combineLatest(
+            observeProperDateEvents(uid, year, month, dayOfMonth),
+            observeProperRepeatedEvents(uid, month, dayOfMonth, dayOfWeek)
+        ) { dateEvents, repeatedEvents ->
+            (dateEvents + repeatedEvents)
+                .map { it.mapToEvent() }
+                .sortedBy { it.endTime }
+                .sortedBy { it.beginTime }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperDateEvents(
+        uid: String,
+        year: Int,
+        month: Int,
+        dayOfMonth: Int
+    ): Observable<List<EventDto>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, NEVER)
+                .whereEqualTo(EventDto::year.name, year)
+                .whereEqualTo(EventDto::month.name, month)
+                .whereEqualTo(EventDto::monthDay.name, dayOfMonth)
+        ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedEvents(
+        uid: String,
+        month: Int,
+        dayOfMonth: Int,
+        dayOfWeek: Int
+    ): Observable<List<EventDto>> {
+        return Observable.combineLatest(
+            observeProperRepeatedYearEvents(uid, month, dayOfMonth),
+            observeProperRepeatedMonthEvents(uid, dayOfMonth),
+            observeProperRepeatedWeekEvents(uid, dayOfWeek),
+            observeProperRepeatedDayEvents(uid)
+        ) { yearEvents, monthEvents, weekEvents, dayEvents ->
+            yearEvents + monthEvents + weekEvents + dayEvents
+        }.subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedYearEvents(
+        uid: String,
+        month: Int,
+        dayOfMonth: Int
+    ): Observable<List<EventDto>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, YEAR.name)
+                .whereEqualTo(EventDto::month.name, month)
+                .whereEqualTo(EventDto::monthDay.name, dayOfMonth)
+        ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedMonthEvents(
+        uid: String,
+        dayOfMonth: Int
+    ): Observable<List<EventDto>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, MONTH.name)
+                .whereEqualTo(EventDto::monthDay.name, dayOfMonth)
+        ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedWeekEvents(
+        uid: String,
+        dayOfWeek: Int
+    ): Observable<List<EventDto>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, WEEK.name)
+                .whereEqualTo(EventDto::weekDay.name, dayOfWeek)
+        ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun observeProperRepeatedDayEvents(
+        uid: String
+    ): Observable<List<EventDto>> {
+        return RxFirebaseFirestore.dataChanges(
+            provideProperEventsCollection(uid)
+                .whereEqualTo(EventDto::repeatMode.name, DAY.name)
+        ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
     fun addEvent(
-        creatorId: String,
+        uid: String,
         title: String,
         description: String,
         participants: List<String>,
@@ -84,31 +210,24 @@ object EventsRepository {
         endTime: Long,
         repeatMode: String
     ): Completable {
-        return Completable.fromAction {
-            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                .document(creatorId)
-                .collection(FIREBASE_COLLECTION_EVENTS)
-                .document(FIREBASE_COLLECTION_EVENTS_COLLECTIONS)
-                .collection(FIREBASE_COLLECTION_EVENTS_PROPER)
-                .add(
-                    EventDto(
-                        title = title,
-                        description = description,
-                        creatorId = creatorId,
-                        participants = participants,
-                        participantsLimit = participantsLimit,
-                        created = created,
-                        modified = modified,
-                        weekDay = weekDay,
-                        monthDay = monthDay,
-                        month = month,
-                        year = year,
-                        beginTime = beginTime,
-                        endTime = endTime,
-                        repeatMode = repeatMode
-                    )
-                )
-        }.subscribeOn(Schedulers.io())
+        return RxFirebaseFirestore.set(
+            provideProperEventsCollection(uid).document(),
+            EventDto(
+                title = title,
+                description = description,
+                creatorId = uid,
+                participants = participants,
+                participantsLimit = participantsLimit,
+                created = created,
+                modified = modified,
+                weekDay = weekDay,
+                monthDay = monthDay,
+                month = month,
+                year = year,
+                beginTime = beginTime,
+                endTime = endTime,
+                repeatMode = repeatMode
+            )
+        ).subscribeOn(Schedulers.io())
     }
-
 }

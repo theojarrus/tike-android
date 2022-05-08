@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
-    android:layout_marginBottom="8dp"
     android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
     app:cardBackgroundColor="?attr/eventBackgroundColor"
     app:cardCornerRadius="15dp"
     app:cardElevation="0dp"
@@ -16,100 +16,101 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/acceptEventButton"
-            style="@style/Theme.Tike.EventButton.Accept"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+        <TextView
+            android:id="@+id/eventTitle"
+            style="@style/Theme.Tike.TextView.RobotoMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/rejectEventButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="?attr/eventTitleColor"
+            app:layout_constraintEnd_toStartOf="@id/editButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Это новое событие" />
+
+        <TextView
+            android:id="@+id/eventDescription"
+            style="@style/Theme.Tike.TextView.RobotoMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/editButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventTitle"
+            tools:text="Просто какое-то описание нового события, хехехехехе еххехехех" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/rejectEventButton"
-            style="@style/Theme.Tike.EventButton.Reject"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/editEventButton"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/editEventButton"
+            android:id="@+id/editButton"
             style="@style/Theme.Tike.EventButton.Action"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="10dp"
             app:icon="@drawable/ic_edit"
-            app:layout_constraintEnd_toStartOf="@+id/cancelEventButton"
+            app:layout_constraintEnd_toStartOf="@id/cancelButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancelEventButton"
+            android:id="@+id/cancelButton"
             style="@style/Theme.Tike.EventButton.Action"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            app:icon="@drawable/ic_cross"
+            app:icon="@drawable/ic_close"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/eventTitle"
+        <TextView
+            android:id="@+id/eventTime"
             style="@style/Theme.Tike.TextView.RobotoMedium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="?attr/eventTitleColor"
-            app:layout_constraintEnd_toStartOf="@id/acceptEventButton"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/blue"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Заголовок" />
+            tools:text="15:30 - 16:00" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/eventDescription"
-            style="@style/Theme.Tike.TextView.RobotoRegular"
-            android:layout_width="0dp"
+        <include
+            android:id="@+id/eventParticipant1"
+            layout="@layout/item_avatar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/gray"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@id/acceptEventButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/eventTitle"
-            tools:text="Это просто какое-то событие, здесь будет подробная информация о нём от его создателя" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:background="?attr/eventDividerColor"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="-8dp"
+            app:layout_constraintEnd_toStartOf="@id/eventParticipant2"
             app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/eventTime"
-            style="@style/Theme.Tike.TextView.RobotoRegular"
+        <include
+            android:id="@+id/eventParticipant2"
+            layout="@layout/item_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="-8dp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/darker_gray"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:text="12:40 - 14:50" />
+            app:layout_constraintEnd_toStartOf="@id/eventParticipant3"
+            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/eventUsers"
+        <include
+            android:id="@+id/eventParticipant3"
+            layout="@layout/item_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-8dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toStartOf="@id/eventParticipantCounter"
+            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+        <include
+            android:id="@+id/eventParticipantCounter"
+            layout="@layout/item_avatar_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toTopOf="@id/divider"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:stackFromEnd="true"
-            tools:itemCount="4"
-            tools:listitem="@layout/item_avatar" />
+            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

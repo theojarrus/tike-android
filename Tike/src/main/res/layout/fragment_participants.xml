@@ -15,7 +15,7 @@
         app:menu="@menu/menu_participants"
         app:title="@string/participants" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/emptyView"
         style="@style/Theme.Tike.InfoView"
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/errorView"
         style="@style/Theme.Tike.InfoView"
         android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
         style="@style/Theme.Tike.BlueButton.Basic"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/reload"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,8 +77,8 @@
         style="@style/Theme.Tike.BlueButton.Basic"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/add_participants"
+        android:layout_marginBottom="10dp"
+        android:text="@string/choose_participants"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart" />

@@ -20,6 +20,8 @@
     <color name="blue_gray">#A2CEEE</color>
     <color name="blue_white">#F1F9FF</color>
 
+    <color name="ic_launcher_background">@color/white</color>
+
     <color name="background_main_light">@color/white</color>
     <color name="background_main_dark">@color/blue_black</color>
 

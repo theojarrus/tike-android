@@ -1,19 +1,20 @@
 package com.theost.tike.ui.adapters.delegates
 
-import android.view.LayoutInflater
+import android.view.LayoutInflater.from
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.theost.tike.R
-import com.theost.tike.data.models.ui.ListParticipant
+import com.theost.tike.data.models.ui.ParticipantUi
 import com.theost.tike.databinding.ItemParticipantBinding
+import com.theost.tike.ui.extensions.load
 import com.theost.tike.ui.interfaces.AdapterDelegate
 import com.theost.tike.ui.interfaces.DelegateItem
 
 class ParticipantAdapterDelegate(private val clickListener: (participantId: String) -> Unit) : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val binding = ItemParticipantBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemParticipantBinding.inflate(from(parent.context), parent, false)
         return ViewHolder(binding, clickListener)
     }
 
@@ -23,30 +24,27 @@ class ParticipantAdapterDelegate(private val clickListener: (participantId: Stri
         position: Int,
         enabled: Boolean
     ) {
-        (holder as ViewHolder).bind(item as ListParticipant, enabled)
+        (holder as ViewHolder).bind(item as ParticipantUi, enabled)
     }
 
-    override fun isOfViewType(item: DelegateItem): Boolean = item is ListParticipant
+    override fun isOfViewType(item: DelegateItem): Boolean = item is ParticipantUi
 
     class ViewHolder(
         private val binding: ItemParticipantBinding,
         private val clickListener: (participantId: String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(listParticipant: ListParticipant, enabled: Boolean) {
-            binding.participantName.text = listParticipant.name
-            binding.removeParticipantButton.setOnClickListener { clickListener(listParticipant.id) }
-
-            Glide.with(binding.root)
-                .load(listParticipant.avatar)
-                .placeholder(R.color.blue)
-                .error(R.color.blue)
-                .into(binding.participantAvatar)
-
-            binding.participantName.isEnabled = enabled
-            binding.removeParticipantButton.isEnabled = enabled
+        fun bind(item: ParticipantUi, enabled: Boolean) {
+            with(binding) {
+                participantAvatar.load(item.avatar, R.color.blue, R.color.blue)
+                participantName.text = item.name
+                participantName.isEnabled = enabled
+                removeParticipantButton.isEnabled = enabled
+                when (enabled) {
+                    true -> removeParticipantButton.setOnClickListener { clickListener(item.id) }
+                    else -> removeParticipantButton.setOnClickListener(null)
+                }
+            }
         }
-
     }
-
 }

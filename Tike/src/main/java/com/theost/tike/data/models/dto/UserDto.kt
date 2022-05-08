@@ -17,7 +17,7 @@ data class UserDto(
     val blocked: List<String> = emptyList()
 )
 
-fun UserDto.mapToUser(lifestyles: List<Lifestyle>): User {
+fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
     return User(
         id = id,
         name = name,

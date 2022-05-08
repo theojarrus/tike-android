@@ -21,11 +21,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/userAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:contentDescription="@string/participants" />
 
     </androidx.cardview.widget.CardView>
 
@@ -38,7 +39,7 @@
         app:layout_constraintStart_toEndOf="@id/avatarLayout"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/userName"
             style="@style/Theme.Tike.TextView.RobotoRegular"
             android:layout_width="wrap_content"
@@ -48,7 +49,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Theo Jedi" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/userNick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,13 +62,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/indicatorSelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/participants" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

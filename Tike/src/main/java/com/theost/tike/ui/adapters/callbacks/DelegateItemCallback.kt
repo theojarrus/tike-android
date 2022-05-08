@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.theost.tike.ui.interfaces.DelegateItem
 
 class DelegateItemCallback : DiffUtil.ItemCallback<DelegateItem>() {
+
     override fun areItemsTheSame(oldItem: DelegateItem, newItem: DelegateItem): Boolean =
         oldItem::class == newItem::class && oldItem.id() == newItem.id()
 

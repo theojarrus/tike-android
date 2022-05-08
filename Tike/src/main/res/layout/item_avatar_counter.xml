@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="0dp"
+    app:strokeColor="?attr/eventBackgroundColor"
+    app:strokeWidth="2dp">
+
+    <TextView
+        android:id="@+id/participantCount"
+        style="@style/Theme.Tike.TextView.RobotoMedium"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@color/blue"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        tools:text="0" />
+
+</com.google.android.material.card.MaterialCardView>

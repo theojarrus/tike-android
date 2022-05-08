@@ -1,100 +1,65 @@
 package com.theost.tike.data.repositories
 
-import com.google.firebase.firestore.*
+import com.androidhuman.rxfirebase2.firestore.RxFirebaseFirestore
+import com.google.firebase.firestore.FieldPath.documentId
+import com.theost.tike.data.api.FirestoreApi.provideUserDocument
+import com.theost.tike.data.api.FirestoreApi.provideUsersCollection
 import com.theost.tike.data.models.core.User
 import com.theost.tike.data.models.dto.UserDto
 import com.theost.tike.data.models.dto.mapToUser
-import com.theost.tike.data.models.state.UserStatus
+import com.theost.tike.data.models.state.ExistStatus
+import com.theost.tike.data.models.state.ExistStatus.Exist
+import com.theost.tike.data.models.state.ExistStatus.NotFound
+import com.theost.tike.ui.extensions.getOrNull
+import com.theost.tike.ui.widgets.ExistException
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 object UsersRepository {
 
-    private const val FIREBASE_COLLECTION_USERS = "users"
-
-    private const val FIREBASE_DOCUMENT_USER_NAME = "name"
-    private const val FIREBASE_DOCUMENT_USER_NICK = "nick"
-    private const val FIREBASE_DOCUMENT_USER_EMAIL = "email"
-    private const val FIREBASE_DOCUMENT_USER_AVATAR = "avatar"
-    private const val FIREBASE_DOCUMENT_USER_LIFESTYLES = "lifestyles"
-    private const val FIREBASE_DOCUMENT_USER_FRIENDS = "friends"
-    private const val FIREBASE_DOCUMENT_USER_BLOCKED = "blocked"
-
-    fun getUser(id: String): Single<User> {
-        return Single.create<DocumentSnapshot> { emitter ->
-            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                .document(id)
-                .get()
-                .addOnSuccessListener { snapshot -> emitter.onSuccess(snapshot) }
-                .addOnFailureListener { error -> emitter.onError(error) }
-        }.map { snapshot ->
-            snapshot.toObject(UserDto::class.java)
-        }.flatMap { entity ->
-            LifestylesRepository.getLifestyles(entity.lifestyles).map { lifestyles ->
-                entity.mapToUser(lifestyles)
-            }
-        }.subscribeOn(Schedulers.io())
+    fun getUser(uid: String): Single<User> {
+        return RxFirebaseFirestore.data(provideUserDocument(uid))
+            .map { snapshot -> snapshot.value().toObject(UserDto::class.java) }
+            .map { entity -> entity.mapToUser() }
+            .subscribeOn(Schedulers.io())
     }
 
-    fun getUsers(ids: List<String>, hiddenIds: List<String> = emptyList()): Single<List<User>> {
-        return if (ids.isNotEmpty()) {
-            Single.create<QuerySnapshot> { emitter ->
-                getUsersQuery(ids, hiddenIds).get()
-                    .addOnSuccessListener { snapshot -> emitter.onSuccess(snapshot) }
-                    .addOnFailureListener { error -> emitter.onError(error) }
-            }.map { snapshot ->
-                snapshot.toObjects(UserDto::class.java)
-            }.flatMap { entities ->
-                Observable.fromIterable(entities).concatMapSingle { entity ->
-                    LifestylesRepository.getLifestyles(entity.lifestyles).map { lifestyles ->
-                        entity.mapToUser(lifestyles)
-                    }
-                }.toList()
-            }.map { users ->
-                users.sortedBy { user -> user.name }
-            }.subscribeOn(Schedulers.io())
-        } else Single.just(emptyList())
+    fun getUsers(ids: List<String>, excludedIds: List<String> = emptyList()): Single<List<User>> {
+        return when {
+            ids.isNotEmpty() && excludedIds.isNotEmpty() -> getUsersWithFilter(ids, excludedIds)
+            ids.isNotEmpty() -> getUsersWithoutFilter(ids)
+            else -> Single.just(emptyList())
+        }
     }
 
-    private fun getUsersQuery(ids: List<String>, hiddenIds: List<String>): Query {
-        val query = FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-            .whereIn(FieldPath.documentId(), ids)
-        return if (hiddenIds.isNotEmpty()) query.whereNotIn(
-            FieldPath.documentId(),
-            hiddenIds
-        ) else query
+    private fun getUsersWithoutFilter(ids: List<String>): Single<List<User>> {
+        return RxFirebaseFirestore.data(provideUsersCollection().whereIn(documentId(), ids))
+            .map { snapshot -> snapshot.value().toObjects(UserDto::class.java) }
+            .map { entities -> entities.map { entity -> entity.mapToUser() } }
+            .subscribeOn(Schedulers.io())
     }
 
-    fun getUserExist(userId: String): Observable<UserStatus> {
-        return Observable.create<DocumentSnapshot> { emitter ->
-            val queryListener =
-                FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                    .document(userId)
-                    .addSnapshotListener { snapshot, error ->
-                        if (error == null) {
-                            snapshot?.let { emitter.onNext(snapshot) }
-                        } else {
-                            emitter.onError(error)
-                        }
-                    }
-            emitter.setCancellable { queryListener.remove() }
-        }.map { snapshot ->
-            if (snapshot.exists()) UserStatus.Exist else UserStatus.NotFound
-        }.subscribeOn(Schedulers.io())
+    private fun getUsersWithFilter(ids: List<String>, excluded: List<String>): Single<List<User>> {
+        return RxFirebaseFirestore.data(
+            provideUsersCollection()
+                .whereIn(documentId(), ids)
+                .whereNotIn(documentId(), excluded)
+        ).map { snapshot -> snapshot.value().toObjects(UserDto::class.java) }
+            .map { entities -> entities.map { entity -> entity.mapToUser() } }
+            .subscribeOn(Schedulers.io())
     }
 
-    fun getNickExist(nick: String): Single<UserStatus> {
-        return Single.create<QuerySnapshot> { emitter ->
-            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                .whereEqualTo(FIREBASE_DOCUMENT_USER_NICK, "@$nick")
-                .get()
-                .addOnSuccessListener { emitter.onSuccess(it) }
-                .addOnFailureListener { emitter.onError(it) }
-        }.map { snapshot ->
-            if (snapshot.isEmpty) UserStatus.NotFound else UserStatus.Exist
-        }.subscribeOn(Schedulers.io())
+    private fun getNicknameExist(nick: String): Single<ExistStatus> {
+        return RxFirebaseFirestore.data(provideUsersCollection().whereEqualTo(UserDto::nick.name, nick))
+            .map { snapshot -> if (snapshot.getOrNull()?.isEmpty == false) Exist else NotFound }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun deleteUser(uid: String): Completable {
+        return RxFirebaseFirestore.delete(provideUsersCollection().document(uid))
+            .andThen(AuthRepository.signOut())
+            .subscribeOn(Schedulers.io())
     }
 
     fun addUser(
@@ -106,14 +71,15 @@ object UsersRepository {
         avatar: String,
         lifestyles: List<String>
     ): Completable {
-        return Completable.fromAction {
-            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                .document(id)
-                .set(
+        return getNicknameExist(nick).flatMapCompletable { status ->
+            when (status) {
+                Exist -> Completable.error(ExistException())
+                NotFound -> RxFirebaseFirestore.set(
+                    provideUsersCollection().document(),
                     UserDto(
                         id = id,
                         name = name,
-                        nick = "@$nick",
+                        nick = nick,
                         email = email,
                         phone = phone,
                         avatar = avatar,
@@ -122,15 +88,7 @@ object UsersRepository {
                         blocked = emptyList()
                     )
                 )
+            }
         }.subscribeOn(Schedulers.io())
     }
-
-    fun deleteUser(userId: String): Completable {
-        return Completable.fromAction {
-            FirebaseFirestore.getInstance().collection(FIREBASE_COLLECTION_USERS)
-                .document(userId)
-                .delete()
-        }.subscribeOn(Schedulers.io())
-    }
-
 }

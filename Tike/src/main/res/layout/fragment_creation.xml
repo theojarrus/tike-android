@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:fillViewport="true"
         android:overScrollMode="never"
-        android:paddingBottom="80dp">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@id/createEventButton">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -18,7 +21,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/titleText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -31,7 +34,7 @@
                 android:id="@+id/titleLayout"
                 style="@style/Theme.Tike.TextInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -41,13 +44,13 @@
                     android:id="@+id/titleInput"
                     style="@style/Theme.Tike.TextInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:hint="@string/hint_title"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/descriptionText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -61,7 +64,7 @@
                 android:id="@+id/descriptionLayout"
                 style="@style/Theme.Tike.TextInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -71,14 +74,14 @@
                     android:id="@+id/descriptionInput"
                     style="@style/Theme.Tike.TextInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:hint="@string/hint_description"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/dateDayText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -88,7 +91,7 @@
                 app:layout_constraintStart_toStartOf="@id/dateDayLayout"
                 app:layout_constraintTop_toBottomOf="@id/descriptionLayout" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/dateBeginText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -97,7 +100,7 @@
                 app:layout_constraintStart_toStartOf="@id/dateBeginLayout"
                 app:layout_constraintTop_toTopOf="@id/dateDayText" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/dateEndText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -110,7 +113,7 @@
                 android:id="@+id/dateDayLayout"
                 style="@style/Theme.Tike.TextInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="5dp"
                 app:layout_constraintEnd_toStartOf="@id/dateBeginLayout"
@@ -121,7 +124,7 @@
                     android:id="@+id/dateDayInput"
                     style="@style/Theme.Tike.TextInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:gravity="center"
@@ -134,7 +137,7 @@
                 android:id="@+id/dateBeginLayout"
                 style="@style/Theme.Tike.TextInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="5dp"
@@ -146,7 +149,7 @@
                     android:id="@+id/dateBeginInput"
                     style="@style/Theme.Tike.TextInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:gravity="center"
@@ -159,7 +162,7 @@
                 android:id="@+id/dateEndLayout"
                 style="@style/Theme.Tike.TextInputLayout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
@@ -170,7 +173,7 @@
                     android:id="@+id/dateEndInput"
                     style="@style/Theme.Tike.TextInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:gravity="center"
@@ -179,7 +182,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/dateRepeatText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -192,8 +195,9 @@
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/repeatButtonsGroup"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/bg_round_corners"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/dateRepeatText"
@@ -203,41 +207,45 @@
                     android:id="@+id/repeatDayToggle"
                     style="@style/Theme.Tike.BlueButton.Toggle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/day"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    app:strokeWidth="0dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/repeatWeekToggle"
                     style="@style/Theme.Tike.BlueButton.Toggle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/week"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    app:strokeWidth="0dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/repeatMonthToggle"
                     style="@style/Theme.Tike.BlueButton.Toggle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/month"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    app:strokeWidth="0dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/repeatYearToggle"
                     style="@style/Theme.Tike.BlueButton.Toggle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/year"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    app:strokeWidth="0dp" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/participantsText"
                 style="@style/Theme.Tike.TextView.RobotoMedium"
                 android:layout_width="wrap_content"
@@ -246,6 +254,61 @@
                 android:text="@string/participants"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/repeatButtonsGroup" />
+
+            <LinearLayout
+                android:id="@+id/counterLayout"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                app:layout_constraintEnd_toStartOf="@id/openParticipantsButton"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_round_corners"
+                android:padding="1dp"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/participantsText">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/numberMinusButton"
+                    style="@style/Theme.Tike.CounterButton"
+                    android:layout_width="52dp"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/white"
+                    app:cornerRadius="15dp"
+                    app:icon="@drawable/ic_remove" />
+
+                <TextView
+                    android:id="@+id/numberCounter"
+                    style="@style/Theme.Tike.TextView.RobotoRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/vacancy_count" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/numberPlusButton"
+                    style="@style/Theme.Tike.CounterButton"
+                    android:layout_width="52dp"
+                    android:layout_height="match_parent"
+                    app:icon="@drawable/ic_add" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/openParticipantsButton"
+                style="@style/Theme.Tike.BlueButton.Imaged"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                app:icon="@drawable/ic_participants"
+                app:iconGravity="textStart"
+                app:iconTint="@color/blue"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/counterLayout"
+                app:layout_constraintTop_toBottomOf="@id/participantsText" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/participantsList"
@@ -260,7 +323,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="6dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/participantsText"
+                app:layout_constraintTop_toBottomOf="@id/counterLayout"
                 app:reverseLayout="true"
                 app:stackFromEnd="true"
                 tools:listitem="@layout/item_participant" />
@@ -288,12 +351,15 @@
         style="@style/Theme.Tike.BlueButton.Basic"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="10dp"
         android:enabled="false"
         android:text="@string/create"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guidelineParentEnd"
-        app:layout_constraintStart_toStartOf="@id/guidelineParentStart" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/loadingBar"
@@ -304,19 +370,5 @@
         app:layout_constraintEnd_toEndOf="@id/createEventButton"
         app:layout_constraintStart_toStartOf="@id/createEventButton"
         app:layout_constraintTop_toTopOf="@id/createEventButton" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineParentStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineParentEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
