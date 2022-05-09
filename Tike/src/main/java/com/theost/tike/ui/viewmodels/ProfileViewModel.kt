@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.state.Status
@@ -21,8 +22,8 @@ class ProfileViewModel : ViewModel() {
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
 
-    private val _signingOutStatus = MutableLiveData<Status>()
-    val signingOutStatus: LiveData<Status> = _signingOutStatus
+    private val _changingStatus = MutableLiveData<Status>()
+    val changingStatus: LiveData<Status> = _changingStatus
 
     private val _user = MutableLiveData<UserUi>()
     val user: LiveData<UserUi> = _user
@@ -68,13 +69,25 @@ class ProfileViewModel : ViewModel() {
         )
     }
 
+    fun delete(credential: AuthCredential) {
+        _changingStatus.postValue(Loading)
+        compositeDisposable.add(
+            AuthRepository.delete(credential).subscribe({
+                _changingStatus.postValue(Success)
+            }, { error ->
+                _changingStatus.postValue(Error)
+                Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
+            })
+        )
+    }
+
     fun signOut() {
-        _signingOutStatus.postValue(Loading)
+        _changingStatus.postValue(Loading)
         compositeDisposable.add(
             AuthRepository.signOut().subscribe({
-                _signingOutStatus.postValue(Success)
+                _changingStatus.postValue(Success)
             }, { error ->
-                _signingOutStatus.postValue(Error)
+                _changingStatus.postValue(Error)
                 Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
             })
         )

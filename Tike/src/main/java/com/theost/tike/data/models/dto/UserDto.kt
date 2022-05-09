@@ -6,7 +6,7 @@ import com.theost.tike.data.models.core.User
 
 data class UserDto(
     @DocumentId
-    val id: String = "",
+    val uid: String = "",
     val name: String = "",
     val nick: String = "",
     val email: String = "",
@@ -19,7 +19,7 @@ data class UserDto(
 
 fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
     return User(
-        id = id,
+        id = uid,
         name = name,
         nick = nick,
         email = email,

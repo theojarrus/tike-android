@@ -33,6 +33,14 @@ object AuthRepository {
             .subscribeOn(Schedulers.io())
     }
 
+    fun delete(credential: AuthCredential): Completable {
+        return RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMapCompletable { user ->
+            UsersRepository.deleteUser(user.uid)
+                .andThen(RxFirebaseUser.reauthenticate(user, credential))
+                .andThen(RxFirebaseUser.delete(user))
+        }
+    }
+
     fun getUserAuthStatus(): Single<AuthStatus> {
         return RxFirebaseAuth.getCurrentUser(Firebase.auth)
             .flatMapCompletable { RxFirebaseUser.reload(it) }

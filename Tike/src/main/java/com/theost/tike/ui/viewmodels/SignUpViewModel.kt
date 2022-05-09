@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.state.Status
@@ -63,15 +64,19 @@ class SignUpViewModel : ViewModel() {
 
     private fun restoreFirebaseUser() {
         _loadingStatus.postValue(Loading)
-        Firebase.auth.currentUser?.let { user ->
-            if (_userName.value == null) _userName.value = formatName(user.displayName.orEmpty())
-            if (_userNick.value == null) _userNick.value = formatNick(user.displayName.orEmpty())
-            userId = user.uid
-            userEmail = user.email.orEmpty()
-            userPhone = user.phoneNumber.orEmpty()
-            userAvatar = user.photoUrl.toString()
-            _loadingStatus.postValue(Success)
-        } ?: _loadingStatus.postValue(Error)
+        compositeDisposable.add(
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).subscribe({ user ->
+                if (_userName.value == null) _userName.value = formatName(user.displayName.orEmpty())
+                if (_userNick.value == null) _userNick.value = formatNick(user.displayName.orEmpty())
+                userId = user.uid
+                userEmail = user.email.orEmpty()
+                userPhone = user.phoneNumber.orEmpty()
+                userAvatar = user.photoUrl.toString()
+                _loadingStatus.postValue(Success)
+            }, {
+                _loadingStatus.postValue(Error)
+            })
+        )
     }
 
     private fun loadLifecycles() {
@@ -106,7 +111,7 @@ class SignUpViewModel : ViewModel() {
             _nickStatus.postValue(Success)
             compositeDisposable.add(
                 UsersRepository.addUser(
-                    id = userId,
+                    uid = userId,
                     name = formattedName,
                     nick = formattedNick,
                     email = userEmail,

@@ -70,4 +70,5 @@
     <string name="confirmation">Подтверждение</string>
     <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
     <string name="sign_out">Выйти</string>
+    <string name="delete_account">Удалить аккаунт</string>
 </resources>

@@ -7,6 +7,9 @@ import com.google.firebase.ktx.Firebase
 
 object FirestoreApi {
 
+    const val SERVER_CLIENT_ID =
+        "694580831967-k64snkpmp1k6bb38bps6fifaoh7acq6e.apps.googleusercontent.com"
+
     private const val FIREBASE_DOCUMENT_COLLECTIONS = "collections"
 
     private const val FIREBASE_COLLECTION_USERS = "users"

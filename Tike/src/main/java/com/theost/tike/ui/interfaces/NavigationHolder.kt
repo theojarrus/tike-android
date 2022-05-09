@@ -2,5 +2,7 @@ package com.theost.tike.ui.interfaces
 
 interface NavigationHolder {
 
-    abstract fun startAuthActivity()
+    fun hideBottomNavigation()
+    fun showBottomNavigation()
+    fun startAuthActivity()
 }

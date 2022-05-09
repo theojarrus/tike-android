@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.PopupMenu
+import androidx.core.view.isGone
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -32,6 +33,14 @@ class TikeActivity : FragmentActivity(R.layout.activity_tike), NavigationHolder 
     private fun setupSmoothBottomMenu() {
         val popupMenu = PopupMenu(this, binding.root).apply { inflate(R.menu.menu_bottom) }
         binding.bottomNavigation.setupWithNavController(popupMenu.menu, navController)
+    }
+
+    override fun hideBottomNavigation() {
+        binding.bottomNavigation.isGone = true
+    }
+
+    override fun showBottomNavigation() {
+        binding.bottomNavigation.isGone = false
     }
 
     override fun startAuthActivity() {

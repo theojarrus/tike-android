@@ -18,7 +18,6 @@
         android:id="@+id/profileLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -31,10 +30,10 @@
             android:layout_marginTop="20dp"
             android:backgroundTint="@color/blue"
             app:cardCornerRadius="15dp"
-            app:contentPaddingTop="20dp"
             app:contentPaddingBottom="20dp"
             app:contentPaddingLeft="16dp"
             app:contentPaddingRight="16dp"
+            app:contentPaddingTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -60,6 +59,15 @@
                         android:contentDescription="@string/profile" />
 
                 </com.google.android.material.card.MaterialCardView>
+
+                <ProgressBar
+                    android:id="@+id/loadingBar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:layout_constraintBottom_toBottomOf="@id/profileAvatarLayout"
+                    app:layout_constraintEnd_toEndOf="@id/profileAvatarLayout"
+                    app:layout_constraintStart_toStartOf="@id/profileAvatarLayout"
+                    app:layout_constraintTop_toTopOf="@id/profileAvatarLayout" />
 
                 <TextView
                     android:id="@+id/profileName"
@@ -223,6 +231,19 @@
             app:layout_constraintTop_toBottomOf="@id/profileInfo" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteButton"
+            style="@style/Theme.Tike.BlueButton.Basic"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/red"
+            android:text="@string/delete_account"
+            app:layout_constraintBottom_toTopOf="@id/signOutButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/red" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/signOutButton"
             style="@style/Theme.Tike.BlueButton.Basic"
             android:layout_width="0dp"
@@ -236,9 +257,10 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
-        android:id="@+id/loadingBar"
+        android:id="@+id/changingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

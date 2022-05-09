@@ -1,7 +1,13 @@
 package com.theost.tike.data.repositories
 
+import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
+import com.androidhuman.rxfirebase2.auth.RxFirebaseUser
 import com.androidhuman.rxfirebase2.firestore.RxFirebaseFirestore
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldPath.documentId
+import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.api.FirestoreApi.provideUserDocument
 import com.theost.tike.data.api.FirestoreApi.provideUsersCollection
 import com.theost.tike.data.models.core.User
@@ -51,19 +57,23 @@ object UsersRepository {
     }
 
     private fun getNicknameExist(nick: String): Single<ExistStatus> {
-        return RxFirebaseFirestore.data(provideUsersCollection().whereEqualTo(UserDto::nick.name, nick))
+        return RxFirebaseFirestore.data(
+            provideUsersCollection().whereEqualTo(
+                UserDto::nick.name,
+                nick
+            )
+        )
             .map { snapshot -> if (snapshot.getOrNull()?.isEmpty == false) Exist else NotFound }
             .subscribeOn(Schedulers.io())
     }
 
     fun deleteUser(uid: String): Completable {
         return RxFirebaseFirestore.delete(provideUsersCollection().document(uid))
-            .andThen(AuthRepository.signOut())
             .subscribeOn(Schedulers.io())
     }
 
     fun addUser(
-        id: String,
+        uid: String,
         name: String,
         nick: String,
         email: String,
@@ -75,9 +85,8 @@ object UsersRepository {
             when (status) {
                 Exist -> Completable.error(ExistException())
                 NotFound -> RxFirebaseFirestore.set(
-                    provideUsersCollection().document(),
+                    provideUsersCollection().document(uid),
                     UserDto(
-                        id = id,
                         name = name,
                         nick = nick,
                         email = email,

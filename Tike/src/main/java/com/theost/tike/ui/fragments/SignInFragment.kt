@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.GoogleAuthProvider
 import com.theost.tike.R
+import com.theost.tike.data.api.FirestoreApi.SERVER_CLIENT_ID
 import com.theost.tike.databinding.FragmentSignInBinding
 import com.theost.tike.ui.viewmodels.SignInViewModel
 import com.theost.tike.ui.widgets.StateFragment
@@ -55,9 +56,6 @@ class SignInFragment : StateFragment(R.layout.fragment_sign_in) {
     }
 
     companion object {
-
-        private const val SERVER_CLIENT_ID =
-            "694580831967-k64snkpmp1k6bb38bps6fifaoh7acq6e.apps.googleusercontent.com"
 
         fun newInstance(): Fragment {
             return SignInFragment()
