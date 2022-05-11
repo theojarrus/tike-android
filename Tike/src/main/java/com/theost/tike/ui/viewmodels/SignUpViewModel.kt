@@ -15,6 +15,7 @@ import com.theost.tike.data.models.ui.LifestyleUi
 import com.theost.tike.data.models.ui.mapToLifestyleUi
 import com.theost.tike.data.repositories.LifestylesRepository
 import com.theost.tike.data.repositories.UsersRepository
+import com.theost.tike.ui.utils.ApiUtils.getQualityAvatar
 import com.theost.tike.ui.widgets.ExistException
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_SIGN_UP
 import com.theost.tike.ui.utils.StringUtils.formatName
@@ -71,7 +72,7 @@ class SignUpViewModel : ViewModel() {
                 userId = user.uid
                 userEmail = user.email.orEmpty()
                 userPhone = user.phoneNumber.orEmpty()
-                userAvatar = user.photoUrl.toString()
+                userAvatar = getQualityAvatar(user.photoUrl.toString())
                 _loadingStatus.postValue(Success)
             }, {
                 _loadingStatus.postValue(Error)

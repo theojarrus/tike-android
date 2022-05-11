@@ -5,6 +5,9 @@
     <string name="creation">Создание</string>
     <string name="dialogs">Диалоги</string>
     <string name="profile">Профиль</string>
+    <string name="preferences">Настройки</string>
+    <string name="qr_code">QR Код</string>
+
     <string name="calendar">Календарь</string>
     <string name="time">Время</string>
     <string name="edit">Редактировать</string>
@@ -59,16 +62,28 @@
     <string name="error_name_format">Некорректный формат имени</string>
     <string name="error_nick_format">Содержит недопустимые символы</string>
     <string name="error_nick_exist">Такой ник уже существует</string>
-
     <string name="error_network">Ошибка загрузки</string>
     <string name="error_auth">Ошибка авторизации</string>
     <string name="error_unknown">Неизвестная ошибка</string>
-    <string name="empty_people">Нет людей</string>
-    <string name="reload">Перезагрузить</string>
-    <string name="vacancy_count">Свободно: %d</string>
-    <string name="write_message">Написать сообщение</string>
-    <string name="confirmation">Подтверждение</string>
+    <string name="error_delete">Ошибка удаления</string>
+
+    <string name="empty_contacts">Нет контактов</string>
+
     <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
+    <string name="confirmation">Подтверждение</string>
+
+    <string name="reload">Перезагрузить</string>
     <string name="sign_out">Выйти</string>
     <string name="delete_account">Удалить аккаунт</string>
+    <string name="share">Поделиться</string>
+
+    <string name="privacy">Приватность</string>
+    <string name="account">Аккаунт</string>
+
+    <string name="blacklist">Чёрный список</string>
+
+    <string name="vacancy_count">Свободно: %d</string>
+    <string name="share_profile">С вами поделились контактом в Tike! Его уникальный id: %s</string>
+
+    <string name="feature_not_ready">Функция будет доступна позднее</string>
 </resources>

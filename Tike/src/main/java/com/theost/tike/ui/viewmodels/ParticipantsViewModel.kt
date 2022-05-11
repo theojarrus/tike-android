@@ -76,7 +76,7 @@ class ParticipantsViewModel : SearchStateViewModel() {
         val selectedIds = selectedParticipants.value.orEmpty().toMutableList()
             .apply { if (contains(uid)) remove(uid) else add(uid) }
         val items = participants.value.orEmpty()
-            .map { user -> user.copy(isSelected = selectedIds.contains(user.id)) }
+            .map { user -> user.copy(isSelected = selectedIds.contains(user.uid)) }
         _selectedParticipants.postValue(selectedIds)
         _participants.postValue(items)
     }
@@ -87,6 +87,6 @@ class ParticipantsViewModel : SearchStateViewModel() {
     }
 
     private fun List<UserUi>.mapWithSelection(): List<UserUi> = map { user ->
-        user.copy(isSelected = selectedParticipants.value.orEmpty().contains(user.id))
+        user.copy(isSelected = selectedParticipants.value.orEmpty().contains(user.uid))
     }
 }

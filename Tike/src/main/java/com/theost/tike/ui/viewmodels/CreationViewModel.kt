@@ -13,7 +13,7 @@ import com.theost.tike.data.models.ui.ParticipantUi
 import com.theost.tike.data.models.ui.mapToParticipantUi
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
-import com.theost.tike.ui.extensions.isPositive
+import com.theost.tike.ui.extensions.isNotLower
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_CREATION
 import io.reactivex.disposables.CompositeDisposable
 import org.threeten.bp.LocalDate
@@ -66,7 +66,7 @@ class CreationViewModel : ViewModel() {
         val beginTime = eventBeginTime.value?.toNanoOfDay() ?: 0
         val endTime = eventEndTime.value?.toNanoOfDay() ?: 0
         val participantsLimit = participantsLimit.value ?: 0
-        val participants = participants.value.orEmpty().map { user -> user.id }
+        val participants = participants.value.orEmpty().map { user -> user.uid }
 
         val creationDate = LocalDateTime.now().nano
 
@@ -115,8 +115,8 @@ class CreationViewModel : ViewModel() {
     }
 
     fun updateParticipantsLimit(value: Int) {
-        participantsLimit.value?.plus(value).let {
-            _participantsLimit.value = if (it.isPositive()) it else 0
+        participantsLimit.value?.plus(value).let { limit ->
+            _participantsLimit.value = if (limit.isNotLower(participantsIds.size)) limit else 0
         }
     }
 
@@ -127,7 +127,7 @@ class CreationViewModel : ViewModel() {
             compositeDisposable.add(
                 UsersRepository.getUsers(participantsIds).subscribe({ users ->
                     val participants = users.map { user -> user.mapToParticipantUi() }
-                        .distinctBy { participant -> participant.id }
+                        .distinctBy { participant -> participant.uid }
 
                     updateParticipantsLimit(participants.size)
                     _participants.postValue(participants)
@@ -147,7 +147,7 @@ class CreationViewModel : ViewModel() {
             updateParticipantsLimit(participantsIds.size - participantsCount)
             _participants.postValue(
                 items.toMutableList()
-                    .filterNot { participant -> participant.id == userId }
+                    .filterNot { participant -> participant.uid == userId }
                     .toList()
             )
         }

@@ -20,7 +20,7 @@
         style="@style/Theme.Tike.InfoView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/empty_people"
+        android:text="@string/empty_contacts"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/addParticipantsButton"
         app:layout_constraintEnd_toEndOf="parent"

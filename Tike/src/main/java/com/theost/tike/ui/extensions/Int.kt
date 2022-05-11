@@ -1,5 +1,5 @@
 package com.theost.tike.ui.extensions
 
-fun Int?.isPositive(): Boolean {
-    return this != null && this >= 0
+fun Int?.isNotLower(value: Int): Boolean {
+    return this != null && this >= value
 }

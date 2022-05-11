@@ -17,6 +17,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.theost.tike.R
 import com.theost.tike.data.api.FirestoreApi.SERVER_CLIENT_ID
 import com.theost.tike.databinding.FragmentSignInBinding
+import com.theost.tike.ui.utils.AuthUtils.getSignInIntent
 import com.theost.tike.ui.viewmodels.SignInViewModel
 import com.theost.tike.ui.widgets.StateFragment
 
@@ -29,8 +30,10 @@ class SignInFragment : StateFragment(R.layout.fragment_sign_in) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.signInButton.setOnClickListener { authHandler.launch(getSignInIntent()) }
         viewModel.signingStatus.observe(viewLifecycleOwner) { handleEndlessStatus(it) }
+        binding.signInButton.setOnClickListener {
+            activity?.let { authHandler.launch(getSignInIntent(it)) }
+        }
     }
 
     override fun bindState(): StateViews = StateViews(
@@ -38,14 +41,6 @@ class SignInFragment : StateFragment(R.layout.fragment_sign_in) {
         loadingView = binding.loadingBar,
         errorMessage = getString(R.string.error_auth)
     )
-
-    private fun getSignInIntent(): Intent {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(SERVER_CLIENT_ID)
-            .requestEmail()
-            .build()
-        return GoogleSignIn.getClient(requireActivity(), gso).signInIntent
-    }
 
     private fun onAuth(result: ActivityResult) {
         if (result.resultCode == RESULT_OK) {

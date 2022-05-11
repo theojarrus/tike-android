@@ -28,10 +28,10 @@ class SplashActivity : AppCompatActivity(R.layout.activity_splash) {
     }
 
     private fun startAuthActivity(authStatus: AuthStatus) {
-        startActivity(AuthActivity.newInstance(this, authStatus))
+        startActivity(AuthActivity.newIntent(this, authStatus))
     }
 
     private fun startTikeActivity() {
-        startActivity(TikeActivity.newInstance(this))
+        startActivity(TikeActivity.newIntent(this))
     }
 }

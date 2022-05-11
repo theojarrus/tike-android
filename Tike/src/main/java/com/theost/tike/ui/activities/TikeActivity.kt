@@ -4,16 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.PopupMenu
-import androidx.core.view.isGone
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.databinding.ActivityTikeBinding
-import com.theost.tike.ui.interfaces.NavigationHolder
 
-class TikeActivity : FragmentActivity(R.layout.activity_tike), NavigationHolder {
+class TikeActivity : FragmentActivity(R.layout.activity_tike) {
 
     private val binding: ActivityTikeBinding by viewBinding()
     private lateinit var navController: NavController
@@ -35,26 +33,14 @@ class TikeActivity : FragmentActivity(R.layout.activity_tike), NavigationHolder 
         binding.bottomNavigation.setupWithNavController(popupMenu.menu, navController)
     }
 
-    override fun hideBottomNavigation() {
-        binding.bottomNavigation.isGone = true
-    }
-
-    override fun showBottomNavigation() {
-        binding.bottomNavigation.isGone = false
-    }
-
-    override fun startAuthActivity() {
-        startActivity(AuthActivity.newTaskInstance(this))
-    }
-
     companion object {
 
-        fun newInstance(context: Context): Intent {
+        fun newIntent(context: Context): Intent {
             return Intent(context, TikeActivity::class.java)
         }
 
-        fun newTaskInstance(context: Context): Intent {
-            return newInstance(context).apply {
+        fun newTaskIntent(context: Context): Intent {
+            return newIntent(context).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or
                         Intent.FLAG_ACTIVITY_NEW_TASK

@@ -3,7 +3,6 @@ package com.theost.tike.ui.adapters.delegates
 import android.view.LayoutInflater.from
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.theost.tike.R
 import com.theost.tike.data.models.ui.ParticipantUi
 import com.theost.tike.databinding.ItemParticipantBinding
@@ -41,7 +40,7 @@ class ParticipantAdapterDelegate(private val clickListener: (participantId: Stri
                 participantName.isEnabled = enabled
                 removeParticipantButton.isEnabled = enabled
                 when (enabled) {
-                    true -> removeParticipantButton.setOnClickListener { clickListener(item.id) }
+                    true -> removeParticipantButton.setOnClickListener { clickListener(item.uid) }
                     else -> removeParticipantButton.setOnClickListener(null)
                 }
             }

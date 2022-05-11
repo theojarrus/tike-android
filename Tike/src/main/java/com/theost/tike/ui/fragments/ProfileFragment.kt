@@ -1,33 +1,29 @@
 package com.theost.tike.ui.fragments
 
-import android.app.Activity
 import android.content.Intent
+import android.content.Intent.*
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import android.widget.Toast.LENGTH_SHORT
+import android.widget.Toast.makeText
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.GoogleAuthProvider
 import com.theost.tike.R
-import com.theost.tike.data.api.FirestoreApi.SERVER_CLIENT_ID
-import com.theost.tike.data.models.state.Status.Error
-import com.theost.tike.data.models.state.Status.Loading
-import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.databinding.FragmentProfileBinding
+import com.theost.tike.ui.activities.PreferencesActivity
 import com.theost.tike.ui.extensions.load
-import com.theost.tike.ui.interfaces.NavigationHolder
+import com.theost.tike.ui.fragments.ProfileFragmentDirections.Companion.actionProfileFragmentToQrCodeFragment
 import com.theost.tike.ui.viewmodels.ProfileViewModel
 import com.theost.tike.ui.widgets.ToolbarStateFragment
+import java.lang.String.format
 
 class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
 
-    private val reAuthHandler = registerForActivityResult(StartActivityForResult()) { onReAuth(it) }
+    private var profileId: String? = null
 
     private val viewModel: ProfileViewModel by viewModels()
     private val binding: FragmentProfileBinding by viewBinding()
@@ -35,28 +31,26 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.deleteButton.setOnClickListener { reAuthHandler.launch(getSignInIntent()) }
-        binding.signOutButton.setOnClickListener { viewModel.signOut() }
-
-        viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
-        viewModel.changingStatus.observe(viewLifecycleOwner) { status ->
-            when (status) {
-                Success -> (activity as? NavigationHolder)?.startAuthActivity()
-                Loading -> {
-                    (activity as? NavigationHolder)?.hideBottomNavigation()
-                    binding.changingBar.isGone = false
-                    binding.profileLayout.isGone = true
-                }
-                Error -> {
-                    (activity as? NavigationHolder)?.showBottomNavigation()
-                    binding.changingBar.isGone = true
-                    binding.profileLayout.isGone = false
-                }
-            }
-            handleStatus(status)
+        binding.profileAddFriendButton.setOnClickListener {
+            makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
         }
 
+        binding.profileRemoveFriendButton.setOnClickListener {
+            makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
+        }
+
+        binding.messageProfileButton.setOnClickListener {
+            makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
+        }
+
+        binding.profileShareButton.setOnClickListener { showProfileShare() }
+        binding.profileQrCodeButton.setOnClickListener { showProfileQrCode() }
+        binding.profileEditButton.setOnClickListener { editProfile() }
+        binding.preferencesProfileButton.setOnClickListener { openPreferences() }
+
+        viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
         viewModel.user.observe(viewLifecycleOwner) { user ->
+            profileId = user.nick
             binding.profileAvatar.load(user.avatar)
             binding.profileName.text = user.name
             binding.profileNick.text = user.nick
@@ -71,8 +65,23 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
         }
     }
 
+    override fun bindState(): StateViews = StateViews(
+        toolbar = binding.toolbar,
+        loadingView = binding.loadingBar,
+        errorMessage = getString(R.string.error_unknown),
+        disabledViews = listOf(
+            binding.profileShareButton,
+            binding.profileQrCodeButton,
+            binding.profileEditButton,
+            binding.friendsProfileButton,
+            binding.preferencesProfileButton,
+            binding.messageProfileButton,
+            binding.profileAddFriendButton
+        )
+    )
+
     private fun setupCurrentUserProfile() {
-        binding.messageProfileButton.isGone = true
+        binding.profileCommunicateButtons.isGone = true
     }
 
     private fun setupOtherUserProfile() {
@@ -81,31 +90,39 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
             toolbar.isGone = false
             profileEditButton.isGone = true
             friendsProfileButton.isGone = true
-            settingsProfileButton.isGone = true
+            preferencesProfileButton.isGone = true
         }
     }
 
-    private fun getSignInIntent(): Intent {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(SERVER_CLIENT_ID)
-            .requestEmail()
-            .build()
-        return GoogleSignIn.getClient(requireActivity(), gso).signInIntent
-    }
-
-    private fun onReAuth(result: ActivityResult) {
-        if (result.resultCode == Activity.RESULT_OK) {
-            GoogleSignIn.getSignedInAccountFromIntent(result.data).result.idToken
-                ?.let { viewModel.delete(GoogleAuthProvider.getCredential(it, null)) }
-                ?: showErrorToast()
+    private fun showProfileShare() {
+        profileId?.let { id ->
+            val intent = Intent().apply {
+                action = ACTION_SEND
+                type = "text/plain"
+                putExtra(EXTRA_TITLE, getString(R.string.share))
+                putExtra(EXTRA_TEXT, format(getString(R.string.share_profile), id))
+            }
+            startActivity(intent)
         }
     }
 
-    override fun bindState(): StateViews = StateViews(
-        toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
-        errorMessage = getString(R.string.error_unknown)
-    )
+    private fun showProfileQrCode() {
+        profileId?.let { id ->
+            findNavController().navigate(
+                actionProfileFragmentToQrCodeFragment(
+                    format(getString(R.string.share_profile), id)
+                )
+            )
+        }
+    }
+
+    private fun editProfile() {
+        makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
+    }
+
+    private fun openPreferences() {
+        startActivity(PreferencesActivity.newIntent(requireContext(), profileId))
+    }
 
     companion object {
 

@@ -2,6 +2,7 @@ package com.theost.tike.ui.widgets
 
 import android.view.View
 import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.annotation.LayoutRes
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
@@ -95,6 +96,6 @@ abstract class StateFragment(@LayoutRes contentLayoutId: Int) : Fragment(content
     }
 
     fun showErrorToast() {
-        bindState().errorMessage?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+        bindState().errorMessage?.let { makeText(context, it, Toast.LENGTH_SHORT).show() }
     }
 }

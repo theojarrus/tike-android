@@ -19,7 +19,7 @@ data class UserDto(
 
 fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
     return User(
-        id = uid,
+        uid = uid,
         name = name,
         nick = nick,
         email = email,

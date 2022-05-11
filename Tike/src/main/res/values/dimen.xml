@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="mtrl_calendar_header_height" tools:ignore="PrivateResource">0dp</dimen>
+    <dimen name="padding_preference_start">72dp</dimen>
+    <dimen name="padding_preference_end">24dp</dimen>
+    <dimen name="padding_preference_top">16dp</dimen>
+    <dimen name="padding_preference_bottom">16dp</dimen>
 </resources>

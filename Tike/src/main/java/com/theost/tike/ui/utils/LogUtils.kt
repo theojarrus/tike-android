@@ -9,4 +9,5 @@ object LogUtils {
     const val LOG_VIEW_MODEL_PARTICIPANTS = "view_model_participants"
     const val LOG_VIEW_MODEL_CREATION = "view_model_creation"
     const val LOG_VIEW_MODEL_PROFILE = "view_model_profile"
+    const val LOG_VIEW_MODEL_PREFERENCES= "view_model_preferences"
 }

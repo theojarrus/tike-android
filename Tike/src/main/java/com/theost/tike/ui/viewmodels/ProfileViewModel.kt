@@ -22,9 +22,6 @@ class ProfileViewModel : ViewModel() {
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
 
-    private val _changingStatus = MutableLiveData<Status>()
-    val changingStatus: LiveData<Status> = _changingStatus
-
     private val _user = MutableLiveData<UserUi>()
     val user: LiveData<UserUi> = _user
 
@@ -64,30 +61,6 @@ class ProfileViewModel : ViewModel() {
                 _loadingStatus.postValue(Success)
             }, { error ->
                 _loadingStatus.postValue(Error)
-                Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
-            })
-        )
-    }
-
-    fun delete(credential: AuthCredential) {
-        _changingStatus.postValue(Loading)
-        compositeDisposable.add(
-            AuthRepository.delete(credential).subscribe({
-                _changingStatus.postValue(Success)
-            }, { error ->
-                _changingStatus.postValue(Error)
-                Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
-            })
-        )
-    }
-
-    fun signOut() {
-        _changingStatus.postValue(Loading)
-        compositeDisposable.add(
-            AuthRepository.signOut().subscribe({
-                _changingStatus.postValue(Success)
-            }, { error ->
-                _changingStatus.postValue(Error)
                 Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
             })
         )

@@ -18,6 +18,7 @@ import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
 import com.theost.tike.ui.extensions.getNavigationResult
 import com.theost.tike.ui.extensions.removeNavigationResult
+import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToParticipantsFragment
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.utils.DateUtils
 import com.theost.tike.ui.viewmodels.CalendarViewModel
@@ -79,7 +80,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
-            addedIds = participants.map { participant -> participant.id }
+            addedIds = participants.map { participant -> participant.uid }
             adapter.submitList(mutableListOf<DelegateItem>().apply { addAll(participants) })
         }
 
@@ -141,44 +142,38 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     }
 
     private fun showDatePicker() {
-        context?.let { context ->
-            DatePickerDialog(
-                context,
-                { _, year, month, day -> viewModel.updateEventDate(year, month, day) },
-                eventDate.year,
-                eventDate.monthValue,
-                eventDate.dayOfMonth
-            ).show()
-        }
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, day -> viewModel.updateEventDate(year, month, day) },
+            eventDate.year,
+            eventDate.monthValue,
+            eventDate.dayOfMonth
+        ).show()
     }
 
     private fun showBeginTimePicker() {
-        context?.let { context ->
-            TimePickerDialog(
-                context,
-                { _, hour, minute -> viewModel.updateEventBeginTime(hour, minute) },
-                eventBeginTime.hour,
-                eventBeginTime.minute,
-                true
-            ).show()
-        }
+        TimePickerDialog(
+            requireContext(),
+            { _, hour, minute -> viewModel.updateEventBeginTime(hour, minute) },
+            eventBeginTime.hour,
+            eventBeginTime.minute,
+            true
+        ).show()
     }
 
     private fun showEndTimePicker() {
-        context?.let { context ->
-            TimePickerDialog(
-                context,
-                { _, hour, minute -> viewModel.updateEventEndTime(hour, minute) },
-                eventEndTime.hour,
-                eventEndTime.minute,
-                true
-            ).show()
-        }
+        TimePickerDialog(
+            requireContext(),
+            { _, hour, minute -> viewModel.updateEventEndTime(hour, minute) },
+            eventEndTime.hour,
+            eventEndTime.minute,
+            true
+        ).show()
     }
 
     private fun openParticipantsAdding() {
         findNavController().navigate(
-            AddingFragmentDirections.actionAddingFragmentToParticipantsFragment(
+            actionAddingFragmentToParticipantsFragment(
                 KEY_PARTICIPANTS_REQUEST,
                 addedIds.toTypedArray()
             )

@@ -28,6 +28,9 @@
             android:name=".ui.activities.AuthActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.PreferencesActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.TikeActivity"
             android:screenOrientation="portrait" />
     </application>

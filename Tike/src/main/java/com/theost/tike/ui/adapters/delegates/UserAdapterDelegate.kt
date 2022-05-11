@@ -4,7 +4,6 @@ import android.view.LayoutInflater.from
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.theost.tike.R
 import com.theost.tike.data.models.ui.UserUi
 import com.theost.tike.databinding.ItemUserBinding
@@ -43,7 +42,7 @@ class UserAdapterDelegate(
                 userName.text = item.name
                 userNick.text = item.nick
                 indicatorSelected.isVisible = (item.isSelected)
-                root.setOnClickListener { clickListener(item.id, !item.isSelected) }
+                root.setOnClickListener { clickListener(item.uid, !item.isSelected) }
             }
         }
     }
