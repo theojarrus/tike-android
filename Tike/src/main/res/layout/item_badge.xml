@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/badgeCount"
+    style="@style/Theme.Tike.TextView.RobotoMedium"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:background="@drawable/bg_badge"
+    android:gravity="center"
+    android:textColor="@color/white"
+    android:textSize="11sp"
+    tools:text="0" />

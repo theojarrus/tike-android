@@ -9,7 +9,11 @@
         android:id="@+id/scheduleFragment"
         android:name="com.theost.tike.ui.fragments.ScheduleFragment"
         android:label="@string/schedule"
-        tools:layout="@layout/fragment_schedule" />
+        tools:layout="@layout/fragment_schedule">
+        <action
+            android:id="@+id/action_scheduleFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/inboxFragment"
@@ -24,10 +28,11 @@
         tools:layout="@layout/fragment_adding">
         <action
             android:id="@+id/action_addingFragment_to_participantsFragment"
-            app:destination="@id/participantsFragment"/>
-        <action
-            android:id="@+id/action_addingFragment_to_scheduleFragment"
-            app:destination="@id/scheduleFragment"/>
+            app:destination="@id/participantsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -50,13 +55,106 @@
         tools:layout="@layout/fragment_dialogs" />
 
     <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.theost.tike.ui.fragments.AccountFragment"
+        android:label="@string/account"
+        tools:layout="@layout/fragment_account">
+        <action
+            android:id="@+id/action_accountFragment_to_qrCodeFragment"
+            app:destination="@id/qrCodeFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_accountFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.theost.tike.ui.fragments.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="uid"
+            app:argType="string" />
         <action
             android:id="@+id/action_profileFragment_to_qrCodeFragment"
             app:destination="@id/qrCodeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.theost.tike.ui.fragments.FriendsFragment"
+        android:label="@string/friends"
+        tools:layout="@layout/fragment_friends">
+        <action
+            android:id="@+id/action_friendsFragment_to_peopleFragment"
+            app:destination="@id/peopleFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_friendsFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/peopleFragment"
+        android:name="com.theost.tike.ui.fragments.PeopleFragment"
+        android:label="@string/people"
+        tools:layout="@layout/fragment_people">
+        <action
+            android:id="@+id/action_peopleFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.theost.tike.ui.fragments.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_settingsFragment_to_blacklistFragment"
+            app:destination="@id/blacklistFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/blacklistFragment"
+        android:name="com.theost.tike.ui.fragments.BlacklistFragment"
+        android:label="@string/blacklist"
+        tools:layout="@layout/fragment_blacklist">
+        <action
+            android:id="@+id/action_blacklistFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <dialog
@@ -67,6 +165,23 @@
         <argument
             android:name="content"
             app:argType="string" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/infoFragment"
+        android:name="com.theost.tike.ui.fragments.InfoFragment"
+        android:label="@string/participants"
+        tools:layout="@layout/fragment_info">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_infoFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </dialog>
 
 </navigation>

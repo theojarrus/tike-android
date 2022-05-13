@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
-import com.theost.tike.data.models.state.Status.Error
 import com.theost.tike.databinding.FragmentParticipantsBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
-import com.theost.tike.ui.adapters.delegates.UserAdapterDelegate
+import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
 import com.theost.tike.ui.extensions.setNavigationResult
 import com.theost.tike.ui.viewmodels.ParticipantsViewModel
 import com.theost.tike.ui.widgets.SearchStateFragment
@@ -28,12 +28,9 @@ class ParticipantsFragment : SearchStateFragment(R.layout.fragment_participants)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupSearchToolbar(true) { viewModel.setupSearch(it) }
+        setupSearchToolbar(true)
 
-        viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
-            binding.reloadButton.isGone = status != Error
-            handleStatus(status)
-        }
+        viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
 
         viewModel.participants.observe(viewLifecycleOwner) { users ->
             binding.emptyView.isGone = users.isNotEmpty()
@@ -49,19 +46,18 @@ class ParticipantsFragment : SearchStateFragment(R.layout.fragment_participants)
         }
 
         binding.participantsList.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate { userId, isSelected ->
-                viewModel.selectParticipant(userId)
-            })
+            addDelegate(ParticipantAdapterDelegate { uid -> viewModel.selectParticipant(uid) })
         }
 
-        binding.reloadButton.setOnClickListener { viewModel.loadUsers() }
         binding.addParticipantsButton.setOnClickListener {
             setNavigationResult(args.requestKey, selectedIds)
-            activity?.onBackPressed()
+            findNavController().navigateUp()
         }
 
         viewModel.init(args.addedIds.toList())
     }
+
+    override fun onSearch(query: String) = viewModel.searchParticipants(query)
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,

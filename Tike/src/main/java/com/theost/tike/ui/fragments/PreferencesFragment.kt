@@ -3,6 +3,7 @@ package com.theost.tike.ui.fragments
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.View.OVER_SCROLL_NEVER
 import android.widget.Toast.LENGTH_SHORT
 import android.widget.Toast.makeText
 import androidx.activity.result.ActivityResult
@@ -10,11 +11,13 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.GoogleAuthProvider
 import com.theost.tike.R
+import com.theost.tike.ui.fragments.SettingsFragmentDirections.Companion.actionSettingsFragmentToBlacklistFragment
 import com.theost.tike.ui.utils.AuthUtils.getSignInIntent
 import com.theost.tike.ui.utils.PrefUtils.PREF_KEY_ACCOUNT_BLACKLIST
 import com.theost.tike.ui.utils.PrefUtils.PREF_KEY_ACCOUNT_DELETE
@@ -24,11 +27,10 @@ import com.theost.tike.ui.viewmodels.PreferencesViewModel
 class PreferencesFragment : PreferenceFragmentCompat() {
 
     private val authHandler = registerForActivityResult(StartActivityForResult()) { onAuth(it) }
-
     private val viewModel: PreferencesViewModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
+        setPreferencesFromResource(R.xml.fragment_preferences, rootKey)
         arguments?.getString(ARG_PREFERENCES_ID)?.let { id ->
             findPreference<Preference>(PREF_KEY_ACCOUNT_SIGN_OUT)?.summary = id
         }
@@ -36,9 +38,10 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        listView.overScrollMode = OVER_SCROLL_NEVER
 
         findPreference<Preference>(PREF_KEY_ACCOUNT_BLACKLIST)?.setOnPreferenceClickListener {
-            makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
+            findNavController().navigate(actionSettingsFragmentToBlacklistFragment())
             true
         }
 

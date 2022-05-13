@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -15,12 +14,13 @@ import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
-import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
+import com.theost.tike.ui.adapters.delegates.CardAdapterDelegate
 import com.theost.tike.ui.extensions.getNavigationResult
 import com.theost.tike.ui.extensions.removeNavigationResult
 import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToParticipantsFragment
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.utils.DateUtils
+import com.theost.tike.ui.utils.StringUtils.switchIfEmpty
 import com.theost.tike.ui.viewmodels.CalendarViewModel
 import com.theost.tike.ui.viewmodels.CreationViewModel
 import com.theost.tike.ui.widgets.StateFragment
@@ -53,11 +53,8 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         binding.numberPlusButton.setOnClickListener { viewModel.updateParticipantsLimit(1) }
         binding.numberMinusButton.setOnClickListener { viewModel.updateParticipantsLimit(-1) }
 
-        binding.titleInput.addTextChangedListener { updateCreateEventButton() }
-        binding.descriptionInput.addTextChangedListener { updateCreateEventButton() }
-
         binding.participantsList.adapter = adapter.apply {
-            addDelegate(ParticipantAdapterDelegate { id -> viewModel.removeParticipant(id) })
+            addDelegate(CardAdapterDelegate { id -> viewModel.removeParticipant(id) })
         }
 
         getNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)?.let { usersIds ->
@@ -132,15 +129,6 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         )
     )
 
-    private fun checkIsNotEmptyInputFields(): Boolean {
-        return binding.titleInput.text.toString().isNotEmpty()
-            .and(binding.descriptionInput.text.toString().isNotEmpty())
-    }
-
-    private fun updateCreateEventButton() {
-        binding.createEventButton.isEnabled = checkIsNotEmptyInputFields()
-    }
-
     private fun showDatePicker() {
         DatePickerDialog(
             requireContext(),
@@ -181,17 +169,25 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     }
 
     private fun sendEventData() {
-        val title = binding.titleInput.text.toString().trim()
-        val description = binding.descriptionInput.text.toString().trim()
-        val repeatMode = when (binding.repeatButtonsGroup.checkedButtonId) {
-            R.id.repeatDayToggle -> RepeatMode.DAY
-            R.id.repeatWeekToggle -> RepeatMode.WEEK
-            R.id.repeatMonthToggle -> RepeatMode.MONTH
-            R.id.repeatYearToggle -> RepeatMode.YEAR
-            else -> RepeatMode.NEVER
+        with(binding) {
+            viewModel.sendEventData(
+                title = switchIfEmpty(
+                    titleInput.text.toString(),
+                    getString(R.string.no_title)
+                ),
+                description = switchIfEmpty(
+                    descriptionInput.text.toString(),
+                    getString(R.string.no_description)
+                ),
+                repeatMode = when (repeatButtonsGroup.checkedButtonId) {
+                    R.id.repeatDayToggle -> RepeatMode.DAY
+                    R.id.repeatWeekToggle -> RepeatMode.WEEK
+                    R.id.repeatMonthToggle -> RepeatMode.MONTH
+                    R.id.repeatYearToggle -> RepeatMode.YEAR
+                    else -> RepeatMode.NEVER
+                }
+            )
         }
-
-        viewModel.sendEventData(title = title, description = description, repeatMode = repeatMode)
     }
 
     companion object {

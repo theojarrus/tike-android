@@ -12,7 +12,7 @@ import com.theost.tike.data.models.state.Status.Error
 import com.theost.tike.data.models.state.Status.Loading
 import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.data.models.ui.mapToEventUi
-import com.theost.tike.data.models.ui.mapToParticipantUi
+import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
 import com.theost.tike.ui.interfaces.DelegateItem
@@ -52,7 +52,7 @@ class DayViewModel : ViewModel() {
                             UsersRepository.getUsers(event.participants, listOf(firebaseUser.uid))
                                 .map { users ->
                                     event.mapToEventUi(users.map { user ->
-                                        user.mapToParticipantUi()
+                                        user.mapToUserUi(firebaseUser.uid)
                                     })
                                 }
                         }.toList()
@@ -65,6 +65,7 @@ class DayViewModel : ViewModel() {
                     isListenerAttached = false
                     _events.postValue(emptyList())
                     _loadingStatus.postValue(Error)
+                    error.printStackTrace()
                     Log.e(LOG_VIEW_MODEL_DAY, error.toString())
                 })
         )
@@ -72,9 +73,10 @@ class DayViewModel : ViewModel() {
 
     fun deleteEvent(id: String) {
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMapCompletable { firebaseUser ->
-                EventsRepository.deleteEvent(firebaseUser.uid, id)
-            }.subscribe()
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle()
+                .flatMapCompletable { firebaseUser ->
+                    EventsRepository.deleteEvent(firebaseUser.uid, id)
+                }.subscribe()
         )
     }
 

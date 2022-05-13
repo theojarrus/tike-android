@@ -12,6 +12,7 @@ import com.theost.tike.ui.extensions.isFalse
 import com.theost.tike.ui.extensions.toLongInt
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 object EventsRepository {
@@ -191,6 +192,13 @@ object EventsRepository {
             provideProperEventsCollection(uid)
                 .whereEqualTo(EventDto::repeatMode.name, DAY.name)
         ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getEvent(uid: String, id: String): Single<Event> {
+        return RxFirebaseFirestore.data(provideProperEventsCollection(uid).document(id))
+            .map { it.value().toObject(EventDto::class.java) }
+            .map { entity -> entity.mapToEvent() }
             .subscribeOn(Schedulers.io())
     }
 

@@ -21,9 +21,11 @@
             android:id="@+id/emptyImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="?attr/primaryBackgroundColor"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/no_events"
-            android:scaleType="fitXY" />
+
+            android:scaleType="centerCrop"
+            android:src="?attr/primaryBackgroundColor" />
 
     </androidx.cardview.widget.CardView>
 

@@ -16,7 +16,7 @@
 
         <Preference android:key="pref_key_delete"
             android:title="@string/delete_account"
-            app:layout="@layout/item_preference_red" />
+            app:layout="@layout/item_preference" />
 
     </PreferenceCategory>
 

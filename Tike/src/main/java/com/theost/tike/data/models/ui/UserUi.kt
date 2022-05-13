@@ -8,18 +8,18 @@ data class UserUi(
     val name: String,
     val nick: String,
     val avatar: String,
-    val isSelected: Boolean
+    val hasAccess: Boolean
 ) : DelegateItem {
     override fun id(): Any = uid
-    override fun content(): Any = isSelected
+    override fun content(): Any = nick
 }
 
-fun User.mapToUserUi(): UserUi {
+fun User.mapToUserUi(currentUid: String): UserUi {
     return UserUi(
         uid = uid,
         name = name,
         nick = "@$nick",
         avatar = avatar,
-        isSelected = false
+        hasAccess = !blocked.contains(currentUid)
     )
 }

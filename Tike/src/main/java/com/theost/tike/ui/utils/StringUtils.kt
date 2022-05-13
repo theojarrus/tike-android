@@ -34,4 +34,8 @@ object StringUtils {
         return formatNickLetterCase(nick)
             .replace(Regex("[^=,\\da-zA-Z\\s]|(?<!,)\\s"), "")
     }
+
+    fun switchIfEmpty(value: String, replace: String): String {
+        return value.trim().run { if (isEmpty()) replace else value }
+    }
 }

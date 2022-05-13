@@ -5,8 +5,10 @@
     <string name="creation">Создание</string>
     <string name="dialogs">Диалоги</string>
     <string name="profile">Профиль</string>
-    <string name="preferences">Настройки</string>
-    <string name="qr_code">QR Код</string>
+    <string name="settings">Настройки</string>
+    <string name="friends">Друзья</string>
+    <string name="people">Люди</string>
+    <string name="participants">Участники</string>
 
     <string name="calendar">Календарь</string>
     <string name="time">Время</string>
@@ -19,6 +21,8 @@
     <string name="today">Сегодня</string>
     <string name="search">Поиск</string>
     <string name="reset">Очистить</string>
+
+    <string name="qr_code">QR Код</string>
 
     <string name="welcome_title">Добро пожаловать в Tike!</string>
     <string name="welcome_text">Создайте аккаунт или авторизируйтесь, чтобы синхронизировать расписание</string>
@@ -34,11 +38,11 @@
     <string name="new_event">Новое событие</string>
     <string name="create">Создать</string>
     <string name="join">Присоединиться</string>
-    <string name="choose_participants">Выбрать %d участников</string>
+    <string name="choose_participants">Выбрано участников: %d</string>
 
     <string name="title">Название</string>
     <string name="description">Описание</string>
-    <string name="participants">Участники</string>
+    <string name="info">Информация</string>
 
     <string name="day">День</string>
     <string name="week">Неделя</string>
@@ -67,7 +71,12 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="error_delete">Ошибка удаления</string>
 
-    <string name="empty_contacts">Нет контактов</string>
+    <string name="empty_friends">Нет друзей</string>
+    <string name="empty_people">Нет людей</string>
+    <string name="empty_participants">Нет участников</string>
+
+    <string name="blocked">Пользователь заблокирован</string>
+    <string name="access_denied">Доступ ограничен</string>
 
     <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
     <string name="confirmation">Подтверждение</string>
@@ -77,13 +86,22 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="share">Поделиться</string>
 
+    <string name="no_title">Без названия</string>
+    <string name="no_description">Нет описания</string>
+
     <string name="privacy">Приватность</string>
     <string name="account">Аккаунт</string>
 
     <string name="blacklist">Чёрный список</string>
+    <string name="block">Заблокировать</string>
+    <string name="unblock">Разблокировать</string>
 
     <string name="vacancy_count">Свободно: %d</string>
+
     <string name="share_profile">С вами поделились контактом в Tike! Его уникальный id: %s</string>
+    <string name="share_account">Привет, я использую Tike! Уникальный id моего профиля: %s</string>
 
     <string name="feature_not_ready">Функция будет доступна позднее</string>
+
+    <string name="deleting">Выполняется удаление</string>
 </resources>

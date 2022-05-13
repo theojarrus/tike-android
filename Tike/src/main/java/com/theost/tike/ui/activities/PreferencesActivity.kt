@@ -24,23 +24,6 @@ class PreferencesActivity : AppCompatActivity(R.layout.activity_preferences) {
 
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        viewModel.authStatus.observe(this) { authStatus ->
-            if (authStatus is SignedOut) startActivity(AuthActivity.newTaskIntent(this))
-        }
-
-        viewModel.loadingStatus.observe(this) { status ->
-            when (status) {
-                Loading -> showLoading()
-                Error -> hideLoading()
-                Success -> {}
-            }
-        }
-
-        intent.getStringExtra(EXTRA_ID).let { id ->
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, PreferencesFragment.newInstance(id))
-                .commit()
-        }
     }
 
     private fun showLoading() {

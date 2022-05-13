@@ -37,9 +37,11 @@
             android:layout_marginEnd="10dp"
             android:textColor="@color/gray"
             android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/eventTime"
             app:layout_constraintEnd_toStartOf="@id/cancelButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventTitle"
+            app:layout_constraintVertical_chainStyle="spread_inside"
             tools:text="Просто какое-то описание нового события, хехехехехе еххехехех" />
 
         <com.google.android.material.button.MaterialButton
@@ -61,45 +63,49 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventDescription"
+            app:layout_constraintVertical_chainStyle="spread_inside"
             tools:text="15:30 - 16:00" />
 
         <include
             android:id="@+id/eventParticipant1"
             layout="@layout/item_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+        <include
+            android:id="@+id/eventParticipant2"
+            layout="@layout/item_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="-8dp"
+            app:layout_constraintEnd_toStartOf="@id/eventParticipant1"
+            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+        <include
+            android:id="@+id/eventParticipant3"
+            layout="@layout/item_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="-8dp"
             app:layout_constraintEnd_toStartOf="@id/eventParticipant2"
             app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
         <include
-            android:id="@+id/eventParticipant2"
-            layout="@layout/item_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="-8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toStartOf="@id/eventParticipant3"
-            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
-
-        <include
-            android:id="@+id/eventParticipant3"
-            layout="@layout/item_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="-8dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toStartOf="@id/eventParticipantCounter"
-            app:layout_constraintTop_toBottomOf="@id/eventDescription" />
-
-        <include
             android:id="@+id/eventParticipantCounter"
-            layout="@layout/item_avatar_counter"
+            layout="@layout/item_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="-8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/eventParticipant3"
             app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

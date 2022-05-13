@@ -14,6 +14,7 @@ data class UserDto(
     val avatar: String = "",
     val lifestyles: List<String> = emptyList(),
     val friends: List<String> = emptyList(),
+    val pending: List<String> = emptyList(),
     val blocked: List<String> = emptyList()
 )
 

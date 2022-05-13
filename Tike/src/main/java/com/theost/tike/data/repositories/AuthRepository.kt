@@ -16,6 +16,7 @@ import com.theost.tike.data.models.state.ExistStatus.Exist
 import com.theost.tike.data.models.state.ExistStatus.NotFound
 import com.theost.tike.ui.extensions.getOrNull
 import com.theost.tike.ui.extensions.isTrue
+import com.theost.tike.ui.widgets.RxFirebaseAuthUser
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -43,9 +44,8 @@ object AuthRepository {
 
     fun getUserAuthStatus(): Single<AuthStatus> {
         return RxFirebaseAuth.getCurrentUser(Firebase.auth)
-            .flatMapCompletable { RxFirebaseUser.reload(it) }
-            .andThen(RxFirebaseAuth.getCurrentUser(Firebase.auth))
-            .flatMapSingle { getUserExist(it.uid) }
+            .flatMapSingle { RxFirebaseAuthUser.tryReload(it) }
+            .flatMap { getUserExist(it.uid) }
             .map { if (it is Exist) SignedIn else SigningUp }
             .onErrorReturn { SignedOut }
             .subscribeOn(Schedulers.io())

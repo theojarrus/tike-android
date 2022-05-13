@@ -1,13 +1,7 @@
 package com.theost.tike.data.repositories
 
-import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
-import com.androidhuman.rxfirebase2.auth.RxFirebaseUser
 import com.androidhuman.rxfirebase2.firestore.RxFirebaseFirestore
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldPath.documentId
-import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.api.FirestoreApi.provideUserDocument
 import com.theost.tike.data.api.FirestoreApi.provideUsersCollection
 import com.theost.tike.data.models.core.User
@@ -17,6 +11,7 @@ import com.theost.tike.data.models.state.ExistStatus
 import com.theost.tike.data.models.state.ExistStatus.Exist
 import com.theost.tike.data.models.state.ExistStatus.NotFound
 import com.theost.tike.ui.extensions.getOrNull
+import com.theost.tike.ui.extensions.isNotEmptyNotEquals
 import com.theost.tike.ui.widgets.ExistException
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -24,16 +19,9 @@ import io.reactivex.schedulers.Schedulers
 
 object UsersRepository {
 
-    fun getUser(uid: String): Single<User> {
-        return RxFirebaseFirestore.data(provideUserDocument(uid))
-            .map { snapshot -> snapshot.value().toObject(UserDto::class.java) }
-            .map { entity -> entity.mapToUser() }
-            .subscribeOn(Schedulers.io())
-    }
-
     fun getUsers(ids: List<String>, excludedIds: List<String> = emptyList()): Single<List<User>> {
         return when {
-            ids.isNotEmpty() && excludedIds.isNotEmpty() -> getUsersWithFilter(ids, excludedIds)
+            ids.isNotEmptyNotEquals(excludedIds) -> getUsersWithFilter(ids, excludedIds)
             ids.isNotEmpty() -> getUsersWithoutFilter(ids)
             else -> Single.just(emptyList())
         }
@@ -41,17 +29,38 @@ object UsersRepository {
 
     private fun getUsersWithoutFilter(ids: List<String>): Single<List<User>> {
         return RxFirebaseFirestore.data(provideUsersCollection().whereIn(documentId(), ids))
-            .map { snapshot -> snapshot.value().toObjects(UserDto::class.java) }
+            .map { snapshot -> snapshot.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
             .map { entities -> entities.map { entity -> entity.mapToUser() } }
             .subscribeOn(Schedulers.io())
     }
 
     private fun getUsersWithFilter(ids: List<String>, excluded: List<String>): Single<List<User>> {
-        return RxFirebaseFirestore.data(
-            provideUsersCollection()
-                .whereIn(documentId(), ids)
-                .whereNotIn(documentId(), excluded)
-        ).map { snapshot -> snapshot.value().toObjects(UserDto::class.java) }
+        return RxFirebaseFirestore.data(provideUsersCollection().whereIn(documentId(), ids))
+            .map { snapshot -> snapshot.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
+            .map { entities ->
+                entities.filter { entity -> !excluded.contains(entity.uid) }
+                    .map { entity -> entity.mapToUser() }
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getAllUsers(excluded: List<String> = emptyList()): Single<List<User>> {
+        return when {
+            excluded.isNotEmpty() -> getUsersAllWithFilter(excluded)
+            else -> getAllUsersWithoutFilter()
+        }
+    }
+
+    private fun getAllUsersWithoutFilter(): Single<List<User>> {
+        return RxFirebaseFirestore.data(provideUsersCollection())
+            .map { snapshot -> snapshot.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
+            .map { entities -> entities.map { entity -> entity.mapToUser() } }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun getUsersAllWithFilter(excluded: List<String>): Single<List<User>> {
+        return RxFirebaseFirestore.data(provideUsersCollection().whereNotIn(documentId(), excluded))
+            .map { snapshot -> snapshot.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
             .map { entities -> entities.map { entity -> entity.mapToUser() } }
             .subscribeOn(Schedulers.io())
     }
@@ -62,8 +71,14 @@ object UsersRepository {
                 UserDto::nick.name,
                 nick
             )
-        )
-            .map { snapshot -> if (snapshot.getOrNull()?.isEmpty == false) Exist else NotFound }
+        ).map { snapshot -> if (snapshot.getOrNull()?.isEmpty == false) Exist else NotFound }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getUser(uid: String): Single<User> {
+        return RxFirebaseFirestore.data(provideUserDocument(uid))
+            .map { it.value().toObject(UserDto::class.java) }
+            .map { entity -> entity.mapToUser() }
             .subscribeOn(Schedulers.io())
     }
 
@@ -92,9 +107,7 @@ object UsersRepository {
                         email = email,
                         phone = phone,
                         avatar = avatar,
-                        lifestyles = lifestyles,
-                        friends = emptyList(),
-                        blocked = emptyList()
+                        lifestyles = lifestyles
                     )
                 )
             }

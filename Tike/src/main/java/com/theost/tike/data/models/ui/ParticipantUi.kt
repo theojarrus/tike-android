@@ -6,16 +6,22 @@ import com.theost.tike.ui.interfaces.DelegateItem
 data class ParticipantUi(
     val uid: String,
     val name: String,
-    val avatar: String
+    val nick: String,
+    val avatar: String,
+    val hasAccess: Boolean,
+    val isSelected: Boolean
 ) : DelegateItem {
     override fun id(): Any = uid
-    override fun content(): Any = name
+    override fun content(): Any = isSelected
 }
 
-fun User.mapToParticipantUi(): ParticipantUi {
+fun User.mapToParticipantUi(currentUid: String): ParticipantUi {
     return ParticipantUi(
         uid = uid,
         name = name,
-        avatar = avatar
+        nick = "@$nick",
+        avatar = avatar,
+        hasAccess = !blocked.contains(currentUid),
+        isSelected = false
     )
 }

@@ -2,18 +2,15 @@ package com.theost.tike.ui.adapters.delegates
 
 import android.view.LayoutInflater.from
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.theost.tike.R
 import com.theost.tike.data.models.ui.UserUi
 import com.theost.tike.databinding.ItemUserBinding
-import com.theost.tike.ui.extensions.load
+import com.theost.tike.ui.extensions.loadWithFadeIn
 import com.theost.tike.ui.interfaces.AdapterDelegate
 import com.theost.tike.ui.interfaces.DelegateItem
 
-class UserAdapterDelegate(
-    private val clickListener: (userId: String, isSelected: Boolean) -> Unit
-) : AdapterDelegate {
+class UserAdapterDelegate(private val clickListener: (uid: String) -> Unit) : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemUserBinding.inflate(from(parent.context), parent, false)
@@ -33,16 +30,18 @@ class UserAdapterDelegate(
 
     class ViewHolder(
         private val binding: ItemUserBinding,
-        private val clickListener: (userId: String, isSelected: Boolean) -> Unit
+        private val clickListener: (uid: String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: UserUi) {
             with(binding) {
-                userAvatar.load(item.avatar, R.color.blue, R.color.blue)
+                root.setOnClickListener { clickListener(item.uid) }
                 userName.text = item.name
                 userNick.text = item.nick
-                indicatorSelected.isVisible = (item.isSelected)
-                root.setOnClickListener { clickListener(item.uid, !item.isSelected) }
+                when (item.hasAccess) {
+                    true -> userAvatar.loadWithFadeIn(item.avatar)
+                    false -> userAvatar.loadWithFadeIn(R.drawable.ic_blocked)
+                }
             }
         }
     }

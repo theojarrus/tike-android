@@ -22,7 +22,7 @@
         android:icon="@drawable/ic_dialogs"/>
 
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/accountFragment"
         android:title="@string/profile"
         android:icon="@drawable/ic_profile"/>
 

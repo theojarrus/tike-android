@@ -1,55 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="52dp"
-    android:layout_marginEnd="10dp"
-    android:background="@drawable/bg_round_corners"
-    android:orientation="horizontal"
-    android:paddingStart="12dp"
-    android:paddingTop="12dp"
-    android:paddingEnd="8dp"
-    android:paddingBottom="12dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:paddingStart="16dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="10dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/participantAvatarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardCornerRadius="200dp"
-        app:cardElevation="0dp">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/avatarLayout"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:backgroundTint="@color/blue"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/participantAvatar"
+            android:id="@+id/userAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/profile"
-            android:scaleType="centerCrop"
-            android:src="@color/blue" />
+            android:background="@color/blue"
+            android:contentDescription="@string/participants"
+            android:scaleType="centerCrop" />
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/participantName"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/avatarLayout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/userName"
+            style="@style/Theme.Tike.TextView.RobotoRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Theo Jedi" />
+
+        <TextView
+            android:id="@+id/userNick"
+            style="@style/Theme.Tike.TextView.RobotoRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userName"
+            tools:text="theojedi" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/indicatorSelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/roboto_regular"
-        android:includeFontPadding="false"
-        android:textSize="18sp"
-        android:textColor="@color/selector_text"
-        tools:text="Theo Jedi" />
+        android:layout_marginEnd="5dp"
+        android:contentDescription="@string/participants"
+        android:src="@drawable/ic_check"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/removeParticipantButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:scaleType="fitXY"
-        android:layout_gravity="center_vertical"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_cross" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

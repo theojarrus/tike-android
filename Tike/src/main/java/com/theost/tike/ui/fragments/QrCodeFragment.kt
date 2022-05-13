@@ -13,13 +13,14 @@ import com.theost.tike.ui.utils.ResUtils.getAttrColor
 
 class QrCodeFragment : BottomSheetDialogFragment() {
 
+    private val args: QrCodeFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentQrCodeBinding.inflate(layoutInflater)
-        val args: QrCodeFragmentArgs by navArgs()
 
         binding.qrCodeView.loadQR(
             args.content,

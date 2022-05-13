@@ -13,6 +13,8 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.transition.TransitionManager.beginDelayedTransition
+import androidx.transition.TransitionManager.endTransitions
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode.MONTHS
@@ -136,8 +138,8 @@ class ScheduleFragment : Fragment(R.layout.fragment_schedule) {
     }
 
     private fun switchCalendarMode() {
-        TransitionManager.beginDelayedTransition(binding.calendarView)
-        if (SDK_INT >= M) TransitionManager.endTransitions(binding.toolbar)
+        beginDelayedTransition(binding.calendarView)
+        if (SDK_INT >= M) endTransitions(binding.toolbar)
         when (binding.calendarView.calendarMode ?: MONTHS) {
             WEEKS -> binding.calendarView.state().edit().setCalendarDisplayMode(MONTHS).commit()
             MONTHS -> binding.calendarView.state().edit().setCalendarDisplayMode(WEEKS).commit()

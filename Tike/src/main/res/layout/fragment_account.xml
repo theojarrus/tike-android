@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/profile" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/accountAvatarLayout"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@id/accountName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/accountAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:contentDescription="@string/profile"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toTopOf="@id/accountShareButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/accountName"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@id/accountNick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/accountAvatarLayout"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/hint_name" />
+
+    <TextView
+        android:id="@+id/accountNick"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@id/accountActionsButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/accountName"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/hint_nick" />
+
+    <LinearLayout
+        android:id="@+id/accountActionsButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/accountShareButton"
+            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_share" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/accountQrCodeButton"
+            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_qr_code" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/accountEditButton"
+            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_edit" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/friendsaccountButton"
+            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_friends" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/preferencesaccountButton"
+            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            app:icon="@drawable/ic_settings" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/accountAvatarLayout"
+        app:layout_constraintEnd_toEndOf="@id/accountAvatarLayout"
+        app:layout_constraintStart_toStartOf="@id/accountAvatarLayout"
+        app:layout_constraintTop_toTopOf="@id/accountAvatarLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,48 +3,33 @@ package com.theost.tike.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.state.Status
+import com.theost.tike.data.models.state.Status.Loading
+import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.data.models.state.Status.Error
-import com.theost.tike.data.models.ui.UserUi
-import com.theost.tike.data.models.ui.mapToUserUi
+import com.theost.tike.data.models.ui.ParticipantUi
+import com.theost.tike.data.models.ui.mapToParticipantUi
 import com.theost.tike.data.repositories.UsersRepository
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_PARTICIPANTS
-import com.theost.tike.ui.widgets.SearchStateViewModel
 import io.reactivex.disposables.CompositeDisposable
 
-class ParticipantsViewModel : SearchStateViewModel() {
+class ParticipantsViewModel : ViewModel() {
 
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
 
-    private val _participants = MutableLiveData<List<UserUi>>()
-    val participants: LiveData<List<UserUi>> = _participants
+    private val _participants = MutableLiveData<List<ParticipantUi>>()
+    val participants: LiveData<List<ParticipantUi>> = _participants
 
     private val _selectedParticipants = MutableLiveData<List<String>>()
     val selectedParticipants: LiveData<List<String>> = _selectedParticipants
 
-    private var cachedParticipants = emptyList<UserUi>()
+    private var cachedParticipants = emptyList<ParticipantUi>()
     private val compositeDisposable = CompositeDisposable()
-
-    override fun bindSearchData(): List<Any> = cachedParticipants
-
-    override fun bindSearchFilter(): (Any, String) -> Boolean = { item, query ->
-        (item as? UserUi)?.let { user ->
-            user.name.lowercase().contains(query)
-                .or(user.nick.lowercase().contains(query))
-        } ?: false
-    }
-
-    override fun onDataLoaded(items: List<Any>) {
-        items.filterIsInstance<UserUi>().let { _participants.postValue(it.mapWithSelection()) }
-    }
-
-    override fun onDataLoadError(error: Throwable) {
-        Log.e(LOG_VIEW_MODEL_PARTICIPANTS, error.toString())
-    }
 
     fun init(participants: List<String>) {
         if (selectedParticipants.value == null) {
@@ -53,17 +38,30 @@ class ParticipantsViewModel : SearchStateViewModel() {
         }
     }
 
-    fun loadUsers() {
+    fun searchParticipants(query: String) {
+        _participants.postValue(
+            cachedParticipants.filter {
+                it.name.lowercase().contains(query)
+                    .or(it.nick.lowercase().contains(query))
+            }
+        )
+    }
+
+    private fun loadUsers() {
         if (cachedParticipants.isEmpty()) {
+            _loadingStatus.postValue(Loading)
             compositeDisposable.add(
                 RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMap { firebaseUser ->
                     UsersRepository.getUser(firebaseUser.uid).flatMap { databaseUser ->
-                        UsersRepository.getUsers(databaseUser.friends, databaseUser.blocked)
+                        UsersRepository.getUsers(databaseUser.friends, databaseUser.blocked).map {
+                            it.map { user -> user.mapToParticipantUi(firebaseUser.uid) }
+                                .filter { user -> user.hasAccess }
+                        }
                     }
                 }.subscribe({ users ->
-                    cachedParticipants = users.map { user -> user.mapToUserUi() }
-                    _participants.postValue(cachedParticipants.mapWithSelection())
-                    _loadingStatus.postValue(Status.Success)
+                    cachedParticipants = users
+                    _participants.postValue(users.mapWithSelection())
+                    _loadingStatus.postValue(Success)
                 }, { error ->
                     _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PARTICIPANTS, error.toString())
@@ -86,7 +84,7 @@ class ParticipantsViewModel : SearchStateViewModel() {
         compositeDisposable.clear()
     }
 
-    private fun List<UserUi>.mapWithSelection(): List<UserUi> = map { user ->
+    private fun List<ParticipantUi>.mapWithSelection(): List<ParticipantUi> = map { user ->
         user.copy(isSelected = selectedParticipants.value.orEmpty().contains(user.uid))
     }
 }

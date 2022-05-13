@@ -9,9 +9,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu_profile"
         app:title="@string/profile" />
 
     <com.google.android.material.card.MaterialCardView
@@ -30,8 +30,10 @@
             android:id="@+id/profileAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:background="@color/white"
             android:contentDescription="@string/profile"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/profileShareButton"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,36 +51,6 @@
         app:layout_constraintTop_toBottomOf="@id/profileAvatarLayout"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@string/hint_name" />
-
-    <!--<com.google.android.material.button.MaterialButton
-        android:id="@+id/profileAddFriendButton"
-        style="@style/Theme.Tike.BlueButton.Imaged.Action"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginEnd="5dp"
-        app:icon="@drawable/ic_friend_add"
-        app:iconTint="?attr/colorOnPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:rippleColor="?attr/colorOnPrimary"
-        app:strokeColor="?attr/colorOnPrimary" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/profileRemoveFriendButton"
-        style="@style/Theme.Tike.BlueButton.Imaged.Action"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
-        android:visibility="gone"
-        app:icon="@drawable/ic_friend_remove"
-        app:iconTint="?attr/colorOnPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:rippleColor="?attr/colorOnPrimary"
-        app:strokeColor="?attr/colorOnPrimary" />-->
 
     <TextView
         android:id="@+id/profileNick"
@@ -99,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/profileActionsButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,8 +107,8 @@
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
-            android:visibility="gone"
             android:backgroundTint="?attr/colorPrimary"
+            android:visibility="gone"
             app:icon="@drawable/ic_friend_remove"
             app:iconTint="?attr/colorOnPrimary"
             app:layout_constraintVertical_chainStyle="packed"
@@ -148,6 +121,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -169,33 +143,43 @@
             android:layout_marginEnd="5dp"
             app:icon="@drawable/ic_qr_code" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/profileEditButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            app:icon="@drawable/ic_edit" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/friendsProfileButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            app:icon="@drawable/ic_friends" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/preferencesProfileButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="5dp"
-            app:icon="@drawable/ic_settings" />
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/errorView"
+        style="@style/Theme.Tike.InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_network"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/blockedView"
+        style="@style/Theme.Tike.InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/blocked"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileNick" />
+
+    <TextView
+        android:id="@+id/accessView"
+        style="@style/Theme.Tike.InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/access_denied"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blockedView" />
 
     <ProgressBar
         android:id="@+id/loadingBar"

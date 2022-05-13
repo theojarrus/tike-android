@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Theme.Tike.BlueButton.Imaged.Action"
-    android:layout_width="52dp"
-    android:layout_height="52dp"
-    android:layout_marginEnd="10dp"
-    app:icon="@drawable/ic_add" />
