@@ -38,11 +38,6 @@ fun ImageView.loadWithFadeIn(@DrawableRes drawableRes: Int) {
     fadeIn()
 }
 
-fun ImageView.loadWithFadeIn(url: String) {
-    load(url)
-    fadeIn()
-}
-
 fun ImageView.loadWithPlaceholder(url: String, @ColorRes colorRes: Int) {
     Glide.with(this)
         .load(url)

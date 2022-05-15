@@ -10,5 +10,6 @@ object LogUtils {
     const val LOG_VIEW_MODEL_FRIENDS = "view_model_friends"
     const val LOG_VIEW_MODEL_CREATION = "view_model_creation"
     const val LOG_VIEW_MODEL_PROFILE = "view_model_profile"
-    const val LOG_VIEW_MODEL_PREFERENCES= "view_model_preferences"
+    const val LOG_VIEW_MODEL_PREFERENCES = "view_model_preferences"
+    const val LOG_VIEW_MODEL_INBOX = "view_model_inbox"
 }

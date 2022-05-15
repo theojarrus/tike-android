@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:textColor="?attr/eventTitleColor"
-            app:layout_constraintEnd_toStartOf="@id/cancelButton"
+            app:layout_constraintEnd_toStartOf="@id/acceptButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Это новое событие" />
@@ -38,19 +38,29 @@
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/eventTime"
-            app:layout_constraintEnd_toStartOf="@id/cancelButton"
+            app:layout_constraintEnd_toStartOf="@id/acceptButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventTitle"
             app:layout_constraintVertical_chainStyle="spread_inside"
-            tools:text="Просто какое-то описание нового события, хехехехехе еххехехех" />
+            tools:text="Просто какое-то описание нового события" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancelButton"
+            android:id="@+id/acceptButton"
+            style="@style/Theme.Tike.EventButton.Action"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:icon="@drawable/ic_accept"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toStartOf="@id/rejectButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rejectButton"
             style="@style/Theme.Tike.EventButton.Action"
             android:layout_width="35dp"
             android:layout_height="35dp"
             app:icon="@drawable/ic_close"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

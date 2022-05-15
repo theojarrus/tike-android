@@ -8,11 +8,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
-import com.theost.tike.data.models.state.Action
+import com.theost.tike.data.models.state.Action.Reject
+import com.theost.tike.data.models.state.Action.Info
 import com.theost.tike.databinding.FragmentDayBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.EventAdapterDelegate
-import com.theost.tike.ui.extensions.load
 import com.theost.tike.ui.extensions.loadWithFadeIn
 import com.theost.tike.ui.fragments.ScheduleFragmentDirections.Companion.actionScheduleFragmentToInfoFragment
 import com.theost.tike.ui.utils.DisplayUtils.showConfirmationDialog
@@ -40,11 +40,12 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
         binding.eventsList.adapter = adapter.apply {
             addDelegate(EventAdapterDelegate() { action ->
                 when (action) {
-                    is Action.Info -> showEventInfo(action.id)
-                    is Action.Delete -> showConfirmationDialog(
+                    is Info -> showEventInfo(action.id)
+                    is Reject -> showConfirmationDialog(
                         requireContext(),
                         R.string.ask_event_delete
                     ) { viewModel.deleteEvent(action.id) }
+                    else -> {}
                 }
             })
         }

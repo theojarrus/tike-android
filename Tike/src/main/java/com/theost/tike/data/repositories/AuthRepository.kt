@@ -35,10 +35,10 @@ object AuthRepository {
     }
 
     fun delete(credential: AuthCredential): Completable {
-        return RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMapCompletable { user ->
-            UsersRepository.deleteUser(user.uid)
-                .andThen(RxFirebaseUser.reauthenticate(user, credential))
-                .andThen(RxFirebaseUser.delete(user))
+        return RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
+            UsersRepository.deleteUser(firebaseUser.uid)
+                .andThen(RxFirebaseUser.reauthenticate(firebaseUser, credential))
+                .andThen(RxFirebaseUser.delete(firebaseUser))
         }
     }
 
@@ -80,7 +80,7 @@ object AuthRepository {
 
     private fun observeDatabaseUserStatus(uid: String): Observable<ExistStatus> {
         return RxFirebaseFirestore.dataChanges(provideUserDocument(uid))
-            .map { snapshot -> if (snapshot.getOrNull()?.exists().isTrue()) Exist else NotFound }
+            .map { if (it.getOrNull()?.exists().isTrue()) Exist else NotFound }
             .subscribeOn(Schedulers.io())
     }
 }

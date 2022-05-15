@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/emptyImageLayout"
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -27,7 +27,7 @@
             android:scaleType="centerCrop"
             android:src="?attr/primaryBackgroundColor" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/emptyTitle"

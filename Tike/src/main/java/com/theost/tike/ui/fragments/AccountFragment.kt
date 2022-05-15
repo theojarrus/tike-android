@@ -32,8 +32,8 @@ class AccountFragment : StateFragment(R.layout.fragment_account) {
         binding.accountShareButton.setOnClickListener { showAccountShare() }
         binding.accountQrCodeButton.setOnClickListener { showAccountQrCode() }
         binding.accountEditButton.setOnClickListener { editAccount() }
-        binding.friendsaccountButton.setOnClickListener { openFriends() }
-        binding.preferencesaccountButton.setOnClickListener { openPreferences() }
+        binding.friendsAccountButton.setOnClickListener { openFriends() }
+        binding.preferencesAccountButton.setOnClickListener { openPreferences() }
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
         viewModel.user.observe(viewLifecycleOwner) { user ->
@@ -48,14 +48,14 @@ class AccountFragment : StateFragment(R.layout.fragment_account) {
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingBar.root,
         errorMessage = getString(R.string.error_unknown),
         disabledViews = listOf(
             binding.accountShareButton,
             binding.accountQrCodeButton,
             binding.accountEditButton,
-            binding.friendsaccountButton,
-            binding.preferencesaccountButton
+            binding.friendsAccountButton,
+            binding.preferencesAccountButton
         )
     )
 

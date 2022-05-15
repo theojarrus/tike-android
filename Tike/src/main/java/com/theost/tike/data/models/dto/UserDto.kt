@@ -12,10 +12,10 @@ data class UserDto(
     val email: String = "",
     val phone: String = "",
     val avatar: String = "",
-    val lifestyles: List<String> = emptyList(),
     val friends: List<String> = emptyList(),
     val pending: List<String> = emptyList(),
-    val blocked: List<String> = emptyList()
+    val blocked: List<String> = emptyList(),
+    val lifestyles: List<String> = emptyList()
 )
 
 fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
@@ -26,8 +26,9 @@ fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
         email = email,
         phone = phone,
         avatar = avatar,
-        lifestyles = lifestyles,
         friends = friends,
-        blocked = blocked
+        pending = pending,
+        blocked = blocked,
+        lifestyles = lifestyles
     )
 }

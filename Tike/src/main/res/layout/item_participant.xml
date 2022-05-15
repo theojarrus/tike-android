@@ -10,7 +10,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="10dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/avatarLayout"
         android:layout_width="46dp"
         android:layout_height="46dp"
@@ -30,7 +30,7 @@
             android:contentDescription="@string/participants"
             android:scaleType="centerCrop" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nameLayout"

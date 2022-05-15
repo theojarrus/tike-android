@@ -264,7 +264,6 @@
                 style="@style/Theme.Tike.CounterButton"
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
                 app:cornerRadius="15dp"
                 app:icon="@drawable/ic_remove" />
 
@@ -290,7 +289,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/openParticipantsButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="10dp"

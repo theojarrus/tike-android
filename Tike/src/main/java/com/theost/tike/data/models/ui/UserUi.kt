@@ -14,7 +14,7 @@ data class UserUi(
     override fun content(): Any = nick
 }
 
-fun User.mapToUserUi(currentUid: String): UserUi {
+fun User.mapToUserUi(currentUid: String = ""): UserUi {
     return UserUi(
         uid = uid,
         name = name,

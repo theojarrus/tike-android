@@ -34,15 +34,15 @@ class ScheduleViewModel : ViewModel() {
 
     private fun loadEvents() {
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle()
-                .flatMapObservable { EventsRepository.observeProperEventsDates(it.uid) }
-                .subscribe({ dates ->
-                    isListenerAttached = true
-                    _events.postValue(dates)
-                }, { error ->
-                    isListenerAttached = false
-                    Log.e(LOG_VIEW_MODEL_DAY, error.toString())
-                })
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
+                EventsRepository.observeProperEventsDates(firebaseUser.uid)
+            }.subscribe({ dates ->
+                isListenerAttached = true
+                _events.postValue(dates)
+            }, { error ->
+                isListenerAttached = false
+                Log.e(LOG_VIEW_MODEL_DAY, error.toString())
+            })
         )
     }
 

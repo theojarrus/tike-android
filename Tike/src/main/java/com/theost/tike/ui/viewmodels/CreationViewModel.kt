@@ -9,9 +9,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.state.Status
-import com.theost.tike.data.models.state.Status.Loading
-import com.theost.tike.data.models.state.Status.Success
-import com.theost.tike.data.models.state.Status.Error
+import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.data.models.ui.UserUi
 import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
@@ -45,6 +43,8 @@ class CreationViewModel : ViewModel() {
     val participants: LiveData<List<UserUi>> = _participants
 
     private var participantsIds = emptyList<String>()
+    private var isListenerAttached = false
+
     private val compositeDisposable = CompositeDisposable()
 
     init {
@@ -60,46 +60,42 @@ class CreationViewModel : ViewModel() {
         _participants.value = emptyList()
     }
 
-    fun sendEventData(title: String, description: String, repeatMode: RepeatMode) {
-        _loadingStatus.postValue(Loading)
+    fun init(usersIds: List<String>) {
+        if (!isListenerAttached || usersIds != participantsIds) {
+            compositeDisposable.clear()
+            loadParticipants(usersIds)
+        }
+    }
 
-        val weekDay = eventDate.value?.dayOfWeek?.value ?: 0
-        val monthDay = eventDate.value?.dayOfMonth ?: 0
-        val month = eventDate.value?.monthValue ?: 0
-        val year = eventDate.value?.year ?: 0
-        val beginTime = eventBeginTime.value?.toNanoOfDay() ?: 0
-        val endTime = eventEndTime.value?.toNanoOfDay() ?: 0
-        val participantsLimit = participantsLimit.value ?: 0
-        val participants = participants.value.orEmpty().map { user -> user.uid }
-
-        val creationDate = LocalDateTime.now().nano
-
+    private fun loadParticipants(usersIds: List<String>) {
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle()
-                .flatMapCompletable { firebaseUser ->
-                    EventsRepository.addEvent(
-                        uid = firebaseUser.uid,
-                        title = title,
-                        description = description,
-                        participants = participants.append(firebaseUser.uid),
-                        participantsLimit = participantsLimit.plus(1),
-                        created = creationDate,
-                        modified = creationDate,
-                        weekDay = weekDay,
-                        monthDay = monthDay,
-                        month = month,
-                        year = year,
-                        beginTime = beginTime,
-                        endTime = endTime,
-                        repeatMode = repeatMode.name
-                    )
-                }.subscribe({
-                    _loadingStatus.postValue(Success)
-                }, { error ->
-                    _loadingStatus.postValue(Error)
-                    Log.e(LOG_VIEW_MODEL_CREATION, error.toString())
-                })
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
+                UsersRepository.observeUser(firebaseUser.uid).switchMap { databaseUser ->
+                    UsersRepository.observeUsers(
+                        databaseUser.friends.filter { usersIds.contains(it) }
+                    ).map { users ->
+                        users.map { it.mapToUserUi(firebaseUser.uid) }.filter { it.hasAccess }
+                    }
+                }
+            }.subscribe({ users ->
+                isListenerAttached = true
+                participantsIds = users.map { it.uid }
+                _participantsLimit.postValue(users.size)
+                _participants.postValue(users)
+            }, { error ->
+                isListenerAttached = false
+                Log.e(LOG_VIEW_MODEL_CREATION, error.toString())
+            })
         )
+    }
+
+    fun removeParticipant(uid: String) {
+        participants.value?.let { items ->
+            val participantsCount = participantsIds.size
+            participantsIds = participantsIds.filter { it != uid }
+            updateParticipantsLimit(participantsIds.size - participantsCount)
+            _participants.postValue(items.filter { it.uid != uid })
+        }
     }
 
     fun updateEventDate(year: Int, month: Int, day: Int) {
@@ -127,36 +123,45 @@ class CreationViewModel : ViewModel() {
         }
     }
 
-    fun loadParticipants(usersIds: List<String> = emptyList()) {
-        if (usersIds != participantsIds) {
-            participantsIds = usersIds.toList()
-            compositeDisposable.add(
-                RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMap { firebaseUser ->
-                    UsersRepository.getUsers(participantsIds).map { users ->
-                        users.map { user -> user.mapToUserUi(firebaseUser.uid) }
-                            .distinctBy { participant -> participant.uid }
-                    }
-                }.subscribe({ users ->
-                    _participantsLimit.postValue(users.size)
-                    _participants.postValue(users)
-                }, { error ->
-                    Log.e(LOG_VIEW_MODEL_CREATION, error.toString())
-                })
-            )
-        }
-    }
+    fun addEvent(title: String, description: String, repeatMode: RepeatMode) {
+        _loadingStatus.postValue(Loading)
 
-    fun removeParticipant(uid: String) {
-        participants.value?.let { items ->
-            val participantsCount = participantsIds.size
-            participantsIds = participantsIds.filterNot { id -> id == uid }
-            updateParticipantsLimit(participantsIds.size - participantsCount)
-            _participants.postValue(
-                items.toMutableList()
-                    .filterNot { participant -> participant.uid == uid }
-                    .toList()
-            )
-        }
+        val weekDay = eventDate.value?.dayOfWeek?.value ?: 0
+        val monthDay = eventDate.value?.dayOfMonth ?: 0
+        val month = eventDate.value?.monthValue ?: 0
+        val year = eventDate.value?.year ?: 0
+        val beginTime = eventBeginTime.value?.toNanoOfDay() ?: 0
+        val endTime = eventEndTime.value?.toNanoOfDay() ?: 0
+        val participantsLimit = participantsLimit.value ?: 0
+        val participants = participants.value.orEmpty().map { it.uid }
+
+        val creationDate = LocalDateTime.now().nano
+
+        compositeDisposable.add(
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
+                EventsRepository.addEvent(
+                    uid = firebaseUser.uid,
+                    title = title,
+                    description = description,
+                    participants = participants.append(firebaseUser.uid),
+                    participantsLimit = participantsLimit.plus(1),
+                    created = creationDate,
+                    modified = creationDate,
+                    weekDay = weekDay,
+                    monthDay = monthDay,
+                    month = month,
+                    year = year,
+                    beginTime = beginTime,
+                    endTime = endTime,
+                    repeatMode = repeatMode.name
+                )
+            }.subscribe({
+                _loadingStatus.postValue(Success)
+            }, { error ->
+                _loadingStatus.postValue(Error)
+                Log.e(LOG_VIEW_MODEL_CREATION, error.toString())
+            })
+        )
     }
 
     override fun onCleared() {

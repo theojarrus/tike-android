@@ -7,7 +7,8 @@ data class User(
     val email: String,
     val phone: String,
     val avatar: String,
-    val lifestyles: List<Lifestyle>,
     val friends: List<String>,
-    val blocked: List<String>
+    val pending: List<String>,
+    val blocked: List<String>,
+    val lifestyles: List<Lifestyle>
 )

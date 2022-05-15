@@ -15,22 +15,19 @@ import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.CardAdapterDelegate
-import com.theost.tike.ui.extensions.getNavigationResult
-import com.theost.tike.ui.extensions.removeNavigationResult
 import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToParticipantsFragment
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.utils.DateUtils
 import com.theost.tike.ui.utils.StringUtils.switchIfEmpty
 import com.theost.tike.ui.viewmodels.CalendarViewModel
 import com.theost.tike.ui.viewmodels.CreationViewModel
+import com.theost.tike.ui.viewmodels.MembersViewModel
 import com.theost.tike.ui.widgets.StateFragment
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import java.lang.String.format
 
 class CreationFragment : StateFragment(R.layout.fragment_creation) {
-
-    private var addedIds: List<String> = emptyList()
 
     private var eventDate = LocalDate.now()
     private var eventBeginTime = LocalTime.now()
@@ -39,6 +36,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     private val adapter: BaseAdapter = BaseAdapter()
 
     private val calendarViewModel: CalendarViewModel by activityViewModels()
+    private val membersViewModel: MembersViewModel by activityViewModels()
     private val viewModel: CreationViewModel by viewModels()
     private val binding: FragmentCreationBinding by viewBinding()
 
@@ -49,7 +47,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         binding.dateDayInput.setOnClickListener { showDatePicker() }
         binding.dateBeginInput.setOnClickListener { showBeginTimePicker() }
         binding.dateEndInput.setOnClickListener { showEndTimePicker() }
-        binding.createEventButton.setOnClickListener { sendEventData() }
+        binding.createEventButton.setOnClickListener { addEvent() }
         binding.numberPlusButton.setOnClickListener { viewModel.updateParticipantsLimit(1) }
         binding.numberMinusButton.setOnClickListener { viewModel.updateParticipantsLimit(-1) }
 
@@ -57,15 +55,11 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
             addDelegate(CardAdapterDelegate { id -> viewModel.removeParticipant(id) })
         }
 
-        getNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)?.let { usersIds ->
-            removeNavigationResult<List<String>>(KEY_PARTICIPANTS_REQUEST)
-            viewModel.loadParticipants(usersIds)
-        }
-
         viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 Success -> {
                     calendarViewModel.setPendingDate(eventDate)
+                    membersViewModel.setMembers(emptyList())
                     findNavController().navigateUp()
                 }
                 else -> handleStatus(status)
@@ -77,7 +71,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
-            addedIds = participants.map { participant -> participant.uid }
+            membersViewModel.setMembers(participants.map { it.uid })
             adapter.submitList(mutableListOf<DelegateItem>().apply { addAll(participants) })
         }
 
@@ -111,6 +105,8 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
                 )
             )
         }
+
+        viewModel.init(membersViewModel.members.value ?: emptyList())
     }
 
     override fun bindState(): StateViews = StateViews(
@@ -160,17 +156,12 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     }
 
     private fun openParticipantsAdding() {
-        findNavController().navigate(
-            actionAddingFragmentToParticipantsFragment(
-                KEY_PARTICIPANTS_REQUEST,
-                addedIds.toTypedArray()
-            )
-        )
+        findNavController().navigate(actionAddingFragmentToParticipantsFragment())
     }
 
-    private fun sendEventData() {
+    private fun addEvent() {
         with(binding) {
-            viewModel.sendEventData(
+            viewModel.addEvent(
                 title = switchIfEmpty(
                     titleInput.text.toString(),
                     getString(R.string.no_title)

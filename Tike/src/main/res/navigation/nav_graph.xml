@@ -19,7 +19,15 @@
         android:id="@+id/inboxFragment"
         android:name="com.theost.tike.ui.fragments.InboxFragment"
         android:label="@string/inbox"
-        tools:layout="@layout/fragment_inbox" />
+        tools:layout="@layout/fragment_inbox">
+        <action
+            android:id="@+id/action_inboxFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/addingFragment"
@@ -39,14 +47,7 @@
         android:id="@+id/participantsFragment"
         android:name="com.theost.tike.ui.fragments.ParticipantsFragment"
         android:label="@string/participants"
-        tools:layout="@layout/fragment_participants">
-        <argument
-            android:name="requestKey"
-            app:argType="string" />
-        <argument
-            android:name="addedIds"
-            app:argType="string[]" />
-    </fragment>
+        tools:layout="@layout/fragment_participants" />
 
     <fragment
         android:id="@+id/dialogsFragment"

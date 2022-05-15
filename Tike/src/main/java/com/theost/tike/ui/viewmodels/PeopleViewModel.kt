@@ -25,13 +25,26 @@ class PeopleViewModel : ViewModel() {
     val users: LiveData<List<UserUi>> = _users
 
     private var cachedUsers = emptyList<UserUi>()
+    private var cachedQuery = ""
+    private var isListenerAttached = false
+
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        loadUsers()
+        if (!isListenerAttached) loadUsers()
+    }
+
+    private fun restoreState(users: List<UserUi>) {
+        cachedUsers = users
+        if (cachedQuery.isNotEmpty()) {
+            searchUsers(cachedQuery)
+        } else {
+            _users.postValue(users)
+        }
     }
 
     fun searchUsers(query: String) {
+        cachedQuery = query
         _users.postValue(
             cachedUsers.filter {
                 it.name.lowercase().contains(query).or(it.nick.lowercase().contains(query))
@@ -42,16 +55,18 @@ class PeopleViewModel : ViewModel() {
     private fun loadUsers() {
         _loadingStatus.postValue(Loading)
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMap { firebaseUser ->
-                UsersRepository.getUser(firebaseUser.uid).flatMap { databaseUser ->
-                    UsersRepository.getAllUsers(databaseUser.friends.append(firebaseUser.uid))
-                        .map { users -> users.map { user -> user.mapToUserUi(firebaseUser.uid) } }
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
+                UsersRepository.observeUser(firebaseUser.uid).switchMapSingle { databaseUser ->
+                    UsersRepository.getAllUsers(
+                        databaseUser.friends.append(databaseUser.blocked).append(firebaseUser.uid)
+                    ).map { users -> users.map { it.mapToUserUi(firebaseUser.uid) } }
                 }
             }.subscribe({ users ->
-                cachedUsers = users
-                _users.postValue(users)
+                isListenerAttached = true
+                restoreState(users)
                 _loadingStatus.postValue(Success)
             }, { error ->
+                isListenerAttached = false
                 _loadingStatus.postValue(Error)
                 Log.e(LOG_VIEW_MODEL_FRIENDS, error.toString())
             })

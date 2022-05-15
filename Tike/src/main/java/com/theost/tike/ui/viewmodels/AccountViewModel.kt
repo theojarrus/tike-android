@@ -32,10 +32,10 @@ class AccountViewModel : ViewModel() {
     private fun loadUser() {
         _loadingStatus.postValue(Loading)
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMap { firebaseUser ->
-                UsersRepository.getUser(firebaseUser.uid)
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapSingle { firebaseUser ->
+                UsersRepository.getUser(firebaseUser.uid).map { it.mapToUserUi() }
             }.subscribe({ user ->
-                _user.postValue(user.mapToUserUi(""))
+                _user.postValue(user)
                 _loadingStatus.postValue(Success)
             }, { error ->
                 _loadingStatus.postValue(Error)

@@ -25,6 +25,7 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
         viewModel.authStatus.observe(this) { authStatus ->
             when (authStatus) {
@@ -53,13 +54,11 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
     }
 
     private fun showLoading() {
-        binding.loadingBarOverlay.isGone = false
-        binding.loadingBar.isGone = false
+        binding.loadingBar.root.isGone = false
     }
 
     private fun hideLoading() {
-        binding.loadingBarOverlay.isGone = true
-        binding.loadingBar.isGone = true
+        binding.loadingBar.root.isGone = true
     }
 
     private fun startFragment(fragment: Fragment) {

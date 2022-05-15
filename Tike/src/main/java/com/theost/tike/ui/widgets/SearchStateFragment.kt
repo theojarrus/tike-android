@@ -50,7 +50,7 @@ abstract class SearchStateFragment(
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .doOnNext { onSearch(it) }
                 .subscribeOn(Schedulers.io())
-                .subscribe()
+                .subscribe({}, { it.printStackTrace() })
         )
     }
 

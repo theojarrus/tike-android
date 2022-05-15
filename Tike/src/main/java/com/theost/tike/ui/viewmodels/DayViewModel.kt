@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.theost.tike.data.models.state.EventMode.SCHEDULE
 import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.state.Status.Error
 import com.theost.tike.data.models.state.Status.Loading
@@ -39,44 +40,46 @@ class DayViewModel : ViewModel() {
     private fun loadEvents(date: LocalDate) {
         _loadingStatus.postValue(Loading)
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle()
-                .flatMapObservable { firebaseUser ->
-                    EventsRepository.observeProperEvents(
-                        firebaseUser.uid,
-                        date.year,
-                        date.monthValue,
-                        date.dayOfMonth,
-                        date.dayOfWeek.value
-                    ).switchMapSingle { events ->
-                        Observable.fromIterable(events).concatMapSingle { event ->
-                            UsersRepository.getUsers(event.participants, listOf(firebaseUser.uid))
-                                .map { users ->
-                                    event.mapToEventUi(users.map { user ->
-                                        user.mapToUserUi(firebaseUser.uid)
-                                    })
-                                }
-                        }.toList()
-                    }
-                }.subscribe({
-                    isListenerAttached = true
-                    _events.postValue(it)
-                    _loadingStatus.postValue(Success)
-                }, { error ->
-                    isListenerAttached = false
-                    _events.postValue(emptyList())
-                    _loadingStatus.postValue(Error)
-                    error.printStackTrace()
-                    Log.e(LOG_VIEW_MODEL_DAY, error.toString())
-                })
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
+                EventsRepository.observeProperEvents(
+                    firebaseUser.uid,
+                    date.year,
+                    date.monthValue,
+                    date.dayOfMonth,
+                    date.dayOfWeek.value
+                ).switchMapSingle { events ->
+                    Observable.fromIterable(events).concatMapSingle { event ->
+                        UsersRepository.getUsers(event.participants).map { users ->
+                            event.mapToEventUi(
+                                users.filter { it.uid != firebaseUser.uid }
+                                    .map { it.mapToUserUi(firebaseUser.uid) },
+                                SCHEDULE
+                            )
+                        }
+                    }.toList()
+                }
+            }.subscribe({
+                isListenerAttached = true
+                _events.postValue(it)
+                _loadingStatus.postValue(Success)
+            }, { error ->
+                isListenerAttached = false
+                _events.postValue(emptyList())
+                _loadingStatus.postValue(Error)
+                Log.e(LOG_VIEW_MODEL_DAY, error.toString())
+            })
         )
     }
 
     fun deleteEvent(id: String) {
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle()
-                .flatMapCompletable { firebaseUser ->
-                    EventsRepository.deleteEvent(firebaseUser.uid, id)
-                }.subscribe()
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
+                EventsRepository.deleteEvent(firebaseUser.uid, id)
+            }.subscribe({
+                Log.e(LOG_VIEW_MODEL_DAY, "Event $id successfully deleted")
+            }, { error ->
+                Log.e(LOG_VIEW_MODEL_DAY, error.toString())
+            })
         )
     }
 

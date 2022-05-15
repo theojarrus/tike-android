@@ -74,6 +74,7 @@
     <string name="empty_friends">Нет друзей</string>
     <string name="empty_people">Нет людей</string>
     <string name="empty_participants">Нет участников</string>
+    <string name="empty_inbox">Нет заявок</string>
 
     <string name="blocked">Пользователь заблокирован</string>
     <string name="access_denied">Доступ ограничен</string>
@@ -104,4 +105,9 @@
     <string name="feature_not_ready">Функция будет доступна позднее</string>
 
     <string name="deleting">Выполняется удаление</string>
+
+    <string name="add_friend">Добавить в друзья</string>
+    <string name="friend">В друзьях</string>
+    <string name="accept_request">Принять заявку</string>
+    <string name="request_sent">Заявка отправлена</string>
 </resources>

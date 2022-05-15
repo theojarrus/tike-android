@@ -15,7 +15,7 @@ object LifestylesRepository {
 
     fun getLifestyle(id: String): Single<Lifestyle> {
         return RxFirebaseFirestore.data(provideLifestyleDocument(id))
-            .map { snapshot -> snapshot.getOrNull()?.toObject(LifestyleDto::class.java) }
+            .map { it.getOrNull()?.toObject(LifestyleDto::class.java) }
             .map { entity -> entity.mapToLifestyle() }
             .subscribeOn(Schedulers.io())
     }

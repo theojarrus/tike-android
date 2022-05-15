@@ -37,7 +37,7 @@ class SettingsFragment : ToolbarStateFragment(R.layout.fragment_settings) {
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
         actionView = binding.fragmentContainer,
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingBar.root,
         errorMessage = getString(R.string.error_unknown)
     )
 }

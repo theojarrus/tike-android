@@ -42,8 +42,8 @@ class ParticipantAdapterDelegate(private val clickListener: (uid: String) -> Uni
                 userNick.text = item.nick
                 indicatorSelected.isVisible = (item.isSelected)
                 when (item.hasAccess) {
-                    true -> userAvatar.loadWithFadeIn(item.avatar)
-                    false -> userAvatar.loadWithFadeIn(R.drawable.ic_blocked)
+                    true -> userAvatar.load(item.avatar)
+                    false -> userAvatar.load(R.drawable.ic_blocked)
                 }
             }
         }

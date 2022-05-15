@@ -80,39 +80,48 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/messageProfileButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Filled"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginEnd="5dp"
-            android:backgroundTint="?attr/colorPrimary"
-            app:icon="@drawable/ic_message"
-            app:iconTint="?attr/colorOnPrimary"
-            app:rippleColor="?attr/colorOnPrimary" />
+            app:icon="@drawable/ic_message"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/profileAddFriendButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
-            android:layout_width="52dp"
+            android:id="@+id/profileAddFriendRequestButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
-            android:backgroundTint="?attr/colorPrimary"
-            app:icon="@drawable/ic_friend_add"
-            app:iconTint="?attr/colorOnPrimary"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:rippleColor="?attr/colorOnPrimary" />
+            android:text="@string/add_friend"
+            app:icon="@drawable/ic_friend_add" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profileRemoveFriendButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
-            android:layout_width="52dp"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
-            android:backgroundTint="?attr/colorPrimary"
+            android:text="@string/friend"
+            app:icon="@drawable/ic_friend" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileAddFriendButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:text="@string/accept_request"
             android:visibility="gone"
-            app:icon="@drawable/ic_friend_remove"
-            app:iconTint="?attr/colorOnPrimary"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:rippleColor="?attr/colorOnPrimary" />
+            app:icon="@drawable/ic_requested" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profilePendingFriendButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:text="@string/request_sent"
+            app:icon="@drawable/ic_pending" />
 
     </LinearLayout>
 
@@ -128,7 +137,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profileShareButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginEnd="5dp"
@@ -136,7 +145,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profileQrCodeButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
@@ -181,8 +190,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blockedView" />
 
-    <ProgressBar
+    <include
         android:id="@+id/loadingBar"
+        layout="@layout/view_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

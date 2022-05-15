@@ -76,7 +76,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/accountShareButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginEnd="5dp"
@@ -84,7 +84,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/accountQrCodeButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
@@ -93,7 +93,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/accountEditButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
@@ -101,8 +101,8 @@
             app:icon="@drawable/ic_edit" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/friendsaccountButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:id="@+id/friendsAccountButton"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
@@ -110,8 +110,8 @@
             app:icon="@drawable/ic_friends" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/preferencesaccountButton"
-            style="@style/Theme.Tike.BlueButton.Imaged.Action"
+            android:id="@+id/preferencesAccountButton"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_marginStart="5dp"
@@ -119,14 +119,15 @@
 
     </LinearLayout>
 
-    <ProgressBar
+    <include
         android:id="@+id/loadingBar"
-        android:layout_width="wrap_content"
+        layout="@layout/view_loading"
         android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/accountAvatarLayout"
         app:layout_constraintEnd_toEndOf="@id/accountAvatarLayout"
         app:layout_constraintStart_toStartOf="@id/accountAvatarLayout"
-        app:layout_constraintTop_toTopOf="@id/accountAvatarLayout" />
+        app:layout_constraintTop_toTopOf="@id/accountAvatarLayout"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

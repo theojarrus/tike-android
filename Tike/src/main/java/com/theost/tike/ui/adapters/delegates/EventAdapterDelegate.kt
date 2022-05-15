@@ -2,19 +2,16 @@ package com.theost.tike.ui.adapters.delegates
 
 import android.view.LayoutInflater.from
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.theost.tike.R
 import com.theost.tike.data.models.state.Action
-import com.theost.tike.data.models.state.Action.Delete
-import com.theost.tike.data.models.state.Action.Info
+import com.theost.tike.data.models.state.Action.*
 import com.theost.tike.data.models.ui.EventUi
 import com.theost.tike.data.models.ui.UserUi
 import com.theost.tike.databinding.ItemAvatarBinding
 import com.theost.tike.databinding.ItemEventBinding
 import com.theost.tike.ui.extensions.load
-import com.theost.tike.ui.extensions.loadWithFadeIn
 import com.theost.tike.ui.interfaces.AdapterDelegate
 import com.theost.tike.ui.interfaces.DelegateItem
 
@@ -46,7 +43,8 @@ class EventAdapterDelegate(private val clickListener: (Action) -> Unit) : Adapte
                 eventTitle.text = item.title
                 eventDescription.text = item.description
                 eventTime.text = item.time
-                cancelButton.setOnClickListener { clickListener(Delete(item.id)) }
+                acceptButton.setOnClickListener { clickListener(Accept(item.id)) }
+                rejectButton.setOnClickListener { clickListener(Reject(item.id)) }
                 root.setOnLongClickListener { clickListener(Info(item.id)).run { true } }
                 with (item.participants) {
                     eventParticipant1.displayAvatar(getOrNull(0))
@@ -64,8 +62,8 @@ class EventAdapterDelegate(private val clickListener: (Action) -> Unit) : Adapte
             root.isGone = user == null
             user?.let {
                 when (it.hasAccess) {
-                    true -> participantAvatar.loadWithFadeIn(it.avatar)
-                    false -> participantAvatar.loadWithFadeIn(R.drawable.ic_blocked)
+                    true -> participantAvatar.load(it.avatar)
+                    false -> participantAvatar.load(R.drawable.ic_blocked)
                 }
             }
         }

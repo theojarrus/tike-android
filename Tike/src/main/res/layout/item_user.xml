@@ -10,7 +10,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="10dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/avatarLayout"
         android:layout_width="46dp"
         android:layout_height="46dp"
@@ -30,7 +30,7 @@
             android:contentDescription="@string/participants"
             android:scaleType="centerCrop" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nameLayout"
@@ -46,6 +46,7 @@
             style="@style/Theme.Tike.TextView.RobotoRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

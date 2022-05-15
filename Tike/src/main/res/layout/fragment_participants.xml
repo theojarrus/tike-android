@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/primaryBackgroundColor">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -52,8 +53,8 @@
 
     <ProgressBar
         android:id="@+id/loadingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/addParticipantsButton"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
@@ -66,8 +67,8 @@
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginBottom="10dp"
+        android:enabled="false"
         android:text="@string/choose_participants"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart" />

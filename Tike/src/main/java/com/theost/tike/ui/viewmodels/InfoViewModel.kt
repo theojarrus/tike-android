@@ -33,10 +33,12 @@ class InfoViewModel : ViewModel() {
     private fun loadUsers(eventId: String) {
         _loadingStatus.postValue(Loading)
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle().flatMap { firebaseUser ->
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapSingle { firebaseUser ->
                 EventsRepository.getEvent(firebaseUser.uid, eventId).flatMap { event ->
-                    UsersRepository.getUsers(event.participants, listOf(firebaseUser.uid))
-                        .map { users -> users.map { user -> user.mapToUserUi(firebaseUser.uid) } }
+                    UsersRepository.getUsers(event.participants).map { users ->
+                        users.filter { it.uid != firebaseUser.uid }
+                            .map { it.mapToUserUi(firebaseUser.uid) }
+                    }
                 }
             }.subscribe({ users ->
                 _users.postValue(users)

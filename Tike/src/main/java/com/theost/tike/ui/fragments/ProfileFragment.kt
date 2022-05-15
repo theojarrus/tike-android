@@ -12,7 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.data.models.state.FriendStatus
+import com.theost.tike.data.models.state.FriendStatus.*
+import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.databinding.FragmentProfileBinding
+import com.theost.tike.ui.extensions.load
 import com.theost.tike.ui.extensions.loadWithFadeIn
 import com.theost.tike.ui.extensions.newPlaintextShare
 import com.theost.tike.ui.fragments.ProfileFragmentDirections.Companion.actionProfileFragmentToQrCodeFragment
@@ -32,21 +36,19 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(true)
 
-        binding.profileAddFriendButton.setOnClickListener {
-            makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
-        }
-
-        binding.profileRemoveFriendButton.setOnClickListener {
-            makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
-        }
-
         binding.messageProfileButton.setOnClickListener {
             makeText(requireContext(), R.string.feature_not_ready, LENGTH_SHORT).show()
         }
 
+        binding.profileAddFriendButton.setOnClickListener { viewModel.addFriend() }
+        binding.profileAddFriendRequestButton.setOnClickListener { viewModel.addFriendRequest() }
+        binding.profileRemoveFriendButton.setOnClickListener { viewModel.deleteFriend() }
+        binding.profilePendingFriendButton.setOnClickListener { viewModel.cancelPending() }
+
         binding.profileShareButton.setOnClickListener { showProfileShare() }
         binding.profileQrCodeButton.setOnClickListener { showProfileQrCode() }
 
+        viewModel.updatingStatus.observe(viewLifecycleOwner) { if (it !is Error) handleStatus(it) }
         viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
         viewModel.user.observe(viewLifecycleOwner) { user ->
             with(binding) {
@@ -57,7 +59,7 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
                 blockedView.isGone = !user.isBlocked
                 accessView.isGone = user.hasAccess
                 when (user.hasAccess) {
-                    true -> setupProfile(user.avatar, user.isBlocked)
+                    true -> setupProfile(user.avatar, user.isBlocked, user.friendStatus)
                     false -> setupClosedProfile()
                 }
             }
@@ -68,30 +70,51 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingBar.root,
         errorView = binding.errorView,
         disabledViews = listOf(
             binding.profileShareButton,
             binding.profileQrCodeButton,
             binding.messageProfileButton,
-            binding.profileAddFriendButton
+            binding.profileAddFriendButton,
+            binding.profileAddFriendRequestButton,
+            binding.profileRemoveFriendButton,
+            binding.profilePendingFriendButton
         )
     )
 
     private fun setupToolbarMenu(isBlocked: Boolean) {
-        with(binding) {
-            when (isBlocked) {
-                true -> toolbar.menu.findItem(R.id.profileUnblock)
-                false -> toolbar.menu.findItem(R.id.profileBlock)
-            }.isVisible = true
+        with(binding.toolbar.menu) {
+            findItem(R.id.profileUnblock).apply {
+                isVisible = isBlocked
+                setOnMenuItemClickListener {
+                    viewModel.unblockUser()
+                    true
+                }
+            }
+            findItem(R.id.profileBlock).apply {
+                isVisible = !isBlocked
+                setOnMenuItemClickListener {
+                    viewModel.blockUser()
+                    true
+                }
+            }
         }
     }
 
-    private fun setupProfile(avatar: String, isBlocked: Boolean) {
+    private fun setupProfile(
+        avatar: String,
+        isBlocked: Boolean,
+        friendStatus: FriendStatus
+    ) {
         with(binding) {
-            profileAvatar.loadWithFadeIn(avatar)
-            profileCommunicateButtons.isInvisible = isBlocked
+            profileAvatar.load(avatar)
             profileActionsButtons.isInvisible = false
+            profileCommunicateButtons.isInvisible = isBlocked
+            profileAddFriendButton.isGone = friendStatus != PENDING
+            profileRemoveFriendButton.isGone = friendStatus != FRIEND
+            profilePendingFriendButton.isGone = friendStatus != REQUESTED
+            profileAddFriendRequestButton.isGone = friendStatus != NOT_FRIEND
         }
     }
 
