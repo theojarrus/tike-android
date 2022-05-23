@@ -18,6 +18,7 @@ import com.theost.tike.ui.adapters.delegates.FriendAdapterDelegate
 import com.theost.tike.ui.adapters.delegates.TitleAdapterDelegate
 import com.theost.tike.ui.fragments.InboxFragmentDirections.Companion.actionInboxFragmentToInfoFragment
 import com.theost.tike.ui.fragments.InboxFragmentDirections.Companion.actionInboxFragmentToProfileFragment
+import com.theost.tike.ui.utils.DisplayUtils
 import com.theost.tike.ui.viewmodels.InboxViewModel
 import com.theost.tike.ui.widgets.StateFragment
 
@@ -51,12 +52,18 @@ class InboxFragment : StateFragment(R.layout.fragment_inbox) {
                         action.participants,
                         action.mode
                     )
-                    is EventAction.Reject -> rejectEvent(
-                        action.id,
-                        action.creator,
-                        action.participants,
-                        action.mode
-                    )
+                    is EventAction.Reject ->
+                        DisplayUtils.showConfirmationDialog(
+                            requireContext(),
+                            R.string.ask_event_reject
+                        ) {
+                            rejectEvent(
+                                action.id,
+                                action.creator,
+                                action.participants,
+                                action.mode
+                            )
+                        }
                     is EventAction.Info -> findNavController().navigate(
                         actionInboxFragmentToInfoFragment(action.id, action.creator)
                     )

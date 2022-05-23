@@ -19,6 +19,7 @@ import com.theost.tike.ui.extensions.load
 import com.theost.tike.ui.extensions.loadWithPlaceholder
 import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToCreatorFragment
 import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToInfoFragment
+import com.theost.tike.ui.utils.DisplayUtils
 import com.theost.tike.ui.viewmodels.JoiningViewModel
 import com.theost.tike.ui.viewmodels.MemberViewModel
 import com.theost.tike.ui.widgets.StateFragment
@@ -47,7 +48,10 @@ class JoiningFragment : StateFragment(R.layout.fragment_joining) {
         binding.eventsList.adapter = adapter.apply {
             addDelegate(EventAdapterDelegate { action ->
                 when (action) {
-                    is Accept -> viewModel.addEventRequest(action.id, action.creator)
+                    is Accept -> DisplayUtils.showConfirmationDialog(
+                        requireContext(),
+                        R.string.ask_event_join
+                    ) { viewModel.addEventRequest(action.id, action.creator) }
                     is Info -> findNavController().navigate(
                         actionAddingFragmentToInfoFragment(
                             action.id,

@@ -88,8 +88,12 @@
     <string name="blocked">Пользователь заблокирован</string>
     <string name="access_denied">Доступ ограничен</string>
 
-    <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
     <string name="confirmation">Подтверждение</string>
+    <string name="ask_event_join">Присоединиться к событию?</string>
+    <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
+    <string name="ask_event_reject">Вы уверены, что хотите отклонить событие?</string>
+    <string name="ask_friend_delete">Вы уверены, что хотите удалить пользователя из друзей?</string>
+    <string name="ask_user_block">Вы уверены, что хотите заблокировать пользователя?\nОн будет удалён из друзей и скрыт из общего списка</string>
 
     <string name="reload">Перезагрузить</string>
     <string name="sign_out">Выйти</string>

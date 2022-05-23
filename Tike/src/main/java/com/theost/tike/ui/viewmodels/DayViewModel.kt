@@ -75,6 +75,7 @@ class DayViewModel : ViewModel() {
     }
 
     fun deleteProperEvent(id: String) {
+        _events.hideItem(EventUi::id, id)
         compositeDisposable.add(
             RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
                 EventsRepository.getEvent(firebaseUser.uid, id).flatMapCompletable { event ->

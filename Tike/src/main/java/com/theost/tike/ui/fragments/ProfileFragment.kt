@@ -14,12 +14,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.data.models.state.FriendStatus
 import com.theost.tike.data.models.state.FriendStatus.*
-import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.databinding.FragmentProfileBinding
 import com.theost.tike.ui.extensions.load
 import com.theost.tike.ui.extensions.loadWithFadeIn
 import com.theost.tike.ui.extensions.newPlaintextShare
 import com.theost.tike.ui.fragments.ProfileFragmentDirections.Companion.actionProfileFragmentToQrCodeFragment
+import com.theost.tike.ui.utils.DisplayUtils.showConfirmationDialog
 import com.theost.tike.ui.viewmodels.ProfileViewModel
 import com.theost.tike.ui.widgets.ToolbarStateFragment
 import java.lang.String.format
@@ -42,8 +42,13 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
 
         binding.profileAddFriendButton.setOnClickListener { viewModel.addFriend() }
         binding.profileAddFriendRequestButton.setOnClickListener { viewModel.addFriendRequest() }
-        binding.profileRemoveFriendButton.setOnClickListener { viewModel.deleteFriend() }
         binding.profilePendingFriendButton.setOnClickListener { viewModel.cancelPending() }
+        binding.profileRemoveFriendButton.setOnClickListener {
+            showConfirmationDialog(
+                requireContext(),
+                R.string.ask_friend_delete
+            ) { viewModel.deleteFriend() }
+        }
 
         binding.profileShareButton.setOnClickListener { showProfileShare() }
         binding.profileQrCodeButton.setOnClickListener { showProfileQrCode() }
@@ -94,7 +99,10 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
             findItem(R.id.profileBlock).apply {
                 isVisible = !isBlocked
                 setOnMenuItemClickListener {
-                    viewModel.blockUser()
+                    showConfirmationDialog(
+                        requireContext(),
+                        R.string.ask_user_block
+                    ) { viewModel.blockUser() }
                     true
                 }
             }
