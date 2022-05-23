@@ -5,7 +5,6 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import com.theost.tike.data.models.core.Dates
-import org.threeten.bp.LocalDate
 
 /** Shows DotSpan color of date with events **/
 class EventDecorator(

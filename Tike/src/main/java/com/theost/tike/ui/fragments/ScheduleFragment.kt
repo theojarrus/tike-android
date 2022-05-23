@@ -5,7 +5,6 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.M
 import android.os.Bundle
 import android.text.style.TextAppearanceSpan
-import android.transition.TransitionManager
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.getDrawable
@@ -131,7 +130,7 @@ class ScheduleFragment : Fragment(R.layout.fragment_schedule) {
 
     private fun setupPager() {
         with(binding.daysPager) {
-            registerOnPageChangeCallback(OnPageChangeCallback() { positionOffset ->
+            registerOnPageChangeCallback(OnPageChangeCallback { positionOffset ->
                 pagerNumerator.calculatePosition(positionOffset)
             })
         }

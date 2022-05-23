@@ -1,21 +1,16 @@
 package com.theost.tike.ui.fragments
 
 import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.GoogleAuthProvider
 import com.theost.tike.R
-import com.theost.tike.data.api.FirestoreApi.SERVER_CLIENT_ID
 import com.theost.tike.databinding.FragmentSignInBinding
 import com.theost.tike.ui.utils.AuthUtils.getSignInIntent
 import com.theost.tike.ui.viewmodels.SignInViewModel

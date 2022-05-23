@@ -34,7 +34,7 @@ class InboxFragment : StateFragment(R.layout.fragment_inbox) {
 
         binding.inboxList.adapter = adapter.apply {
             addDelegate(TitleAdapterDelegate())
-            addDelegate(FriendAdapterDelegate() { action ->
+            addDelegate(FriendAdapterDelegate { action ->
                 when (action) {
                     is FriendAction.Accept -> viewModel.addFriend(action.id)
                     is FriendAction.Reject -> viewModel.deleteFriendRequest(action.id)
@@ -44,7 +44,7 @@ class InboxFragment : StateFragment(R.layout.fragment_inbox) {
                     )
                 }
             })
-            addDelegate(EventAdapterDelegate() { action ->
+            addDelegate(EventAdapterDelegate { action ->
                 when (action) {
                     is EventAction.Accept -> acceptEvent(
                         action.id,

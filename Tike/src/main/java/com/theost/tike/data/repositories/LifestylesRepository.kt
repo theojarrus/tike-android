@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 
 object LifestylesRepository {
 
+    @Suppress("unused")
     fun getLifestyle(id: String): Single<Lifestyle> {
         return RxFirebaseFirestore.data(provideLifestyleDocument(id))
             .map { it.getOrNull()?.toObject(LifestyleDto::class.java) }
@@ -27,6 +28,7 @@ object LifestylesRepository {
             .subscribeOn(Schedulers.io())
     }
 
+    @Suppress("unused")
     fun getLifestyles(ids: List<String>): Single<List<Lifestyle>> {
         return if (ids.isNotEmpty()) {
             RxFirebaseFirestore.data(provideLifestylesCollection().whereIn(documentId(), ids))

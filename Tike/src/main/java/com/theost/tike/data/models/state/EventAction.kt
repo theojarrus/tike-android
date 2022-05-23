@@ -21,7 +21,6 @@ sealed class EventAction {
     class Info(
         val id: String,
         val creator: String,
-        val participants: List<UserUi>,
-        val mode: EventMode
+        val participants: List<UserUi>
     ) : EventAction()
 }

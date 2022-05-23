@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
-import org.threeten.bp.LocalDate
 
 /** Shows background of selected date **/
 class DayDecorator(val drawable: Drawable?) : DayViewDecorator {

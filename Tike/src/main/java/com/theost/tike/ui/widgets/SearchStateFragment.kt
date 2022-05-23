@@ -31,9 +31,9 @@ abstract class SearchStateFragment(
         }
     }
 
-    fun setupSearchView(searchView: SearchView) {
+    private fun setupSearchView(searchView: SearchView) {
         compositeDisposable.add(
-            Observable.create<String>() { emitter ->
+            Observable.create<String> { emitter ->
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(s: String?): Boolean {
                         emitter.onComplete()

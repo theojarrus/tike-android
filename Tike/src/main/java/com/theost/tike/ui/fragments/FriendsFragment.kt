@@ -33,7 +33,7 @@ class FriendsFragment : SearchStateFragment(R.layout.fragment_friends) {
         }
 
         binding.usersList.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate() { uid ->
+            addDelegate(UserAdapterDelegate { uid ->
                 findNavController().navigate(actionFriendsFragmentToProfileFragment(uid))
             })
         }

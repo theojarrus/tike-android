@@ -44,5 +44,5 @@ open class BaseAdapter : ListAdapter<DelegateItem, RecyclerView.ViewHolder>(Dele
         }
     }
 
-    private class EmptyViewHolder(context: Context) : RecyclerView.ViewHolder(View(context)) {}
+    private class EmptyViewHolder(context: Context) : RecyclerView.ViewHolder(View(context))
 }

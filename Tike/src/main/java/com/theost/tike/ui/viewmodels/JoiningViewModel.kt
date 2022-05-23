@@ -16,7 +16,6 @@ import com.theost.tike.data.models.ui.mapToEventUi
 import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
-import com.theost.tike.ui.extensions.hideItem
 import com.theost.tike.ui.extensions.hideNullableItem
 import com.theost.tike.ui.extensions.mergeWith
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_JOINING

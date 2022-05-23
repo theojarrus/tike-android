@@ -8,7 +8,6 @@ import com.theost.tike.R
 import com.theost.tike.data.models.ui.ParticipantUi
 import com.theost.tike.databinding.ItemParticipantBinding
 import com.theost.tike.ui.extensions.load
-import com.theost.tike.ui.extensions.loadWithFadeIn
 import com.theost.tike.ui.interfaces.AdapterDelegate
 import com.theost.tike.ui.interfaces.DelegateItem
 

@@ -61,7 +61,7 @@ abstract class StateFragment(@LayoutRes contentLayoutId: Int) : Fragment(content
         }
     }
 
-    fun showLoading() {
+    private fun showLoading() {
         with(bindState()) {
             rootView?.let { hideKeyboard(rootView) }
             actionView?.isInvisible = true
@@ -74,7 +74,7 @@ abstract class StateFragment(@LayoutRes contentLayoutId: Int) : Fragment(content
         }
     }
 
-    fun hideLoading() {
+    private fun hideLoading() {
         with(bindState()) {
             actionView?.isInvisible = false
             loadingView?.isGone = true
@@ -83,13 +83,13 @@ abstract class StateFragment(@LayoutRes contentLayoutId: Int) : Fragment(content
         }
     }
 
-    fun showError() {
+    private fun showError() {
         with(bindState()) {
             errorView?.let { it.isGone = false } ?: showErrorToast()
         }
     }
 
-    fun hideError() {
+    private fun hideError() {
         with(bindState()) {
             errorView?.isGone = true
         }

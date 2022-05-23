@@ -12,7 +12,6 @@ import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.UserAdapterDelegate
 import com.theost.tike.ui.fragments.BlacklistFragmentDirections.Companion.actionBlacklistFragmentToProfileFragment
 import com.theost.tike.ui.viewmodels.BlacklistViewModel
-import com.theost.tike.ui.viewmodels.FriendsViewModel
 import com.theost.tike.ui.widgets.SearchStateFragment
 
 class BlacklistFragment : SearchStateFragment(R.layout.fragment_blacklist) {
@@ -33,7 +32,7 @@ class BlacklistFragment : SearchStateFragment(R.layout.fragment_blacklist) {
         }
 
         binding.usersList.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate() { uid ->
+            addDelegate(UserAdapterDelegate { uid ->
                 findNavController().navigate(actionBlacklistFragmentToProfileFragment(uid))
             })
         }

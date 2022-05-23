@@ -32,7 +32,7 @@ class PeopleFragment : SearchStateFragment(R.layout.fragment_people) {
         }
 
         binding.usersList.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate() { uid ->
+            addDelegate(UserAdapterDelegate { uid ->
                 findNavController().navigate(actionPeopleFragmentToProfileFragment(uid))
             })
         }

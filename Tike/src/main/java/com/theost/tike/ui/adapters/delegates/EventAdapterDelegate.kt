@@ -61,8 +61,7 @@ class EventAdapterDelegate(private val clickListener: (EventAction) -> Unit) : A
                         Info(
                             item.id,
                             item.creator,
-                            item.participants,
-                            item.mode
+                            item.participants
                         )
                     )
                 }

@@ -27,7 +27,7 @@ class DialogsFragment : StateFragment(R.layout.fragment_dialogs) {
         viewModel.users.observe(viewLifecycleOwner) { adapter.submitList(it) }
 
         binding.usersList.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate() {
+            addDelegate(UserAdapterDelegate {
                 makeText(requireContext(), R.string.feature_not_ready, Toast.LENGTH_SHORT).show()
             })
         }

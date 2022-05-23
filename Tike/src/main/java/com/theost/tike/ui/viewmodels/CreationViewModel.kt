@@ -14,7 +14,6 @@ import com.theost.tike.data.models.ui.UserUi
 import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
-import com.theost.tike.ui.extensions.append
 import com.theost.tike.ui.extensions.isNotLower
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_CREATION
 import io.reactivex.disposables.CompositeDisposable

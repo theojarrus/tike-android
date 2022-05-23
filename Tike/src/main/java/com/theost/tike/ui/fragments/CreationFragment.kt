@@ -1,3 +1,5 @@
+@file:Suppress("unused", "unused")
+
 package com.theost.tike.ui.fragments
 
 import android.app.DatePickerDialog
@@ -182,8 +184,6 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     }
 
     companion object {
-
-        private const val KEY_PARTICIPANTS_REQUEST = "request_participants"
 
         fun newInstance(): Fragment {
             return CreationFragment()
