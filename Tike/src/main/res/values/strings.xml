@@ -128,4 +128,9 @@
     <string name="pending_out_events">Исходящие приглашения</string>
     <string name="requesting_in_events">Входящие запросы</string>
     <string name="requesting_out_events">Исходящие запросы</string>
+
+    <string name="event_creator">Создатель</string>
+    <string name="event_participants">Участники</string>
+    <string name="event_pending">Ожидаются</string>
+    <string name="event_requesting">Запросили</string>
 </resources>

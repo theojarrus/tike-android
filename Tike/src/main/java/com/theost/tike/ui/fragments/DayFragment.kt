@@ -43,11 +43,16 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
         binding.eventsList.adapter = adapter.apply {
             addDelegate(EventAdapterDelegate { action ->
                 when (action) {
-                    is Info -> showEventInfo(action.id)
                     is Reject -> showConfirmationDialog(
                         requireContext(),
                         R.string.ask_event_delete
                     ) { deleteEvent(action.id, action.creator, action.mode) }
+                    is Info -> findNavController().navigate(
+                        actionScheduleFragmentToInfoFragment(
+                            action.id,
+                            action.creator
+                        )
+                    )
                     else -> {}
                 }
             })
@@ -81,10 +86,6 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
             binding.emptyDayView.root.isVisible = isVisible
             if (isVisible) emptyImage.loadWithFadeIn(R.drawable.empty_events)
         }
-    }
-
-    private fun showEventInfo(id: String) {
-        findNavController().navigate(actionScheduleFragmentToInfoFragment(id))
     }
 
     companion object {

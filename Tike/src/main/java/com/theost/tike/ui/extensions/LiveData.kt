@@ -22,6 +22,13 @@ inline fun <reified T, reified K, I, X, Y> MutableLiveData<List<I>>.hideItem(
     }
 }
 
+inline fun <reified T, I, X> MutableLiveData<List<I>>.hideItem(
+    field: KProperty1<T, X>,
+    filter: X
+) {
+    value?.let { items -> postValue(items.filterNot { it is T && field.get(it) == filter }) }
+}
+
 inline fun <reified T, I, X> MutableLiveData<List<I>?>.hideNullableItem(
     field: KProperty1<T, X>,
     filter: X

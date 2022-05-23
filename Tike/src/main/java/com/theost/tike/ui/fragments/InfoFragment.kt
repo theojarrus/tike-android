@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.databinding.FragmentInfoBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
+import com.theost.tike.ui.adapters.delegates.TitleAdapterDelegate
 import com.theost.tike.ui.adapters.delegates.UserAdapterDelegate
 import com.theost.tike.ui.fragments.InfoFragmentDirections.Companion.actionInfoFragmentToProfileFragment
 import com.theost.tike.ui.viewmodels.InfoViewModel
@@ -30,7 +31,7 @@ class InfoFragment : BottomSheetDialogFragment() {
     ): View {
         val binding = FragmentInfoBinding.inflate(layoutInflater)
 
-        viewModel.users.observe(viewLifecycleOwner) { users ->
+        viewModel.items.observe(viewLifecycleOwner) { users ->
             binding.emptyView.isGone = users.isNotEmpty()
             adapter.submitList(users)
         }
@@ -47,12 +48,13 @@ class InfoFragment : BottomSheetDialogFragment() {
         }
 
         binding.usersList.adapter = adapter.apply {
+            addDelegate(TitleAdapterDelegate())
             addDelegate(UserAdapterDelegate { uid ->
                 findNavController().navigate(actionInfoFragmentToProfileFragment(uid))
             })
         }
 
-        viewModel.init(args.id)
+        viewModel.init(args.id, args.creator)
 
         return binding.root
     }

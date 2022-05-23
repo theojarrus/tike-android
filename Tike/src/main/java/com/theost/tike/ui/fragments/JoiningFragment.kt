@@ -11,12 +11,14 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.data.models.state.EventAction.Accept
+import com.theost.tike.data.models.state.EventAction.Info
 import com.theost.tike.databinding.FragmentJoiningBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.EventAdapterDelegate
 import com.theost.tike.ui.extensions.load
 import com.theost.tike.ui.extensions.loadWithPlaceholder
 import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToCreatorFragment
+import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToInfoFragment
 import com.theost.tike.ui.viewmodels.JoiningViewModel
 import com.theost.tike.ui.viewmodels.MemberViewModel
 import com.theost.tike.ui.widgets.StateFragment
@@ -43,8 +45,17 @@ class JoiningFragment : StateFragment(R.layout.fragment_joining) {
 
         binding.emptyJoinView.emptyImage.load(R.drawable.empty_join)
         binding.eventsList.adapter = adapter.apply {
-            addDelegate(EventAdapterDelegate() { action ->
-                if (action is Accept) viewModel.addEventRequest(action.id, action.creator)
+            addDelegate(EventAdapterDelegate { action ->
+                when (action) {
+                    is Accept -> viewModel.addEventRequest(action.id, action.creator)
+                    is Info -> findNavController().navigate(
+                        actionAddingFragmentToInfoFragment(
+                            action.id,
+                            action.creator
+                        )
+                    )
+                    else -> {}
+                }
             })
         }
 

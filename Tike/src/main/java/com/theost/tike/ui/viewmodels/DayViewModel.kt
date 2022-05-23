@@ -12,10 +12,12 @@ import com.theost.tike.data.models.state.EventMode.SCHEDULE_REFERENCE
 import com.theost.tike.data.models.state.EventType.REFERENCE
 import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.state.Status.*
+import com.theost.tike.data.models.ui.EventUi
 import com.theost.tike.data.models.ui.mapToEventUi
 import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
+import com.theost.tike.ui.extensions.hideItem
 import com.theost.tike.ui.extensions.mergeWith
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_DAY
@@ -91,6 +93,7 @@ class DayViewModel : ViewModel() {
     }
 
     fun deleteReferenceEvent(id: String, creator: String) {
+        _events.hideItem(EventUi::id, id)
         compositeDisposable.add(
             RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
                 EventsRepository.getEvent(creator, id).flatMapCompletable { event ->

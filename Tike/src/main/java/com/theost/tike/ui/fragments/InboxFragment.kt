@@ -58,7 +58,7 @@ class InboxFragment : StateFragment(R.layout.fragment_inbox) {
                         action.mode
                     )
                     is EventAction.Info -> findNavController().navigate(
-                        actionInboxFragmentToInfoFragment(action.id)
+                        actionInboxFragmentToInfoFragment(action.id, action.creator)
                     )
                 }
             })
