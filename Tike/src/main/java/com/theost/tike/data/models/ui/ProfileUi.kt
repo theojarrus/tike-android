@@ -29,7 +29,7 @@ fun User.mapToProfileUi(current: User): ProfileUi {
         friendStatus = when {
             current.friends.contains(uid) -> FRIEND
             current.pending.contains(uid) -> PENDING
-            pending.contains(current.uid) -> REQUESTED
+            pending.contains(current.uid) -> REQUESTING
             else -> NOT_FRIEND
         }
     )

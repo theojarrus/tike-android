@@ -8,8 +8,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
-import com.theost.tike.data.models.state.Action.Reject
-import com.theost.tike.data.models.state.Action.Info
+import com.theost.tike.data.models.state.EventAction.Reject
+import com.theost.tike.data.models.state.EventAction.Info
+import com.theost.tike.data.models.state.EventMode
+import com.theost.tike.data.models.state.EventMode.SCHEDULE_PROPER
+import com.theost.tike.data.models.state.EventMode.SCHEDULE_REFERENCE
 import com.theost.tike.databinding.FragmentDayBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.EventAdapterDelegate
@@ -38,13 +41,13 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
         }
 
         binding.eventsList.adapter = adapter.apply {
-            addDelegate(EventAdapterDelegate() { action ->
+            addDelegate(EventAdapterDelegate { action ->
                 when (action) {
                     is Info -> showEventInfo(action.id)
                     is Reject -> showConfirmationDialog(
                         requireContext(),
                         R.string.ask_event_delete
-                    ) { viewModel.deleteEvent(action.id) }
+                    ) { deleteEvent(action.id, action.creator, action.mode) }
                     else -> {}
                 }
             })
@@ -65,10 +68,18 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
         errorMessage = getString(R.string.error_network)
     )
 
+    private fun deleteEvent(id: String, creator: String, mode: EventMode) {
+        when (mode) {
+            SCHEDULE_PROPER -> viewModel.deleteProperEvent(id)
+            SCHEDULE_REFERENCE -> viewModel.deleteReferenceEvent(id, creator)
+            else -> {}
+        }
+    }
+
     private fun displayEmptyView(isVisible: Boolean) {
         with(binding.emptyDayView) {
             binding.emptyDayView.root.isVisible = isVisible
-            if (isVisible) emptyImage.loadWithFadeIn(R.drawable.events_empty)
+            if (isVisible) emptyImage.loadWithFadeIn(R.drawable.empty_events)
         }
     }
 

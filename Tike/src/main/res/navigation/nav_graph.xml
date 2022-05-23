@@ -27,6 +27,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_inboxFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
     </fragment>
 
     <fragment
@@ -41,6 +44,13 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_addingFragment_to_creatorFragment"
+            app:destination="@id/creatorFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -48,6 +58,12 @@
         android:name="com.theost.tike.ui.fragments.ParticipantsFragment"
         android:label="@string/participants"
         tools:layout="@layout/fragment_participants" />
+
+    <fragment
+        android:id="@+id/creatorFragment"
+        android:name="com.theost.tike.ui.fragments.CreatorFragment"
+        android:label="@string/creator"
+        tools:layout="@layout/fragment_creator" />
 
     <fragment
         android:id="@+id/dialogsFragment"

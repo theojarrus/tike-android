@@ -47,7 +47,7 @@
             android:layout_marginEnd="10dp"
             android:textColor="?attr/eventTitleColor"
             app:layout_constraintBottom_toTopOf="@id/userNick"
-            app:layout_constraintEnd_toStartOf="@id/acceptButton"
+            app:layout_constraintEnd_toStartOf="@id/actionButtons"
             app:layout_constraintStart_toEndOf="@id/userAvatarLayout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
@@ -63,43 +63,54 @@
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/acceptButton"
+            app:layout_constraintEnd_toStartOf="@id/actionButtons"
             app:layout_constraintStart_toEndOf="@id/userAvatarLayout"
             app:layout_constraintTop_toBottomOf="@id/userName"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="theo" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/acceptButton"
-            style="@style/Theme.Tike.EventButton.Action"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="10dp"
-            app:icon="@drawable/ic_accept"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/rejectButton"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/rejectButton"
-            style="@style/Theme.Tike.EventButton.Action"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="10dp"
-            app:icon="@drawable/ic_close"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/blockButton"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/blockButton"
-            style="@style/Theme.Tike.EventButton.Action"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            app:icon="@drawable/ic_block"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <LinearLayout
+            android:id="@+id/actionButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/acceptButton"
+                style="@style/Theme.Tike.EventButton.Action"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                app:icon="@drawable/ic_accept"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/rejectButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rejectButton"
+                style="@style/Theme.Tike.EventButton.Action"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:icon="@drawable/ic_close"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/blockButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/blockButton"
+                style="@style/Theme.Tike.EventButton.Action"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                app:icon="@drawable/ic_block"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -23,7 +23,6 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:contentDescription="@string/no_events"
-
             android:scaleType="centerCrop"
             android:src="?attr/primaryBackgroundColor" />
 
@@ -35,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/done"
+        android:text="@string/empty"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@id/emptyDescription"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,13 +48,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="@string/no_events"
+        android:gravity="center"
+        android:text="@string/add_creator"
         android:textColor="?attr/colorOnSurface"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/emptyActionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emptyTitle"
         app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/emptyActionButton"
+        style="@style/Theme.Tike.BlueButton.Basic"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:text="@string/add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emptyDescription"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

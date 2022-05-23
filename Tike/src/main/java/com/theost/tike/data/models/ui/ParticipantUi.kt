@@ -12,7 +12,7 @@ data class ParticipantUi(
     val isSelected: Boolean
 ) : DelegateItem {
     override fun id(): Any = uid
-    override fun content(): Any = isSelected
+    override fun content(): Any = name + nick + avatar + hasAccess + isSelected
 }
 
 fun User.mapToParticipantUi(currentUid: String): ParticipantUi {

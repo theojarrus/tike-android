@@ -8,6 +8,7 @@ data class User(
     val phone: String,
     val avatar: String,
     val friends: List<String>,
+    val requesting: List<String>,
     val pending: List<String>,
     val blocked: List<String>,
     val lifestyles: List<Lifestyle>

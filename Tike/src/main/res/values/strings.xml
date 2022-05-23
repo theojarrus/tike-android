@@ -9,6 +9,7 @@
     <string name="friends">Друзья</string>
     <string name="people">Люди</string>
     <string name="participants">Участники</string>
+    <string name="creator">Создатель</string>
 
     <string name="calendar">Календарь</string>
     <string name="time">Время</string>
@@ -35,10 +36,17 @@
     <string name="done">Готово!</string>
     <string name="no_events">На этот день планов нет</string>
 
+    <string name="empty">Пусто!</string>
+    <string name="add_creator">Добавьте создателя, чтобы\nотобразить события</string>
+
+    <string name="events">События</string>
+
     <string name="new_event">Новое событие</string>
     <string name="create">Создать</string>
+    <string name="add">Добавить</string>
     <string name="join">Присоединиться</string>
     <string name="choose_participants">Выбрано участников: %d</string>
+    <string name="choose_creator">Выбрать</string>
 
     <string name="title">Название</string>
     <string name="description">Описание</string>
@@ -75,6 +83,7 @@
     <string name="empty_people">Нет людей</string>
     <string name="empty_participants">Нет участников</string>
     <string name="empty_inbox">Нет заявок</string>
+    <string name="empty_vacant_events">Нет свободных событий</string>
 
     <string name="blocked">Пользователь заблокирован</string>
     <string name="access_denied">Доступ ограничен</string>
@@ -89,6 +98,8 @@
 
     <string name="no_title">Без названия</string>
     <string name="no_description">Нет описания</string>
+
+    <string name="no_connection">Отсутствует подключение к сети</string>
 
     <string name="privacy">Приватность</string>
     <string name="account">Аккаунт</string>
@@ -110,4 +121,11 @@
     <string name="friend">В друзьях</string>
     <string name="accept_request">Принять заявку</string>
     <string name="request_sent">Заявка отправлена</string>
+
+    <string name="pending_friends">Входящие в друзья</string>
+    <string name="requesting_friends">Исходящие в друзья</string>
+    <string name="pending_in_events">Входящие приглашения</string>
+    <string name="pending_out_events">Исходящие приглашения</string>
+    <string name="requesting_in_events">Входящие запросы</string>
+    <string name="requesting_out_events">Исходящие запросы</string>
 </resources>

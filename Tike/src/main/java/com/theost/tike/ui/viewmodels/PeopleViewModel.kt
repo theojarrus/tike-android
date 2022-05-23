@@ -56,8 +56,8 @@ class PeopleViewModel : ViewModel() {
         _loadingStatus.postValue(Loading)
         compositeDisposable.add(
             RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
-                UsersRepository.observeUser(firebaseUser.uid).switchMapSingle { databaseUser ->
-                    UsersRepository.getAllUsers(
+                UsersRepository.observeUser(firebaseUser.uid).switchMap { databaseUser ->
+                    UsersRepository.observeAllUsers(
                         databaseUser.friends.append(databaseUser.blocked).append(firebaseUser.uid)
                     ).map { users -> users.map { it.mapToUserUi(firebaseUser.uid) } }
                 }
@@ -71,5 +71,10 @@ class PeopleViewModel : ViewModel() {
                 Log.e(LOG_VIEW_MODEL_FRIENDS, error.toString())
             })
         )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }

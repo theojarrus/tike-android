@@ -71,4 +71,9 @@ class BlacklistViewModel : ViewModel() {
             })
         )
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }

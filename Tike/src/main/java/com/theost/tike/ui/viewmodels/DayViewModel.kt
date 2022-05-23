@@ -7,15 +7,16 @@ import androidx.lifecycle.ViewModel
 import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.theost.tike.data.models.state.EventMode.SCHEDULE
+import com.theost.tike.data.models.state.EventMode.SCHEDULE_PROPER
+import com.theost.tike.data.models.state.EventMode.SCHEDULE_REFERENCE
+import com.theost.tike.data.models.state.EventType.REFERENCE
 import com.theost.tike.data.models.state.Status
-import com.theost.tike.data.models.state.Status.Error
-import com.theost.tike.data.models.state.Status.Loading
-import com.theost.tike.data.models.state.Status.Success
+import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.data.models.ui.mapToEventUi
 import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
 import com.theost.tike.data.repositories.UsersRepository
+import com.theost.tike.ui.extensions.mergeWith
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_DAY
 import io.reactivex.Observable
@@ -41,7 +42,7 @@ class DayViewModel : ViewModel() {
         _loadingStatus.postValue(Loading)
         compositeDisposable.add(
             RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
-                EventsRepository.observeProperEvents(
+                EventsRepository.observeEvents(
                     firebaseUser.uid,
                     date.year,
                     date.monthValue,
@@ -53,7 +54,7 @@ class DayViewModel : ViewModel() {
                             event.mapToEventUi(
                                 users.filter { it.uid != firebaseUser.uid }
                                     .map { it.mapToUserUi(firebaseUser.uid) },
-                                SCHEDULE
+                                if (event.type == REFERENCE) SCHEDULE_REFERENCE else SCHEDULE_PROPER
                             )
                         }
                     }.toList()
@@ -71,12 +72,37 @@ class DayViewModel : ViewModel() {
         )
     }
 
-    fun deleteEvent(id: String) {
+    fun deleteProperEvent(id: String) {
         compositeDisposable.add(
             RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
-                EventsRepository.deleteEvent(firebaseUser.uid, id)
+                EventsRepository.getEvent(firebaseUser.uid, id).flatMapCompletable { event ->
+                    EventsRepository.deleteProperEvent(
+                        firebaseUser.uid,
+                        id,
+                        event.participants.mergeWith(event.requesting, event.pending)
+                    )
+                }
             }.subscribe({
-                Log.e(LOG_VIEW_MODEL_DAY, "Event $id successfully deleted")
+                Log.e(LOG_VIEW_MODEL_DAY, "Proper Event $id successfully deleted")
+            }, { error ->
+                Log.e(LOG_VIEW_MODEL_DAY, error.toString())
+            })
+        )
+    }
+
+    fun deleteReferenceEvent(id: String, creator: String) {
+        compositeDisposable.add(
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
+                EventsRepository.getEvent(creator, id).flatMapCompletable { event ->
+                    EventsRepository.deleteReferenceEvent(
+                        firebaseUser.uid,
+                        id,
+                        creator,
+                        event.participantsLimit
+                    )
+                }
+            }.subscribe({
+                Log.e(LOG_VIEW_MODEL_DAY, "Reference Event $id successfully deleted")
             }, { error ->
                 Log.e(LOG_VIEW_MODEL_DAY, error.toString())
             })

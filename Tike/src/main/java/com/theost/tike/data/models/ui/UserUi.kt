@@ -11,7 +11,7 @@ data class UserUi(
     val hasAccess: Boolean
 ) : DelegateItem {
     override fun id(): Any = uid
-    override fun content(): Any = nick
+    override fun content(): Any = name + nick + avatar + hasAccess
 }
 
 fun User.mapToUserUi(currentUid: String = ""): UserUi {

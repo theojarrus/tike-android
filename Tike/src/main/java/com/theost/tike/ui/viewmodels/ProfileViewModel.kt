@@ -11,7 +11,7 @@ import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.state.Status.*
 import com.theost.tike.data.models.ui.ProfileUi
 import com.theost.tike.data.models.ui.mapToProfileUi
-import com.theost.tike.data.repositories.PeopleRepository
+import com.theost.tike.data.repositories.FriendsRepository
 import com.theost.tike.data.repositories.UsersRepository
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_PROFILE
 import io.reactivex.disposables.CompositeDisposable
@@ -21,50 +21,53 @@ class ProfileViewModel : ViewModel() {
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
 
-    private val _updatingStatus = MutableLiveData<Status>()
-    val updatingStatus: LiveData<Status> = _updatingStatus
-
     private val _user = MutableLiveData<ProfileUi>()
     val user: LiveData<ProfileUi> = _user
 
+    private var isListenerAttached = false
     private val compositeDisposable = CompositeDisposable()
 
     fun init(uid: String) {
-        if (user.value == null) loadUser(uid) else reloadUser()
+        if (!isListenerAttached) loadUser(uid, isFirstLoad = true)
     }
 
     private fun reloadUser() {
-        user.value?.uid?.let { uid -> loadUser(uid, true) }
+        user.value?.uid?.let { uid ->
+            compositeDisposable.clear()
+            loadUser(uid, isFirstLoad = false)
+        }
     }
 
-    private fun loadUser(uid: String, isFirstLoad: Boolean = false) {
+    private fun loadUser(uid: String, isFirstLoad: Boolean) {
         if (isFirstLoad) _loadingStatus.postValue(Loading)
-        (if (isFirstLoad) _loadingStatus else _updatingStatus).postValue(Loading)
         compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapSingle { firebaseUser ->
-                UsersRepository.getUser(firebaseUser.uid)
+            RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
+                UsersRepository.observeUser(firebaseUser.uid)
             }.flatMap { databaseUser ->
-                UsersRepository.getUser(uid).map { it.mapToProfileUi(databaseUser) }
+                UsersRepository.observeUser(uid).map { it.mapToProfileUi(databaseUser) }
             }.subscribe({ user ->
+                isListenerAttached = true
                 _user.postValue(user)
-                updateLoadingStatus(Success, isFirstLoad)
+                _loadingStatus.postValue(Success)
             }, { error ->
-                updateLoadingStatus(Error, isFirstLoad)
+                isListenerAttached = false
+                _loadingStatus.postValue(Error)
                 Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
             })
         )
     }
 
     fun cancelPending() {
-        _updatingStatus.postValue(Loading)
+        compositeDisposable.clear()
+        _loadingStatus.postValue(Loading)
         user.value?.uid?.let { requestedUid ->
             compositeDisposable.add(
                 RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { requestingUser ->
-                    PeopleRepository.deleteFriendRequest(requestingUser.uid, requestedUid)
+                    FriendsRepository.deleteFriendRequest(requestingUser.uid, requestedUid)
                 }.subscribe({
                     reloadUser()
                 }, { error ->
-                    _updatingStatus.postValue(Error)
+                    _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
                 })
             )
@@ -72,13 +75,14 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun addFriend() {
-        _updatingStatus.postValue(Loading)
+        compositeDisposable.clear()
+        _loadingStatus.postValue(Loading)
         user.value?.uid?.let { requestedUid ->
             compositeDisposable.add(
                 RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
                     UsersRepository.getUser(firebaseUser.uid).flatMapCompletable { requestingUser ->
                         UsersRepository.getUser(requestedUid).flatMapCompletable { requestedUser ->
-                            PeopleRepository.addFriend(
+                            FriendsRepository.addFriend(
                                 requestingUser.uid,
                                 requestedUser.uid,
                                 requestingUser.friends,
@@ -89,7 +93,7 @@ class ProfileViewModel : ViewModel() {
                 }.subscribe({
                     reloadUser()
                 }, { error ->
-                    _updatingStatus.postValue(Error)
+                    _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
                 })
             )
@@ -97,21 +101,25 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun deleteFriend() {
-        _updatingStatus.postValue(Loading)
+        compositeDisposable.clear()
+        _loadingStatus.postValue(Loading)
         user.value?.uid?.let { requestedUid ->
             compositeDisposable.add(
                 RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
                     UsersRepository.getUser(firebaseUser.uid).flatMapCompletable { requestingUser ->
-                        PeopleRepository.deleteFriend(
-                            requestingUser.uid,
-                            requestedUid,
-                            requestingUser.pending
-                        )
+                        UsersRepository.getUser(requestedUid).flatMapCompletable { requestedUser ->
+                            FriendsRepository.deleteFriend(
+                                requestingUser.uid,
+                                requestedUid,
+                                requestingUser.pending,
+                                requestedUser.requesting
+                            )
+                        }
                     }
                 }.subscribe({
                     reloadUser()
                 }, { error ->
-                    _updatingStatus.postValue(Error)
+                    _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
                 })
             )
@@ -119,21 +127,25 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun addFriendRequest() {
-        _updatingStatus.postValue(Loading)
+        compositeDisposable.clear()
+        _loadingStatus.postValue(Loading)
         user.value?.uid?.let { requestedUid ->
             compositeDisposable.add(
-                RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { requestingUser ->
-                    UsersRepository.getUser(requestedUid).flatMapCompletable { requestedUser ->
-                        PeopleRepository.addFriendRequest(
-                            requestingUser.uid,
-                            requestedUid,
-                            requestedUser.pending
-                        )
+                RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
+                    UsersRepository.getUser(firebaseUser.uid).flatMapCompletable { requestingUser ->
+                        UsersRepository.getUser(requestedUid).flatMapCompletable { requestedUser ->
+                            FriendsRepository.addFriendRequest(
+                                requestingUser.uid,
+                                requestedUid,
+                                requestingUser.requesting,
+                                requestedUser.pending
+                            )
+                        }
                     }
                 }.subscribe({
                     reloadUser()
                 }, { error ->
-                    _updatingStatus.postValue(Error)
+                    _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
                 })
             )
@@ -141,12 +153,13 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun blockUser() {
-        _updatingStatus.postValue(Loading)
+        compositeDisposable.clear()
+        _loadingStatus.postValue(Loading)
         user.value?.uid?.let { requestedUid ->
             compositeDisposable.add(
                 RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { firebaseUser ->
                     UsersRepository.getUser(firebaseUser.uid).flatMapCompletable { requestingUser ->
-                        PeopleRepository.blockUser(
+                        FriendsRepository.blockUser(
                             requestingUser.uid,
                             requestedUid,
                             requestingUser.blocked
@@ -155,7 +168,7 @@ class ProfileViewModel : ViewModel() {
                 }.subscribe({
                     reloadUser()
                 }, { error ->
-                    _updatingStatus.postValue(Error)
+                    _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
                 })
             )
@@ -163,22 +176,24 @@ class ProfileViewModel : ViewModel() {
     }
 
     fun unblockUser() {
-        _updatingStatus.postValue(Loading)
+        compositeDisposable.clear()
+        _loadingStatus.postValue(Loading)
         user.value?.uid?.let { requestedUid ->
             compositeDisposable.add(
                 RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapCompletable { requestingUser ->
-                    PeopleRepository.unblockUser(requestingUser.uid, requestedUid)
+                    FriendsRepository.unblockUser(requestingUser.uid, requestedUid)
                 }.subscribe({
                     reloadUser()
                 }, { error ->
-                    _updatingStatus.postValue(Error)
+                    _loadingStatus.postValue(Error)
                     Log.e(LOG_VIEW_MODEL_PROFILE, error.toString())
                 })
             )
         }
     }
 
-    private fun updateLoadingStatus(status: Status, isFirstLoad: Boolean) {
-        if (isFirstLoad) _loadingStatus.postValue(status) else _updatingStatus.postValue(status)
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }

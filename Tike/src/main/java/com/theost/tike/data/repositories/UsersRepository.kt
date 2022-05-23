@@ -41,14 +41,15 @@ object UsersRepository {
         }
     }
 
-    fun getAllUsers(excluded: List<String> = emptyList()): Single<List<User>> {
+    fun observeAllUsers(excluded: List<String> = emptyList()): Observable<List<User>> {
         return if (excluded.isNotEmpty()) {
-            RxFirebaseFirestore.data(provideUsersCollection().whereNotIn(documentId(), excluded))
-                .map { it.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
+            RxFirebaseFirestore.dataChanges(
+                provideUsersCollection().whereNotIn(documentId(), excluded)
+            ).map { it.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
                 .map { entities -> entities.map { entity -> entity.mapToUser() } }
                 .subscribeOn(Schedulers.io())
         } else {
-            RxFirebaseFirestore.data(provideUsersCollection())
+            RxFirebaseFirestore.dataChanges(provideUsersCollection())
                 .map { it.getOrNull()?.toObjects(UserDto::class.java) ?: emptyList() }
                 .map { entities -> entities.map { entity -> entity.mapToUser() } }
                 .subscribeOn(Schedulers.io())

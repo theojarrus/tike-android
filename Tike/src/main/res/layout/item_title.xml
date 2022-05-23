@@ -5,5 +5,8 @@
     style="@style/Theme.Tike.TextView.RobotoMedium"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:layout_marginBottom="8dp"
+    android:paddingTop="6dp"
     tools:text="@string/title" />

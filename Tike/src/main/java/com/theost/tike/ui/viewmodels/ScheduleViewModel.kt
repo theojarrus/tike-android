@@ -9,7 +9,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.theost.tike.data.models.core.Dates
-import com.theost.tike.data.repositories.EventsRepository
+import com.theost.tike.data.repositories.DatesRepository
 import com.theost.tike.ui.utils.LogUtils.LOG_VIEW_MODEL_DAY
 import io.reactivex.disposables.CompositeDisposable
 
@@ -35,7 +35,7 @@ class ScheduleViewModel : ViewModel() {
     private fun loadEvents() {
         compositeDisposable.add(
             RxFirebaseAuth.getCurrentUser(Firebase.auth).flatMapObservable { firebaseUser ->
-                EventsRepository.observeProperEventsDates(firebaseUser.uid)
+                DatesRepository.observeEventsDates(firebaseUser.uid)
             }.subscribe({ dates ->
                 isListenerAttached = true
                 _events.postValue(dates)
@@ -53,5 +53,10 @@ class ScheduleViewModel : ViewModel() {
 
     fun setToday(position: Int) {
         updateCurrentDay(CalendarDay.today(), position)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }

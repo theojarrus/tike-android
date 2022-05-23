@@ -43,4 +43,9 @@ class AccountViewModel : ViewModel() {
             })
         )
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }

@@ -8,16 +8,27 @@ import com.theost.tike.ui.extensions.append
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 
-object PeopleRepository {
+object FriendsRepository {
 
     fun addFriendRequest(
         requesting: String,
         requested: String,
+        requestingRequesting: List<String>,
         requestedPending: List<String>
     ): Completable {
         return RxFirebaseFirestore.update(
             provideUsersCollection().document(requested),
             mapOf(Pair(UserDto::pending.name, requestedPending.append(requesting).distinct()))
+        ).andThen(
+            RxFirebaseFirestore.update(
+                provideUsersCollection().document(requesting),
+                mapOf(
+                    Pair(
+                        UserDto::requesting.name,
+                        requestingRequesting.append(requested).distinct()
+                    )
+                )
+            )
         ).subscribeOn(Schedulers.io())
     }
 
@@ -25,6 +36,11 @@ object PeopleRepository {
         return RxFirebaseFirestore.update(
             provideUsersCollection().document(requested),
             mapOf(Pair(UserDto::pending.name, arrayRemove(requesting)))
+        ).andThen(
+            RxFirebaseFirestore.update(
+                provideUsersCollection().document(requesting),
+                mapOf(Pair(UserDto::requesting.name, arrayRemove(requested)))
+            )
         ).subscribeOn(Schedulers.io())
     }
 
@@ -34,9 +50,9 @@ object PeopleRepository {
         requestingFriends: List<String>,
         requestedFriends: List<String>
     ): Completable {
-        return addSingleFriend(requesting, requested, requestingFriends)
+        return deleteFriendRequest(requested, requesting)
+            .andThen(addSingleFriend(requesting, requested, requestingFriends))
             .andThen(addSingleFriend(requested, requesting, requestedFriends))
-            .andThen(deleteFriendRequest(requested, requesting))
     }
 
     private fun addSingleFriend(
@@ -53,9 +69,10 @@ object PeopleRepository {
     fun deleteFriend(
         requesting: String,
         requested: String,
-        requestingPending: List<String>
+        requestingPending: List<String>,
+        requestedRequesting: List<String>,
     ): Completable {
-        return addFriendRequest(requested, requesting, requestingPending)
+        return addFriendRequest(requested, requesting, requestedRequesting, requestingPending)
             .andThen(deleteSingleFriend(requested, requesting))
             .andThen(deleteSingleFriend(requesting, requested))
     }

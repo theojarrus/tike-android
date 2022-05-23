@@ -25,4 +25,9 @@ class SplashViewModel : ViewModel() {
             Log.e(LOG_VIEW_MODEL_SPLASH, error.toString())
         }))
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }

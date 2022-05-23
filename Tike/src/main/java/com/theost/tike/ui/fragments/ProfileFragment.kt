@@ -48,7 +48,6 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
         binding.profileShareButton.setOnClickListener { showProfileShare() }
         binding.profileQrCodeButton.setOnClickListener { showProfileQrCode() }
 
-        viewModel.updatingStatus.observe(viewLifecycleOwner) { if (it !is Error) handleStatus(it) }
         viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
         viewModel.user.observe(viewLifecycleOwner) { user ->
             with(binding) {
@@ -113,7 +112,7 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
             profileCommunicateButtons.isInvisible = isBlocked
             profileAddFriendButton.isGone = friendStatus != PENDING
             profileRemoveFriendButton.isGone = friendStatus != FRIEND
-            profilePendingFriendButton.isGone = friendStatus != REQUESTED
+            profilePendingFriendButton.isGone = friendStatus != REQUESTING
             profileAddFriendRequestButton.isGone = friendStatus != NOT_FRIEND
         }
     }

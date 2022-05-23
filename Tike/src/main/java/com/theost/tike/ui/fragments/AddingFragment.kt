@@ -29,12 +29,10 @@ class AddingFragment : Fragment(R.layout.fragment_adding) {
         binding.joiningSwitchButton.setOnClickListener { viewModel.setPosition(JOINING.position) }
 
         viewModel.position.observe(viewLifecycleOwner) { position ->
-            if (binding.addingPager.currentItem != position) {
-                binding.addingPager.currentItem = position
-                when (position) {
-                    0 -> switchAddingButtons(R.id.creationSwitchButton)
-                    1 -> switchAddingButtons(R.id.joiningSwitchButton)
-                }
+            binding.addingPager.currentItem = position
+            when (position) {
+                0 -> switchAddingButtons(R.id.creationSwitchButton)
+                1 -> switchAddingButtons(R.id.joiningSwitchButton)
             }
         }
     }

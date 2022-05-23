@@ -29,4 +29,9 @@ class SignInViewModel : ViewModel() {
             })
         )
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }
