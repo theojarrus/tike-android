@@ -20,7 +20,12 @@ class TikeActivity : FragmentActivity(R.layout.activity_tike) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupNavController()
-        setupSmoothBottomMenu()
+        setupSmoothBottomMenu(savedInstanceState?.getInt(KEY_NAVIGATION_STATE))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(KEY_NAVIGATION_STATE, binding.bottomNavigation.itemActiveIndex)
+        super.onSaveInstanceState(outState)
     }
 
     private fun setupNavController() {
@@ -28,12 +33,15 @@ class TikeActivity : FragmentActivity(R.layout.activity_tike) {
         navController = (navHostFragment as NavHostFragment).navController
     }
 
-    private fun setupSmoothBottomMenu() {
+    private fun setupSmoothBottomMenu(savedInstanceIndex: Int?) {
         val popupMenu = PopupMenu(this, binding.root).apply { inflate(R.menu.menu_bottom) }
         binding.bottomNavigation.setupWithNavController(popupMenu.menu, navController)
+        savedInstanceIndex?.let { binding.bottomNavigation.itemActiveIndex = it }
     }
 
     companion object {
+
+        private const val KEY_NAVIGATION_STATE = "navigation_state"
 
         fun newIntent(context: Context): Intent {
             return Intent(context, TikeActivity::class.java)

@@ -16,7 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/registration_title" />
+        app:title="@string/registration_title"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <TextView
         android:id="@+id/nameText"

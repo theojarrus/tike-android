@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/profile" />
+        app:title="@string/profile"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/accountAvatarLayout"
@@ -29,10 +30,10 @@
             android:id="@+id/accountAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:background="@color/white"
             android:contentDescription="@string/profile"
             android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
             app:layout_constraintBottom_toTopOf="@id/accountShareButton"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -122,12 +123,12 @@
     <include
         android:id="@+id/loadingBar"
         layout="@layout/view_loading"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/accountAvatarLayout"
         app:layout_constraintEnd_toEndOf="@id/accountAvatarLayout"
         app:layout_constraintStart_toStartOf="@id/accountAvatarLayout"
-        app:layout_constraintTop_toTopOf="@id/accountAvatarLayout"  />
+        app:layout_constraintTop_toTopOf="@id/accountAvatarLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

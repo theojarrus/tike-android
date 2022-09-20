@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/new_event" />
+        app:title="@string/new_event"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/creationSwitchButton"

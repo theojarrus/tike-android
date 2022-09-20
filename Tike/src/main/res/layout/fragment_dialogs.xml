@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/dialogs" />
+        app:title="@string/dialogs"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/usersList"

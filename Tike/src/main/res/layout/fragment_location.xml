@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/location" />
+        app:title="@string/location"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"

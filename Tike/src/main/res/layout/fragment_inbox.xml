@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/inbox" />
+        app:title="@string/inbox"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/inboxList"

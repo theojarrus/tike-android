@@ -14,7 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_search"
-        app:title="@string/creator" />
+        app:title="@string/creator"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/participantsList"
