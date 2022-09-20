@@ -17,5 +17,8 @@ data class Event(
     val beginTime: LocalTime,
     val endTime: LocalTime,
     val repeatMode: String,
+    val locationAddress: String?,
+    val locationLatitude: Double?,
+    val locationLongitude: Double?,
     val type: EventType
 )

@@ -25,7 +25,10 @@ data class EventDto(
     val year: Int = 0,
     val beginTime: Long = 0,
     val endTime: Long = 0,
-    val repeatMode: String = ""
+    val repeatMode: String = "",
+    val locationAddress: String? = null,
+    val locationLatitude: Double? = null,
+    val locationLongitude: Double? = null
 )
 
 fun EventDto.mapToEvent(type: String = PROPER.name): Event {
@@ -42,6 +45,9 @@ fun EventDto.mapToEvent(type: String = PROPER.name): Event {
         beginTime = LocalTime.ofNanoOfDay(beginTime),
         endTime = LocalTime.ofNanoOfDay(endTime),
         repeatMode = repeatMode,
+        locationAddress = locationAddress,
+        locationLatitude = locationLatitude,
+        locationLongitude = locationLongitude,
         type = if (type == REFERENCE.name) REFERENCE else PROPER
     )
 }

@@ -8,8 +8,11 @@ import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.R
+import com.theost.tike.data.models.core.Location
+import com.theost.tike.data.models.state.OptionAction.LocationOptionAction
 import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.state.Status.*
+import com.theost.tike.data.models.ui.OptionUi
 import com.theost.tike.data.models.ui.TitleUi
 import com.theost.tike.data.models.ui.mapToUserUi
 import com.theost.tike.data.repositories.EventsRepository
@@ -56,6 +59,27 @@ class InfoViewModel : ViewModel() {
                         }
                     ) { eventCreator, eventParticipants, eventPending, eventRequesting ->
                         mutableListOf<DelegateItem>().apply {
+                            if (
+                                event.locationAddress != null
+                                && event.locationLatitude != null
+                                && event.locationLongitude != null
+                            ) {
+                                add(TitleUi(R.string.info))
+                                add(
+                                    OptionUi(
+                                        "Локация",
+                                        event.locationAddress,
+                                        R.drawable.ic_location,
+                                        LocationOptionAction(
+                                            Location(
+                                                event.locationAddress,
+                                                event.locationLatitude,
+                                                event.locationLongitude
+                                            )
+                                        )
+                                    )
+                                )
+                            }
                             if (eventCreator.uid != firebaseUser.uid) {
                                 add(TitleUi(R.string.creator))
                                 add(eventCreator)

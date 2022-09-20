@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,13 +18,14 @@ import com.theost.tike.data.models.state.Status.Success
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.CardAdapterDelegate
+import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToLocationFragment
 import com.theost.tike.ui.fragments.AddingFragmentDirections.Companion.actionAddingFragmentToParticipantsFragment
 import com.theost.tike.ui.interfaces.DelegateItem
 import com.theost.tike.ui.utils.DateUtils
 import com.theost.tike.ui.utils.StringUtils.switchIfEmpty
 import com.theost.tike.ui.viewmodels.CalendarViewModel
 import com.theost.tike.ui.viewmodels.CreationViewModel
-import com.theost.tike.ui.viewmodels.MembersViewModel
+import com.theost.tike.ui.viewmodels.EventViewModel
 import com.theost.tike.ui.widgets.StateFragment
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -38,7 +40,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     private val adapter: BaseAdapter = BaseAdapter()
 
     private val calendarViewModel: CalendarViewModel by activityViewModels()
-    private val membersViewModel: MembersViewModel by activityViewModels()
+    private val eventViewModel: EventViewModel by activityViewModels()
     private val viewModel: CreationViewModel by viewModels()
     private val binding: FragmentCreationBinding by viewBinding()
 
@@ -46,12 +48,14 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.openParticipantsButton.setOnClickListener { openParticipantsAdding() }
+        binding.locationInput.setOnClickListener { openLocationPicker() }
         binding.dateDayInput.setOnClickListener { showDatePicker() }
         binding.dateBeginInput.setOnClickListener { showBeginTimePicker() }
         binding.dateEndInput.setOnClickListener { showEndTimePicker() }
         binding.createEventButton.setOnClickListener { addEvent() }
         binding.numberPlusButton.setOnClickListener { viewModel.updateParticipantsLimit(1) }
         binding.numberMinusButton.setOnClickListener { viewModel.updateParticipantsLimit(-1) }
+        binding.clearLocation.setOnClickListener { eventViewModel.setLocation(null) }
 
         binding.participantsList.adapter = adapter.apply {
             addDelegate(CardAdapterDelegate { id -> viewModel.removeParticipant(id) })
@@ -61,7 +65,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
             when (status) {
                 Success -> {
                     calendarViewModel.setPendingDate(eventDate)
-                    membersViewModel.setMembers(emptyList())
+                    eventViewModel.reset()
                     findNavController().navigateUp()
                 }
                 else -> handleStatus(status)
@@ -73,7 +77,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
         }
 
         viewModel.participants.observe(viewLifecycleOwner) { participants ->
-            membersViewModel.setMembers(participants.map { it.uid })
+            eventViewModel.setMembers(participants.map { it.uid })
             adapter.submitList(mutableListOf<DelegateItem>().apply { addAll(participants) })
         }
 
@@ -108,7 +112,13 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
             )
         }
 
-        viewModel.init(membersViewModel.members.value ?: emptyList())
+        eventViewModel.location.observe(viewLifecycleOwner) { location ->
+            viewModel.updateLocation(location)
+            binding.locationInput.setText(location?.address ?: "")
+            binding.clearLocation.isGone = location == null
+        }
+
+        viewModel.init(eventViewModel.members.value ?: emptyList())
     }
 
     override fun bindState(): StateViews = StateViews(
@@ -159,6 +169,10 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
 
     private fun openParticipantsAdding() {
         findNavController().navigate(actionAddingFragmentToParticipantsFragment())
+    }
+
+    private fun openLocationPicker() {
+        findNavController().navigate(actionAddingFragmentToLocationFragment(null))
     }
 
     private fun addEvent() {

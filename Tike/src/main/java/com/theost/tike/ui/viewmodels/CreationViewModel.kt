@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.theost.tike.data.models.core.Location
 import com.theost.tike.data.models.state.RepeatMode
 import com.theost.tike.data.models.state.Status
 import com.theost.tike.data.models.state.Status.*
@@ -40,6 +41,9 @@ class CreationViewModel : ViewModel() {
 
     private val _participants = MutableLiveData<List<UserUi>>()
     val participants: LiveData<List<UserUi>> = _participants
+
+    private val _location = MutableLiveData<Location?>()
+    val location: LiveData<Location?> = _location
 
     private var participantsIds = emptyList<String>()
     private var isListenerAttached = false
@@ -122,6 +126,10 @@ class CreationViewModel : ViewModel() {
         }
     }
 
+    fun updateLocation(location: Location?) {
+        _location.value = location
+    }
+
     fun addEvent(title: String, description: String, repeatMode: RepeatMode) {
         _loadingStatus.postValue(Loading)
 
@@ -133,6 +141,7 @@ class CreationViewModel : ViewModel() {
         val endTime = eventEndTime.value?.toNanoOfDay() ?: 0
         val participantsLimit = participantsLimit.value ?: 0
         val participants = participants.value.orEmpty().map { it.uid }
+        val location = location.value
 
         val creationDate = LocalDateTime.now().nano
 
@@ -153,7 +162,10 @@ class CreationViewModel : ViewModel() {
                     year = year,
                     beginTime = beginTime,
                     endTime = endTime,
-                    repeatMode = repeatMode.name
+                    repeatMode = repeatMode.name,
+                    locationAddress = location?.address,
+                    locationLatitude = location?.latitude,
+                    locationLongitude = location?.longitude
                 )
             }.subscribe({
                 _loadingStatus.postValue(Success)

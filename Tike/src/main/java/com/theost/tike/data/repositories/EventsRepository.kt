@@ -423,7 +423,10 @@ object EventsRepository {
         year: Int,
         beginTime: Long,
         endTime: Long,
-        repeatMode: String
+        repeatMode: String,
+        locationAddress: String?,
+        locationLatitude: Double?,
+        locationLongitude: Double?
     ): Completable {
         return provideProperEventsCollection(uid).document().id.run {
             Observable.fromIterable(pending).flatMapCompletable {
@@ -454,7 +457,10 @@ object EventsRepository {
                     year = year,
                     beginTime = beginTime,
                     endTime = endTime,
-                    repeatMode = repeatMode
+                    repeatMode = repeatMode,
+                    locationAddress = locationAddress,
+                    locationLatitude = locationLatitude,
+                    locationLongitude = locationLongitude
                 )
             ).subscribeOn(Schedulers.io())
         }
@@ -597,7 +603,10 @@ object EventsRepository {
         year: Int,
         beginTime: Long,
         endTime: Long,
-        repeatMode: String
+        repeatMode: String,
+        locationAddress: String?,
+        locationLatitude: Double?,
+        locationLongitude: Double?
     ): Completable {
         return RxFirebaseFirestore.set(
             provideProperEventsCollection(uid).document(id),
@@ -616,7 +625,10 @@ object EventsRepository {
                 year = year,
                 beginTime = beginTime,
                 endTime = endTime,
-                repeatMode = repeatMode
+                repeatMode = repeatMode,
+                locationAddress = locationAddress,
+                locationLatitude = locationLatitude,
+                locationLongitude = locationLongitude
             )
         ).subscribeOn(Schedulers.io())
     }

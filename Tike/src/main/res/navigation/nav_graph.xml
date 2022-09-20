@@ -54,6 +54,13 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_addingFragment_to_locationFragment"
+            app:destination="@id/locationFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -67,6 +74,17 @@
         android:name="com.theost.tike.ui.fragments.CreatorFragment"
         android:label="@string/creator"
         tools:layout="@layout/fragment_creator" />
+
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.theost.tike.ui.fragments.LocationFragment"
+        android:label="@string/location"
+        tools:layout="@layout/fragment_location">
+        <argument
+            android:name="location"
+            app:argType="com.theost.tike.data.models.core.Location"
+            app:nullable="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/dialogsFragment"
@@ -201,6 +219,13 @@
         <action
             android:id="@+id/action_infoFragment_to_profileFragment"
             app:destination="@id/profileFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_infoFragment_to_locationFragment"
+            app:destination="@id/locationFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"

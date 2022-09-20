@@ -13,4 +13,6 @@ object LogUtils {
     const val LOG_VIEW_MODEL_PREFERENCES = "view_model_preferences"
     const val LOG_VIEW_MODEL_INBOX = "view_model_inbox"
     const val LOG_VIEW_MODEL_JOINING = "view_model_joining"
+
+    const val LOG_FRAGMENT_LOCATION = "fragment_location"
 }

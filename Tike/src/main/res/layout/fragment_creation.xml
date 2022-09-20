@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -276,7 +277,8 @@
                 android:gravity="center"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="@string/vacancy_count" />
+                android:text="@string/vacancy_count"
+                android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/numberPlusButton"
@@ -318,6 +320,51 @@
             app:stackFromEnd="true"
             tools:listitem="@layout/item_card" />
 
+        <TextView
+            android:id="@+id/locationText"
+            style="@style/Theme.Tike.TextView.RobotoMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/location"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/participantsList" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/locationLayout"
+            style="@style/Theme.Tike.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@id/clearLocation"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/locationText">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/locationInput"
+                style="@style/Theme.Tike.TextInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="@string/hint_location"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clearLocation"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:icon="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toEndOf="@id/locationLayout"
+            app:layout_constraintTop_toBottomOf="@id/locationText" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/createEventButton"
             style="@style/Theme.Tike.BlueButton.Basic"
@@ -330,7 +377,7 @@
             android:text="@string/create"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/participantsList" />
+            app:layout_constraintTop_toBottomOf="@id/locationLayout" />
 
         <ProgressBar
             android:id="@+id/loadingBar"

@@ -11,7 +11,7 @@ import com.theost.tike.R
 import com.theost.tike.databinding.FragmentParticipantsBinding
 import com.theost.tike.ui.adapters.core.BaseAdapter
 import com.theost.tike.ui.adapters.delegates.ParticipantAdapterDelegate
-import com.theost.tike.ui.viewmodels.MembersViewModel
+import com.theost.tike.ui.viewmodels.EventViewModel
 import com.theost.tike.ui.viewmodels.ParticipantsViewModel
 import com.theost.tike.ui.widgets.SearchStateFragment
 import java.lang.String.format
@@ -22,7 +22,7 @@ class ParticipantsFragment : SearchStateFragment(R.layout.fragment_participants)
 
     private val adapter: BaseAdapter = BaseAdapter()
 
-    private val membersViewModel: MembersViewModel by activityViewModels()
+    private val eventViewModel: EventViewModel by activityViewModels()
     private val viewModel: ParticipantsViewModel by viewModels()
     private val binding: FragmentParticipantsBinding by viewBinding()
 
@@ -50,11 +50,11 @@ class ParticipantsFragment : SearchStateFragment(R.layout.fragment_participants)
         }
 
         binding.addParticipantsButton.setOnClickListener {
-            membersViewModel.setMembers(selectedIds)
+            eventViewModel.setMembers(selectedIds)
             findNavController().navigateUp()
         }
 
-        viewModel.init(membersViewModel.members.value ?: emptyList())
+        viewModel.init(eventViewModel.members.value ?: emptyList())
     }
 
     override fun onSearch(query: String) = viewModel.searchParticipants(query)

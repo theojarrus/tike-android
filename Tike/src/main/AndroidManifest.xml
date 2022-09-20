@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -13,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tike"
         tools:ignore="LockedOrientationActivity">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDRm4GsiJ1XIOYJlzvE5He-Wy1pBbVVPuM" />
+
         <activity
             android:name=".ui.activities.SplashActivity"
             android:exported="true"
@@ -21,6 +28,7 @@
             android:theme="@style/Theme.Tike.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,4 +39,5 @@
             android:name=".ui.activities.TikeActivity"
             android:screenOrientation="portrait" />
     </application>
+
 </manifest>

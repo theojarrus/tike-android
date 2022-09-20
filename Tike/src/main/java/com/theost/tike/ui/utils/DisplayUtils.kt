@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast.LENGTH_SHORT
+import android.widget.Toast.makeText
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.theost.tike.R
 
@@ -22,5 +25,9 @@ object DisplayUtils {
             .setNegativeButton(R.string.no) { _, _ -> }
             .create()
             .show()
+    }
+
+    fun showError(context: Context, @StringRes message: Int) {
+        makeText(context, message, LENGTH_SHORT).show()
     }
 }

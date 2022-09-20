@@ -10,6 +10,7 @@
     <string name="people">Люди</string>
     <string name="participants">Участники</string>
     <string name="creator">Создатель</string>
+    <string name="location">Локация</string>
 
     <string name="calendar">Календарь</string>
     <string name="time">Время</string>
@@ -47,6 +48,7 @@
     <string name="join">Присоединиться</string>
     <string name="choose_participants">Выбрано участников: %d</string>
     <string name="choose_creator">Выбрать</string>
+    <string name="choose_location">Выбрать место</string>
 
     <string name="title">Название</string>
     <string name="description">Описание</string>
@@ -64,6 +66,7 @@
 
     <string name="hint_title">Новое событие</string>
     <string name="hint_description">Напишите здесь что-нибудь…</string>
+    <string name="hint_location">Не указана</string>
 
     <string name="hint_name">Имя Фамилия</string>
     <string name="hint_nick">nickname</string>
@@ -78,6 +81,8 @@
     <string name="error_auth">Ошибка авторизации</string>
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="error_delete">Ошибка удаления</string>
+    <string name="error_location">Ошибка получения локации</string>
+    <string name="error_permission">Ошибка получения разрешения</string>
 
     <string name="empty_friends">Нет друзей</string>
     <string name="empty_people">Нет людей</string>
@@ -137,4 +142,6 @@
     <string name="event_participants">Участники</string>
     <string name="event_pending">Ожидаются</string>
     <string name="event_requesting">Запросили</string>
+
+
 </resources>
