@@ -4,23 +4,19 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_serialization"
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
-    compileSdk 31
-
     defaultConfig {
-        applicationId "com.theost.tike"
-        minSdk 21
-        targetSdk 31
+        applicationId 'com.theost.tike'
+        namespace 'com.theost.tike'
+        minSdk 23
+        targetSdk 33
+        compileSdk 33
         versionCode 100
         versionName "1.0"
-    }
-
-    viewBinding {
-        enabled = true
     }
 
     buildTypes {
@@ -29,63 +25,70 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    viewBinding {
+        enabled = true
     }
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-
-    // Google Maps
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
-    implementation 'com.google.android.libraries.places:places:2.6.0'
-
-    // Binding Delegate
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
+    // Android
+    implementation "androidx.core:core-ktx:$android_core"
+    implementation "androidx.appcompat:appcompat:$android_appcompat"
+    implementation "com.google.android.material:material:$android_material"
+    implementation "androidx.constraintlayout:constraintlayout:$android_constraint"
+    implementation "androidx.preference:preference-ktx:$android_preference"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
-
-    // Smooth Bottom Bar
-    implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.8'
-
-    // Calendar
-    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.3.0'
-
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.13.0'
-    implementation 'com.google.android.gms:play-services-auth:20.2.0'
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    kapt 'com.github.bumptech.glide:compiler:4.13.0'
+    implementation "androidx.navigation:navigation-fragment-ktx:$android_navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$android_navigation"
 
     // QR Code
-    implementation 'com.google.zxing:core:3.4.0'
+    implementation "com.google.zxing:core:$google_zxing"
 
-    // RxJava
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    // GMS
+    implementation "com.google.android.gms:play-services-auth:$gms_auth"
+
+    // Maps
+    implementation "com.google.android.libraries.places:places:$google_places"
+    implementation "com.google.android.gms:play-services-maps:$gms_maps"
+    implementation "com.google.android.gms:play-services-location:$gms_location"
+
+    // Rx
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.2'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+    implementation "com.google.firebase:firebase-auth-ktx:$firebase_auth"
+    implementation "com.google.firebase:firebase-firestore-ktx:$firebase_store"
 
     // RxFirebase
-    implementation 'com.androidhuman.rxfirebase2:firebase-core:16.0.5.0'
-    implementation 'com.androidhuman.rxfirebase2:firebase-auth:16.1.0.0'
-    implementation 'com.androidhuman.rxfirebase2:firebase-auth-kotlin:16.1.0.0'
-    implementation 'com.androidhuman.rxfirebase2:firebase-firestore:17.1.5.0'
-    implementation 'com.androidhuman.rxfirebase2:firebase-firestore-kotlin:17.1.5.0'
+    implementation "com.androidhuman.rxfirebase2:firebase-core:$rx_firebase_core"
+    implementation "com.androidhuman.rxfirebase2:firebase-auth:$rx_firebase_auth"
+    implementation "com.androidhuman.rxfirebase2:firebase-auth-kotlin:$rx_firebase_auth"
+    implementation "com.androidhuman.rxfirebase2:firebase-firestore:$rx_firebase_store"
+    implementation "com.androidhuman.rxfirebase2:firebase-firestore-kotlin:$rx_firebase_store"
+
+    // Binding
+    implementation "com.github.kirich1409:viewbindingpropertydelegate:$custom_binding_delegate"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$bumtech_glide"
+    kapt "com.github.bumptech.glide:compiler:$bumtech_glide"
+
+    // Bottom Navigation
+    implementation "com.github.ibrahimsn98:SmoothBottomBar:$custom_bottom_bar"
+
+    // Calendar
+    implementation "com.github.prolificinteractive:material-calendarview:$custom_calendar_view"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threeten_abp"
 }

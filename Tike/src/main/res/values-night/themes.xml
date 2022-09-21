@@ -16,7 +16,7 @@
         <item name="android:windowBackground">?attr/primaryBackgroundColor</item>
         <item name="android:statusBarColor">?attr/primaryBackgroundColor</item>
         <item name="android:navigationBarColor">?attr/primaryBackgroundColor</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar" >false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="splashLogo">@drawable/splash_logo_dark</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Tike.BottomSheetDialogStyle</item>

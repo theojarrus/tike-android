@@ -18,7 +18,6 @@ class TikeActivity : FragmentActivity(R.layout.activity_tike) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         setupNavController()
         setupSmoothBottomMenu(savedInstanceState?.getInt(KEY_NAVIGATION_STATE))
     }

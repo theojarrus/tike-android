@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.extension.changeText
+import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.recycler.base.BaseAdapter
 import com.theost.tike.core.screen.StateFragment
 import com.theost.tike.databinding.FragmentSignUpBinding
@@ -26,7 +27,7 @@ class SignUpFragment : StateFragment(R.layout.fragment_sign_up) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        binding.toolbar.setNavigationOnClickListener { activity.pressBack() }
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { handleEndlessStatus(it) }
         viewModel.nameStatus.observe(viewLifecycleOwner) { if (it is Error) showNameError() }

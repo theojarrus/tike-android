@@ -16,6 +16,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.extension.changeText
 import com.theost.tike.common.extension.fazy
+import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.util.DisplayUtils.showError
 import com.theost.tike.common.util.LocationUtils.hasLocationPermission
 import com.theost.tike.common.util.LogUtils.LOG_FRAGMENT_LOCATION
@@ -62,7 +63,7 @@ class LocationFragment : Fragment(R.layout.fragment_location) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        binding.toolbar.setNavigationOnClickListener { activity.pressBack() }
 
         binding.locationButton.setOnClickListener {
             eventViewModel.setLocation(viewModel.location.value)
@@ -113,8 +114,7 @@ class LocationFragment : Fragment(R.layout.fragment_location) {
             }.distinctUntilChanged()
                 .doOnNext { binding.locationButton.isEnabled = false }
                 .debounce(500, MILLISECONDS)
-                .observeOn(newThread())
-                .map(mapGeocoder::getLocations)
+                .switchMapSingle(mapGeocoder::getLocations)
                 .observeOn(mainThread())
                 .doOnNext { locations ->
                     if (locations.isNotEmpty()) {
@@ -144,9 +144,7 @@ class LocationFragment : Fragment(R.layout.fragment_location) {
             }.distinctUntilChanged()
                 .doOnNext { binding.locationButton.isEnabled = false }
                 .observeOn(newThread())
-                .switchMapSingle { latlng ->
-                    mapGeocoder.getLocation(latlng.first, latlng.second)
-                }
+                .switchMapSingle { mapGeocoder.getLocation(it.first, it.second) }
                 .observeOn(mainThread())
                 .subscribe({ location ->
                     viewModel.setLocation(location)

@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.common.extension.handleBackPress
+import com.theost.tike.common.extension.pressBack
 import com.theost.tike.databinding.ActivityAuthBinding
 import com.theost.tike.domain.model.multi.AuthStatus
 import com.theost.tike.domain.model.multi.AuthStatus.*
@@ -24,7 +26,13 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+
+        handleBackPress {
+            when (viewModel.authStatus.value) {
+                SigningUp -> viewModel.clearAuthData()
+                else -> pressBack()
+            }
+        }
 
         viewModel.authStatus.observe(this) { authStatus ->
             when (authStatus) {
@@ -43,13 +51,6 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
         }
 
         viewModel.loadAuthStatus(getAuthStatusByName(intent.getStringExtra(EXTRA_KEY_AUTH_STATUS)))
-    }
-
-    override fun onBackPressed() {
-        when (viewModel.authStatus.value) {
-            SigningUp -> viewModel.clearAuthData()
-            else -> super.onBackPressed()
-        }
     }
 
     private fun showLoading() {
