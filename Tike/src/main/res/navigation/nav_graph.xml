@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/scheduleFragment"
-        android:name="com.theost.tike.ui.fragments.ScheduleFragment"
+        android:name="com.theost.tike.feature.schedule.ui.ScheduleFragment"
         android:label="@string/schedule"
         tools:layout="@layout/fragment_schedule">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/inboxFragment"
-        android:name="com.theost.tike.ui.fragments.InboxFragment"
+        android:name="com.theost.tike.feature.inbox.ui.InboxFragment"
         android:label="@string/inbox"
         tools:layout="@layout/fragment_inbox">
         <action
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/addingFragment"
-        android:name="com.theost.tike.ui.fragments.AddingFragment"
+        android:name="com.theost.tike.feature.creation.main.ui.AddingFragment"
         android:label="@string/creation"
         tools:layout="@layout/fragment_adding">
         <action
@@ -65,36 +65,36 @@
 
     <fragment
         android:id="@+id/participantsFragment"
-        android:name="com.theost.tike.ui.fragments.ParticipantsFragment"
+        android:name="com.theost.tike.feature.creation.adding.members.ui.ParticipantsFragment"
         android:label="@string/participants"
         tools:layout="@layout/fragment_participants" />
 
     <fragment
         android:id="@+id/creatorFragment"
-        android:name="com.theost.tike.ui.fragments.CreatorFragment"
+        android:name="com.theost.tike.feature.creation.joining.creator.ui.CreatorFragment"
         android:label="@string/creator"
         tools:layout="@layout/fragment_creator" />
 
     <fragment
         android:id="@+id/locationFragment"
-        android:name="com.theost.tike.ui.fragments.LocationFragment"
+        android:name="com.theost.tike.feature.location.ui.LocationFragment"
         android:label="@string/location"
         tools:layout="@layout/fragment_location">
         <argument
             android:name="location"
-            app:argType="com.theost.tike.data.models.core.Location"
+            app:argType="com.theost.tike.domain.model.core.Location"
             app:nullable="true" />
     </fragment>
 
     <fragment
         android:id="@+id/dialogsFragment"
-        android:name="com.theost.tike.ui.fragments.DialogsFragment"
+        android:name="com.theost.tike.feature.dialogs.ui.DialogsFragment"
         android:label="@string/dialogs"
         tools:layout="@layout/fragment_dialogs" />
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.theost.tike.ui.fragments.AccountFragment"
+        android:name="com.theost.tike.feature.profile.ui.AccountFragment"
         android:label="@string/account"
         tools:layout="@layout/fragment_account">
         <action
@@ -118,7 +118,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.theost.tike.ui.fragments.ProfileFragment"
+        android:name="com.theost.tike.feature.profile.ui.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile">
         <argument
@@ -131,7 +131,7 @@
 
     <fragment
         android:id="@+id/friendsFragment"
-        android:name="com.theost.tike.ui.fragments.FriendsFragment"
+        android:name="com.theost.tike.feature.friends.ui.FriendsFragment"
         android:label="@string/friends"
         tools:layout="@layout/fragment_friends">
         <action
@@ -152,7 +152,7 @@
 
     <fragment
         android:id="@+id/peopleFragment"
-        android:name="com.theost.tike.ui.fragments.PeopleFragment"
+        android:name="com.theost.tike.feature.people.ui.PeopleFragment"
         android:label="@string/people"
         tools:layout="@layout/fragment_people">
         <action
@@ -166,7 +166,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.theost.tike.ui.fragments.SettingsFragment"
+        android:name="com.theost.tike.feature.preferences.ui.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings">
         <argument
@@ -183,7 +183,7 @@
 
     <fragment
         android:id="@+id/blacklistFragment"
-        android:name="com.theost.tike.ui.fragments.BlacklistFragment"
+        android:name="com.theost.tike.feature.blacklist.ui.BlacklistFragment"
         android:label="@string/blacklist"
         tools:layout="@layout/fragment_blacklist">
         <action
@@ -197,7 +197,7 @@
 
     <dialog
         android:id="@+id/qrCodeFragment"
-        android:name="com.theost.tike.ui.fragments.QrCodeFragment"
+        android:name="com.theost.tike.feature.qr.QrCodeFragment"
         android:label="@string/qr_code"
         tools:layout="@layout/fragment_qr_code">
         <argument
@@ -207,7 +207,7 @@
 
     <dialog
         android:id="@+id/infoFragment"
-        android:name="com.theost.tike.ui.fragments.InfoFragment"
+        android:name="com.theost.tike.feature.info.ui.InfoFragment"
         android:label="@string/participants"
         tools:layout="@layout/fragment_info">
         <argument

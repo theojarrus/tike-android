@@ -21,7 +21,7 @@
             android:value="AIzaSyDRm4GsiJ1XIOYJlzvE5He-Wy1pBbVVPuM" />
 
         <activity
-            android:name=".ui.activities.SplashActivity"
+            android:name=".feature.splash.ui.SplashActivity"
             android:exported="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -32,11 +32,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".ui.activities.AuthActivity"
+            android:name=".feature.auth.ui.AuthActivity"
             android:screenOrientation="portrait" />
+
         <activity
-            android:name=".ui.activities.TikeActivity"
+            android:name=".feature.tike.TikeActivity"
             android:screenOrientation="portrait" />
     </application>
 
