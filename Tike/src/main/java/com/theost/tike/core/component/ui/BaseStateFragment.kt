@@ -30,6 +30,7 @@ abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewMod
     protected abstract val stateViews: StateViews
     protected abstract val initialState: State
     protected abstract val initialAction: ViewModel.() -> Unit
+
     protected open val refreshAction: ViewModel.() -> Unit
         get() = initialAction
 
