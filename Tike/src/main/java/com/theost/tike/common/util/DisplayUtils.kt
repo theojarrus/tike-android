@@ -27,7 +27,7 @@ object DisplayUtils {
             .show()
     }
 
-    fun showError(context: Context, @StringRes message: Int) {
-        makeText(context, message, LENGTH_SHORT).show()
+    fun showError(context: Context?, @StringRes message: Int) {
+        context?.let { makeText(context, message, LENGTH_SHORT).show() }
     }
 }

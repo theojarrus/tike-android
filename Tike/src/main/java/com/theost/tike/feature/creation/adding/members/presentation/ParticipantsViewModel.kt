@@ -8,7 +8,7 @@ import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.common.util.LogUtils.LOG_VIEW_MODEL_PARTICIPANTS
-import com.theost.tike.core.recycler.member.ParticipantUi
+import com.theost.tike.core.recycler.member.MemberUi
 import com.theost.tike.core.recycler.member.mapToParticipantUi
 import com.theost.tike.domain.model.multi.Status
 import com.theost.tike.domain.model.multi.Status.*
@@ -20,13 +20,13 @@ class ParticipantsViewModel : ViewModel() {
     private val _loadingStatus = MutableLiveData<Status>()
     val loadingStatus: LiveData<Status> = _loadingStatus
 
-    private val _participants = MutableLiveData<List<ParticipantUi>>()
-    val participants: LiveData<List<ParticipantUi>> = _participants
+    private val _participants = MutableLiveData<List<MemberUi>>()
+    val participants: LiveData<List<MemberUi>> = _participants
 
     private val _selectedIds = MutableLiveData<List<String>>()
     val selectedIds: LiveData<List<String>> = _selectedIds
 
-    private var cachedParticipants = emptyList<ParticipantUi>()
+    private var cachedParticipants = emptyList<MemberUi>()
     private var cachedSearchQuery = ""
     private var isListenerAttached = false
 
@@ -37,7 +37,7 @@ class ParticipantsViewModel : ViewModel() {
         if (!isListenerAttached) loadUsers()
     }
 
-    private fun restoreState(users: List<ParticipantUi>) {
+    private fun restoreState(users: List<MemberUi>) {
         cachedParticipants = users
         selectedIds.value?.let { selected ->
             _selectedIds.postValue(selected.filter { id -> users.map { it.uid }.contains(id) })
@@ -93,7 +93,7 @@ class ParticipantsViewModel : ViewModel() {
         _participants.postValue(items)
     }
 
-    private fun List<ParticipantUi>.mapWithSelection(): List<ParticipantUi> = map { user ->
+    private fun List<MemberUi>.mapWithSelection(): List<MemberUi> = map { user ->
         user.copy(isSelected = selectedIds.value.orEmpty().contains(user.uid))
     }
 

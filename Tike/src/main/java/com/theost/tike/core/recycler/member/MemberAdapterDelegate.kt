@@ -10,7 +10,7 @@ import com.theost.tike.common.recycler.delegate.AdapterDelegate
 import com.theost.tike.common.recycler.delegate.DelegateItem
 import com.theost.tike.databinding.ItemParticipantBinding
 
-class ParticipantAdapterDelegate(private val clickListener: (uid: String) -> Unit) :
+class MemberAdapterDelegate(private val clickListener: (uid: String) -> Unit) :
     AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
@@ -24,17 +24,17 @@ class ParticipantAdapterDelegate(private val clickListener: (uid: String) -> Uni
         position: Int,
         enabled: Boolean
     ) {
-        (holder as ViewHolder).bind(item as ParticipantUi)
+        (holder as ViewHolder).bind(item as MemberUi)
     }
 
-    override fun isOfViewType(item: DelegateItem): Boolean = item is ParticipantUi
+    override fun isOfViewType(item: DelegateItem): Boolean = item is MemberUi
 
     class ViewHolder(
         private val binding: ItemParticipantBinding,
         private val clickListener: (uid: String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ParticipantUi) {
+        fun bind(item: MemberUi) {
             with(binding) {
                 root.setOnClickListener { clickListener(item.uid) }
                 userName.text = item.name

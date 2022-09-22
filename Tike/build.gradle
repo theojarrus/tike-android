@@ -46,6 +46,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$android_appcompat"
     implementation "com.google.android.material:material:$android_material"
     implementation "androidx.constraintlayout:constraintlayout:$android_constraint"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$android_swipe_refresh"
     implementation "androidx.preference:preference-ktx:$android_preference"
 
     // Navigation

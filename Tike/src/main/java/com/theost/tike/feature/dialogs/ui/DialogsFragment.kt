@@ -1,42 +1,60 @@
 package com.theost.tike.feature.dialogs.ui
 
-import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import android.widget.Toast.makeText
+import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.common.extension.fazy
 import com.theost.tike.common.recycler.base.BaseAdapter
+import com.theost.tike.common.util.DisplayUtils.showError
+import com.theost.tike.core.component.model.StateStatus.Initial
+import com.theost.tike.core.component.model.StateViews
+import com.theost.tike.core.component.ui.BaseStateFragment
 import com.theost.tike.core.recycler.user.UserAdapterDelegate
-import com.theost.tike.core.screen.StateFragment
 import com.theost.tike.databinding.FragmentDialogsBinding
+import com.theost.tike.feature.dialogs.presentation.DialogsState
 import com.theost.tike.feature.dialogs.presentation.DialogsViewModel
 
-class DialogsFragment : StateFragment(R.layout.fragment_dialogs) {
+class DialogsFragment : BaseStateFragment<DialogsState, DialogsViewModel>(
+    R.layout.fragment_dialogs
+) {
 
     private val adapter: BaseAdapter = BaseAdapter()
-
-    private val viewModel: DialogsViewModel by viewModels()
     private val binding: FragmentDialogsBinding by viewBinding()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override val viewModel: DialogsViewModel by viewModels()
 
-        viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
-        viewModel.users.observe(viewLifecycleOwner) { adapter.submitList(it) }
+    override val isHandlingState: Boolean = true
+    override val isLoadingEndless: Boolean = false
+    override val isRefreshingErrorOnly: Boolean = false
 
-        binding.usersList.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate {
-                makeText(requireContext(), R.string.feature_not_ready, Toast.LENGTH_SHORT).show()
-            })
+    override fun setupView(): Unit = with(binding) {
+        recyclerView.adapter = adapter.apply {
+            addDelegate(UserAdapterDelegate { showError(context, R.string.feature_not_ready) })
         }
     }
 
-    override fun bindState(): StateViews = StateViews(
-        toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
-        errorView = binding.errorView,
-        disabledAdapter = adapter
+    override fun render(state: DialogsState) {
+        binding.emptyView.isGone = !state.status.isLoaded() || state.items.isNotEmpty()
+        adapter.submitList(state.items)
+    }
+
+    override val stateViews: StateViews by fazy {
+        StateViews(
+            toolbar = binding.toolbar,
+            loadingView = binding.loadingBar,
+            swipeRefresh = binding.swipeRefresh,
+            errorView = binding.errorView,
+            disabledAdapter = adapter
+        )
+    }
+
+    override val initialState: DialogsState = DialogsState(
+        status = Initial,
+        items = emptyList()
     )
+
+    override val initialAction: DialogsViewModel.() -> Unit = {
+        fetchDialogs()
+    }
 }

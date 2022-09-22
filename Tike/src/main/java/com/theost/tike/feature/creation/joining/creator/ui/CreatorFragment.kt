@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.recycler.base.BaseAdapter
-import com.theost.tike.core.recycler.member.ParticipantAdapterDelegate
+import com.theost.tike.core.recycler.member.MemberAdapterDelegate
 import com.theost.tike.core.screen.SearchStateFragment
 import com.theost.tike.databinding.FragmentCreatorBinding
 import com.theost.tike.feature.creation.adding.members.presentation.MemberViewModel
@@ -42,7 +42,7 @@ class CreatorFragment : SearchStateFragment(R.layout.fragment_creator) {
         }
 
         binding.participantsList.adapter = adapter.apply {
-            addDelegate(ParticipantAdapterDelegate { uid -> viewModel.selectParticipant(uid) })
+            addDelegate(MemberAdapterDelegate { uid -> viewModel.selectParticipant(uid) })
         }
 
         binding.addParticipantsButton.setOnClickListener {

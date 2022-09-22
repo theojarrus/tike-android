@@ -14,6 +14,7 @@ ext {
     android_appcompat = "1.5.1"
     android_material = "1.6.1"
     android_constraint = "2.1.4"
+    android_swipe_refresh = "1.1.0"
     android_preference = "1.2.0"
 
     // Navigation

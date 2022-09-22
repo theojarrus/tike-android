@@ -13,7 +13,7 @@ import com.theost.tike.databinding.ActivityTikeBinding
 
 class TikeActivity : FragmentActivity(R.layout.activity_tike) {
 
-    private val binding: ActivityTikeBinding by viewBinding()
+    private val binding: ActivityTikeBinding by viewBinding(R.id.root)
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {

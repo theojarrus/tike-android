@@ -3,7 +3,7 @@ package com.theost.tike.core.recycler.member
 import com.theost.tike.common.recycler.delegate.DelegateItem
 import com.theost.tike.domain.model.core.User
 
-data class ParticipantUi(
+data class MemberUi(
     val uid: String,
     val name: String,
     val nick: String,
@@ -15,8 +15,8 @@ data class ParticipantUi(
     override fun content(): Any = name + nick + avatar + hasAccess + isSelected
 }
 
-fun User.mapToParticipantUi(currentUid: String): ParticipantUi {
-    return ParticipantUi(
+fun User.mapToParticipantUi(currentUid: String): MemberUi {
+    return MemberUi(
         uid = uid,
         name = name,
         nick = "@$nick",

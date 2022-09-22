@@ -18,6 +18,7 @@ import com.theost.tike.domain.model.multi.ExistStatus.Exist
 import com.theost.tike.domain.model.multi.ExistStatus.NotFound
 import com.theost.tike.domain.util.RxFirebaseAuthUser
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -40,6 +41,10 @@ object AuthRepository {
                 .andThen(RxFirebaseUser.reauthenticate(firebaseUser, credential))
                 .andThen(RxFirebaseUser.delete(firebaseUser))
         }
+    }
+
+    fun getCurrentUser(): Maybe<FirebaseUser> {
+        return RxFirebaseAuth.getCurrentUser(Firebase.auth).subscribeOn(Schedulers.io())
     }
 
     fun getUserAuthStatus(): Single<AuthStatus> {

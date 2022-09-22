@@ -1,5 +1,7 @@
 package com.theost.tike.common.util
 
+import android.util.Log
+
 object LogUtils {
 
     const val LOG_VIEW_MODEL_SPLASH = "view_model_splash"
@@ -16,4 +18,9 @@ object LogUtils {
     const val LOG_VIEW_MODEL_JOINING = "view_model_joining"
 
     const val LOG_FRAGMENT_LOCATION = "fragment_location"
+
+    inline fun <reified T : Any> logError(root: T, error: Throwable) {
+        Log.e(root::class.simpleName, error.message.orEmpty())
+        error.printStackTrace()
+    }
 }

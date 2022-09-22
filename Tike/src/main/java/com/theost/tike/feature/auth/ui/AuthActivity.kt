@@ -22,10 +22,11 @@ import com.theost.tike.feature.tike.TikeActivity
 class AuthActivity : FragmentActivity(R.layout.activity_auth) {
 
     private val viewModel: AuthViewModel by viewModels()
-    private val binding: ActivityAuthBinding by viewBinding()
+    private val binding: ActivityAuthBinding by viewBinding(R.id.root)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
         handleBackPress {
             when (viewModel.authStatus.value) {
