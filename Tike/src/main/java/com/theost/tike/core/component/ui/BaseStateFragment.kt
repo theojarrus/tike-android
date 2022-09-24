@@ -2,16 +2,16 @@ package com.theost.tike.core.component.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import com.theost.tike.common.util.DisplayUtils
-import com.theost.tike.core.component.presentation.BaseState
+import com.theost.tike.common.util.DisplayUtils.hideKeyboard
+import com.theost.tike.common.util.DisplayUtils.showError
 import com.theost.tike.core.component.model.StateStatus
 import com.theost.tike.core.component.model.StateStatus.*
 import com.theost.tike.core.component.model.StateViews
+import com.theost.tike.core.component.presentation.BaseState
 import com.theost.tike.core.component.presentation.BaseStateViewModel
 
 abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewModel<State>>(
@@ -50,78 +50,49 @@ abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewMod
     fun handleStatus(status: StateStatus) {
         when (status) {
             Error -> {
-                hideLoading()
-                hideRefreshing()
-                showError()
-                enableRefreshing()
+                handleLoading(isLoading = false)
+                handleRefreshing(isRefreshing = false)
+                handleError(isError = true)
+                controlRefreshing(isEnabled = true)
             }
             Initial -> {}
             Loading -> {
-                hideError()
-                showLoading()
-                disableRefreshing()
+                handleLoading(isLoading = true)
+                controlRefreshing(isEnabled = false)
             }
-            Refreshing -> {
-                showRefreshing()
-            }
+            Refreshing -> handleRefreshing(isRefreshing = true)
             Success -> {
-                hideError()
-                hideRefreshing()
-                if (!isLoadingEndless) hideLoading()
-                if (!isRefreshingErrorOnly) enableRefreshing()
+                if (!isLoadingEndless) handleLoading(isLoading = false)
+                handleError(isError = false)
+                handleRefreshing(isRefreshing = false)
+                controlRefreshing(isEnabled = !isRefreshingErrorOnly)
             }
         }
     }
 
-    private fun showLoading() {
+    private fun handleError(isError: Boolean) {
         with(stateViews) {
-            rootView?.let { DisplayUtils.hideKeyboard(rootView) }
-            actionView?.isInvisible = true
-            loadingView?.isGone = false
-            loadingView?.isGone = false
-            disabledAdapter?.setEnabled(false)
-            disabledViews.forEach { it.isEnabled = false }
+            errorView
+                ?.let { it.isGone = !isError }
+                ?: let { if (isError) errorMessage?.let { showError(context, it) } }
         }
     }
 
-    private fun hideLoading() {
+    private fun handleLoading(isLoading: Boolean) {
         with(stateViews) {
-            actionView?.isInvisible = false
-            loadingView?.isGone = true
-            disabledAdapter?.setEnabled(true)
-            disabledViews.forEach { it.isEnabled = true }
+            rootView?.let { hideKeyboard(rootView) }
+            actionView?.isInvisible = isLoading
+            loadingView?.isGone = !isLoading
+            disabledAdapter?.setEnabled(!isLoading)
+            disabledViews.forEach { it.isEnabled = !isLoading }
         }
     }
 
-    private fun showRefreshing() {
-        stateViews.swipeRefresh?.isRefreshing = true
+    private fun handleRefreshing(isRefreshing: Boolean) {
+        stateViews.swipeRefresh?.isRefreshing = isRefreshing
     }
 
-    private fun hideRefreshing() {
-        stateViews.swipeRefresh?.isRefreshing = false
-    }
-
-    private fun enableRefreshing() {
-        stateViews.swipeRefresh?.isEnabled = true
-    }
-
-    private fun disableRefreshing() {
-        stateViews.swipeRefresh?.isEnabled = false
-    }
-
-    private fun showError() {
-        with(stateViews) {
-            errorView?.let { it.isGone = false } ?: showErrorToast()
-        }
-    }
-
-    private fun hideError() {
-        with(stateViews) {
-            errorView?.isGone = true
-        }
-    }
-
-    private fun showErrorToast() {
-        stateViews.errorMessage?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+    private fun controlRefreshing(isEnabled: Boolean) {
+        stateViews.swipeRefresh?.isEnabled = isEnabled
     }
 }

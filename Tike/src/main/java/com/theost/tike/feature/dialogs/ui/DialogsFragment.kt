@@ -41,7 +41,6 @@ class DialogsFragment : BaseStateFragment<DialogsState, DialogsViewModel>(
 
     override val stateViews: StateViews by fazy {
         StateViews(
-            toolbar = binding.toolbar,
             loadingView = binding.loadingBar,
             swipeRefresh = binding.swipeRefresh,
             errorView = binding.errorView,

@@ -1,7 +1,7 @@
 package com.theost.tike.feature.dialogs.presentation
 
 import com.theost.tike.common.extension.mapList
-import com.theost.tike.common.util.LogUtils.logError
+import com.theost.tike.common.util.LogUtils.log
 import com.theost.tike.core.component.model.StateStatus.Error
 import com.theost.tike.core.component.model.StateStatus.Success
 import com.theost.tike.core.component.presentation.BaseRxStateViewModel
@@ -23,7 +23,7 @@ class DialogsViewModel : BaseRxStateViewModel<DialogsState>() {
                     update { copy(status = Success, items = dialogs) }
                 }, { error ->
                     update { copy(status = Error, items = emptyList()) }
-                    logError(this, error)
+                    log(this, error)
                 })
         }
     }
