@@ -1,8 +1,8 @@
 package com.theost.tike.feature.auth.business
 
 import com.theost.tike.common.extension.mapList
-import com.theost.tike.core.recycler.lifestyle.LifestyleToLifestyleUiMapper
-import com.theost.tike.core.recycler.lifestyle.LifestyleUi
+import com.theost.tike.common.recycler.element.lifestyle.LifestyleToLifestyleUiMapper
+import com.theost.tike.common.recycler.element.lifestyle.LifestyleUi
 import com.theost.tike.domain.repository.LifestylesRepository
 import io.reactivex.Single
 

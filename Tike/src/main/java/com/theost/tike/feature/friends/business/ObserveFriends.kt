@@ -1,8 +1,8 @@
 package com.theost.tike.feature.friends.business
 
 import com.theost.tike.common.extension.mapList
-import com.theost.tike.core.recycler.user.UserToUserUiMapper
-import com.theost.tike.core.recycler.user.UserUi
+import com.theost.tike.common.recycler.element.user.UserToUserUiMapper
+import com.theost.tike.common.recycler.element.user.UserUi
 import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.UsersRepository
 import io.reactivex.Observable

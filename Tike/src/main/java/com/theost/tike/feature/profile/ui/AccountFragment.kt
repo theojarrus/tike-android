@@ -11,7 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.extension.load
 import com.theost.tike.common.extension.newPlaintextShare
-import com.theost.tike.core.screen.StateFragment
+import com.theost.tike.core.deprecated.StateFragment
 import com.theost.tike.databinding.FragmentAccountBinding
 import com.theost.tike.feature.profile.presentation.AccountViewModel
 import com.theost.tike.feature.profile.ui.AccountFragmentDirections.Companion.actionAccountFragmentToFriendsFragment

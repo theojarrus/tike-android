@@ -9,11 +9,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.common.extension.hideNullableItem
 import com.theost.tike.common.extension.mergeWith
+import com.theost.tike.common.recycler.element.event.EventUi
+import com.theost.tike.common.recycler.element.event.mapToEventUi
+import com.theost.tike.common.recycler.element.user.UserUi
+import com.theost.tike.common.recycler.element.user.mapToUserUi
 import com.theost.tike.common.util.LogUtils.LOG_VIEW_MODEL_JOINING
-import com.theost.tike.core.recycler.event.EventUi
-import com.theost.tike.core.recycler.event.mapToEventUi
-import com.theost.tike.core.recycler.user.UserUi
-import com.theost.tike.core.recycler.user.mapToUserUi
 import com.theost.tike.domain.model.multi.EventMode.JOINING
 import com.theost.tike.domain.model.multi.Status
 import com.theost.tike.domain.model.multi.Status.*

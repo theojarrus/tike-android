@@ -9,9 +9,9 @@ import com.theost.tike.R
 import com.theost.tike.common.util.AuthUtils.getCredential
 import com.theost.tike.common.util.AuthUtils.getSignInIntent
 import com.theost.tike.common.util.AuthUtils.getSignedInAccountFromIntent
-import com.theost.tike.core.component.model.StateStatus.*
-import com.theost.tike.core.component.model.StateViews
-import com.theost.tike.core.component.ui.BaseStateFragment
+import com.theost.tike.core.model.StateStatus.*
+import com.theost.tike.core.model.StateViews
+import com.theost.tike.core.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentSignInBinding
 import com.theost.tike.domain.model.multi.AuthStatus.SignedOut
 import com.theost.tike.feature.auth.presentation.AuthViewModel

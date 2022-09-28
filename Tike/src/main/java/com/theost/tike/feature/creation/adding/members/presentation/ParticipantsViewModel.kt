@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.theost.tike.common.recycler.element.member.MemberUi
+import com.theost.tike.common.recycler.element.member.mapToParticipantUi
 import com.theost.tike.common.util.LogUtils.LOG_VIEW_MODEL_PARTICIPANTS
-import com.theost.tike.core.recycler.member.MemberUi
-import com.theost.tike.core.recycler.member.mapToParticipantUi
 import com.theost.tike.domain.model.multi.Status
 import com.theost.tike.domain.model.multi.Status.*
 import com.theost.tike.domain.repository.UsersRepository

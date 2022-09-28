@@ -5,11 +5,11 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.recycler.base.BaseAdapter
+import com.theost.tike.common.recycler.element.user.UserAdapterDelegate
 import com.theost.tike.common.util.DisplayUtils.showError
-import com.theost.tike.core.component.model.StateStatus.Initial
-import com.theost.tike.core.component.model.StateViews
-import com.theost.tike.core.component.ui.BaseStateFragment
-import com.theost.tike.core.recycler.user.UserAdapterDelegate
+import com.theost.tike.core.model.StateStatus.Initial
+import com.theost.tike.core.model.StateViews
+import com.theost.tike.core.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentDialogsBinding
 import com.theost.tike.feature.dialogs.presentation.DialogsState
 import com.theost.tike.feature.dialogs.presentation.DialogsViewModel

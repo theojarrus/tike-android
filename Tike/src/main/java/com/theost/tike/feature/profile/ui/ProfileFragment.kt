@@ -16,7 +16,7 @@ import com.theost.tike.common.extension.load
 import com.theost.tike.common.extension.loadWithFadeIn
 import com.theost.tike.common.extension.newPlaintextShare
 import com.theost.tike.common.util.DisplayUtils.showConfirmationDialog
-import com.theost.tike.core.screen.ToolbarStateFragment
+import com.theost.tike.core.deprecated.ToolbarStateFragment
 import com.theost.tike.databinding.FragmentProfileBinding
 import com.theost.tike.domain.model.multi.FriendStatus
 import com.theost.tike.domain.model.multi.FriendStatus.*

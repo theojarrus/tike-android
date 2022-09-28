@@ -8,12 +8,12 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.recycler.base.BaseAdapter
+import com.theost.tike.common.recycler.element.event.EventAdapterDelegate
+import com.theost.tike.common.recycler.element.friend.FriendAdapterDelegate
+import com.theost.tike.common.recycler.element.title.TitleAdapterDelegate
+import com.theost.tike.common.recycler.element.user.UserUi
 import com.theost.tike.common.util.DisplayUtils
-import com.theost.tike.core.recycler.event.EventAdapterDelegate
-import com.theost.tike.core.recycler.friend.FriendAdapterDelegate
-import com.theost.tike.core.recycler.title.TitleAdapterDelegate
-import com.theost.tike.core.recycler.user.UserUi
-import com.theost.tike.core.screen.StateFragment
+import com.theost.tike.core.deprecated.StateFragment
 import com.theost.tike.databinding.FragmentInboxBinding
 import com.theost.tike.domain.model.multi.EventAction.*
 import com.theost.tike.domain.model.multi.EventMode

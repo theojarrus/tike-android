@@ -12,10 +12,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.recycler.base.BaseAdapter
 import com.theost.tike.common.recycler.delegate.DelegateItem
+import com.theost.tike.common.recycler.element.card.CardAdapterDelegate
 import com.theost.tike.common.util.DateUtils
 import com.theost.tike.common.util.StringUtils.switchIfEmpty
-import com.theost.tike.core.recycler.card.CardAdapterDelegate
-import com.theost.tike.core.screen.StateFragment
+import com.theost.tike.core.deprecated.StateFragment
 import com.theost.tike.databinding.FragmentCreationBinding
 import com.theost.tike.domain.model.multi.RepeatMode
 import com.theost.tike.domain.model.multi.Status.Success

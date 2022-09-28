@@ -10,9 +10,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.extension.loadWithFadeIn
 import com.theost.tike.common.recycler.base.BaseAdapter
+import com.theost.tike.common.recycler.element.event.EventAdapterDelegate
 import com.theost.tike.common.util.DisplayUtils.showConfirmationDialog
-import com.theost.tike.core.recycler.event.EventAdapterDelegate
-import com.theost.tike.core.screen.StateFragment
+import com.theost.tike.core.deprecated.StateFragment
 import com.theost.tike.databinding.FragmentDayBinding
 import com.theost.tike.domain.model.multi.EventAction.Info
 import com.theost.tike.domain.model.multi.EventAction.Reject

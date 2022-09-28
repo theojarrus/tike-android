@@ -6,7 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
-import com.theost.tike.core.screen.ToolbarStateFragment
+import com.theost.tike.core.deprecated.ToolbarStateFragment
 import com.theost.tike.databinding.FragmentSettingsBinding
 import com.theost.tike.domain.model.multi.AuthStatus
 import com.theost.tike.feature.auth.ui.AuthActivity

@@ -3,9 +3,9 @@ package com.theost.tike.feature.splash.ui
 import android.annotation.SuppressLint
 import androidx.activity.viewModels
 import com.theost.tike.R
-import com.theost.tike.core.component.model.StateStatus.Initial
-import com.theost.tike.core.component.model.StateViews
-import com.theost.tike.core.component.ui.BaseStateActivity
+import com.theost.tike.core.model.StateStatus.Initial
+import com.theost.tike.core.model.StateViews
+import com.theost.tike.core.ui.BaseStateActivity
 import com.theost.tike.domain.model.multi.AuthStatus.SignedIn
 import com.theost.tike.domain.model.multi.AuthStatus.Unknown
 import com.theost.tike.feature.auth.ui.AuthActivity

@@ -2,7 +2,7 @@ package com.theost.tike.feature.auth.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.theost.tike.core.component.presentation.BaseRxViewModel
+import com.theost.tike.core.presentation.BaseRxViewModel
 import com.theost.tike.domain.model.multi.AuthStatus
 
 class AuthViewModel : BaseRxViewModel() {

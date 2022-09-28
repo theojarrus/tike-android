@@ -1,11 +1,11 @@
 package com.theost.tike.feature.dialogs.presentation
 
 import com.theost.tike.common.extension.mapList
+import com.theost.tike.common.recycler.element.user.UserToUserUiMapper
 import com.theost.tike.common.util.LogUtils.log
-import com.theost.tike.core.component.model.StateStatus.Error
-import com.theost.tike.core.component.model.StateStatus.Success
-import com.theost.tike.core.component.presentation.BaseStateViewModel
-import com.theost.tike.core.recycler.user.UserToUserUiMapper
+import com.theost.tike.core.model.StateStatus.Error
+import com.theost.tike.core.model.StateStatus.Success
+import com.theost.tike.core.presentation.BaseStateViewModel
 import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.UsersRepository
 import com.theost.tike.feature.dialogs.business.FetchDialogs

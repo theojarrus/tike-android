@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.theost.tike.common.recycler.base.BaseAdapter
-import com.theost.tike.core.recycler.option.OptionAdapterDelegate
-import com.theost.tike.core.recycler.title.TitleAdapterDelegate
-import com.theost.tike.core.recycler.user.UserAdapterDelegate
+import com.theost.tike.common.recycler.element.option.OptionAdapterDelegate
+import com.theost.tike.common.recycler.element.title.TitleAdapterDelegate
+import com.theost.tike.common.recycler.element.user.UserAdapterDelegate
 import com.theost.tike.databinding.FragmentInfoBinding
 import com.theost.tike.domain.model.multi.OptionAction.LocationOptionAction
 import com.theost.tike.domain.model.multi.Status.*

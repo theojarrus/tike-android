@@ -12,9 +12,9 @@ import com.theost.tike.R
 import com.theost.tike.common.extension.load
 import com.theost.tike.common.extension.loadWithPlaceholder
 import com.theost.tike.common.recycler.base.BaseAdapter
+import com.theost.tike.common.recycler.element.event.EventAdapterDelegate
 import com.theost.tike.common.util.DisplayUtils
-import com.theost.tike.core.recycler.event.EventAdapterDelegate
-import com.theost.tike.core.screen.StateFragment
+import com.theost.tike.core.deprecated.StateFragment
 import com.theost.tike.databinding.FragmentJoiningBinding
 import com.theost.tike.domain.model.multi.EventAction.Accept
 import com.theost.tike.domain.model.multi.EventAction.Info

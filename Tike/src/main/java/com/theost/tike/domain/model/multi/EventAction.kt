@@ -1,6 +1,6 @@
 package com.theost.tike.domain.model.multi
 
-import com.theost.tike.core.recycler.user.UserUi
+import com.theost.tike.common.recycler.element.user.UserUi
 
 sealed class EventAction {
 

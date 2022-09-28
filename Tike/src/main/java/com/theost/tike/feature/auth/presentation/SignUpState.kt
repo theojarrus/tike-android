@@ -1,8 +1,8 @@
 package com.theost.tike.feature.auth.presentation
 
-import com.theost.tike.core.component.model.StateStatus
-import com.theost.tike.core.component.presentation.BaseState
-import com.theost.tike.core.recycler.lifestyle.LifestyleUi
+import com.theost.tike.common.recycler.element.lifestyle.LifestyleUi
+import com.theost.tike.core.model.StateStatus
+import com.theost.tike.core.presentation.BaseState
 import com.theost.tike.domain.model.core.User
 import com.theost.tike.domain.model.multi.AuthStatus
 

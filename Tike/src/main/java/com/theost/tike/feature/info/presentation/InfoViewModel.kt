@@ -9,10 +9,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.theost.tike.R
 import com.theost.tike.common.recycler.delegate.DelegateItem
+import com.theost.tike.common.recycler.element.option.OptionUi
+import com.theost.tike.common.recycler.element.title.TitleUi
+import com.theost.tike.common.recycler.element.user.mapToUserUi
 import com.theost.tike.common.util.LogUtils.LOG_VIEW_MODEL_FRIENDS
-import com.theost.tike.core.recycler.option.OptionUi
-import com.theost.tike.core.recycler.title.TitleUi
-import com.theost.tike.core.recycler.user.mapToUserUi
 import com.theost.tike.domain.model.core.Location
 import com.theost.tike.domain.model.multi.OptionAction.LocationOptionAction
 import com.theost.tike.domain.model.multi.Status

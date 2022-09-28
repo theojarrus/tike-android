@@ -11,11 +11,11 @@ import com.theost.tike.common.extension.addBackPressedCallback
 import com.theost.tike.common.extension.changeText
 import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.recycler.base.BaseAdapter
-import com.theost.tike.core.component.model.StateStatus.Initial
-import com.theost.tike.core.component.model.StateStatus.Success
-import com.theost.tike.core.component.model.StateViews
-import com.theost.tike.core.component.ui.BaseStateFragment
-import com.theost.tike.core.recycler.lifestyle.LifestyleAdapterDelegate
+import com.theost.tike.common.recycler.element.lifestyle.LifestyleAdapterDelegate
+import com.theost.tike.core.model.StateStatus.Initial
+import com.theost.tike.core.model.StateStatus.Success
+import com.theost.tike.core.model.StateViews
+import com.theost.tike.core.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentSignUpBinding
 import com.theost.tike.domain.model.core.User
 import com.theost.tike.domain.model.multi.AuthStatus.SigningUp

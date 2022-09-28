@@ -9,8 +9,8 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.recycler.base.BaseAdapter
-import com.theost.tike.core.recycler.member.MemberAdapterDelegate
-import com.theost.tike.core.screen.SearchStateFragment
+import com.theost.tike.common.recycler.element.member.MemberAdapterDelegate
+import com.theost.tike.core.deprecated.SearchStateFragment
 import com.theost.tike.databinding.FragmentParticipantsBinding
 import com.theost.tike.feature.creation.adding.main.presentation.EventViewModel
 import com.theost.tike.feature.creation.adding.members.presentation.ParticipantsViewModel

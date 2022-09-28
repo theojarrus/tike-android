@@ -3,14 +3,14 @@ package com.theost.tike.feature.auth.presentation
 import com.theost.tike.common.exception.AuthException
 import com.theost.tike.common.exception.ExistException
 import com.theost.tike.common.extension.appendExcluding
+import com.theost.tike.common.recycler.element.lifestyle.LifestyleToLifestyleUiMapper
 import com.theost.tike.common.util.LogUtils.log
 import com.theost.tike.common.util.StringUtils.formatNameLetterCase
 import com.theost.tike.common.util.StringUtils.formatNickLetterCase
 import com.theost.tike.common.util.StringUtils.isNameCorrect
 import com.theost.tike.common.util.StringUtils.isNickCorrect
-import com.theost.tike.core.component.model.StateStatus.*
-import com.theost.tike.core.component.presentation.BaseStateViewModel
-import com.theost.tike.core.recycler.lifestyle.LifestyleToLifestyleUiMapper
+import com.theost.tike.core.model.StateStatus.*
+import com.theost.tike.core.presentation.BaseStateViewModel
 import com.theost.tike.domain.model.core.mapper.FirebaseUserToUserMapper
 import com.theost.tike.domain.model.dto.mapper.UserToUserDtoMapper
 import com.theost.tike.domain.model.multi.AuthStatus.SignedIn
