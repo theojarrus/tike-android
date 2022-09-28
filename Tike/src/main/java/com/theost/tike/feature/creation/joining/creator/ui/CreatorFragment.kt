@@ -57,7 +57,7 @@ class CreatorFragment : SearchStateFragment(R.layout.fragment_creator) {
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingView,
         errorView = binding.errorView,
         disabledAdapter = adapter
     )

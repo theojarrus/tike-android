@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -90,7 +89,7 @@ class JoiningFragment : StateFragment(R.layout.fragment_joining) {
     }
 
     override fun bindState(): StateViews = StateViews(
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingView,
         errorView = binding.errorView
     )
 
@@ -100,7 +99,7 @@ class JoiningFragment : StateFragment(R.layout.fragment_joining) {
 
     companion object {
 
-        fun newInstance(): Fragment {
+        fun newInstance(): JoiningFragment {
             return JoiningFragment()
         }
     }

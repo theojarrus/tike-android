@@ -5,8 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusable="true">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -20,7 +34,7 @@
         app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
     <TextView
-        android:id="@+id/nameText"
+        android:id="@+id/nameTitle"
         style="@style/Theme.Tike.TextView.RobotoMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +52,7 @@
         app:helperText=" "
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/nameText">
+        app:layout_constraintTop_toBottomOf="@id/nameTitle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nameInput"
@@ -51,7 +65,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/nickText"
+        android:id="@+id/nickTitle"
         style="@style/Theme.Tike.TextView.RobotoMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,7 +83,7 @@
         app:helperText=" "
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/nickText">
+        app:layout_constraintTop_toBottomOf="@id/nickTitle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nickInput"
@@ -82,7 +96,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/lifestylesText"
+        android:id="@+id/lifestylesTitle"
         style="@style/Theme.Tike.TextView.RobotoMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,12 +107,13 @@
         app:layout_constraintTop_toBottomOf="@id/nickLayout" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lifestylesList"
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:fillViewport="true"
         android:focusable="false"
         android:orientation="vertical"
         android:overScrollMode="never"
@@ -107,12 +122,22 @@
         android:paddingBottom="72dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lifestylesText"
+        app:layout_constraintTop_toBottomOf="@id/lifestylesTitle"
         app:spanCount="2"
         tools:listitem="@layout/item_lifestyle" />
 
+    <ProgressBar
+        android:id="@+id/loadingView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/signUp"
+        app:layout_constraintEnd_toEndOf="@id/signUp"
+        app:layout_constraintStart_toStartOf="@id/signUp"
+        app:layout_constraintTop_toTopOf="@id/signUp" />
+
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/signUpButton"
+        android:id="@+id/signUp"
         style="@style/Theme.Tike.BlueButton.Basic"
         android:layout_width="0dp"
         android:layout_height="55dp"
@@ -121,29 +146,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart" />
-
-    <ProgressBar
-        android:id="@+id/loadingBar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/signUpButton"
-        app:layout_constraintEnd_toEndOf="@id/signUpButton"
-        app:layout_constraintStart_toStartOf="@id/signUpButton"
-        app:layout_constraintTop_toTopOf="@id/signUpButton" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,7 @@
         tools:listitem="@layout/item_event" />
 
     <ProgressBar
-        android:id="@+id/loadingBar"
+        android:id="@+id/loadingView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"

@@ -380,7 +380,7 @@
             app:layout_constraintTop_toBottomOf="@id/locationLayout" />
 
         <ProgressBar
-            android:id="@+id/loadingBar"
+            android:id="@+id/loadingView"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:visibility="gone"

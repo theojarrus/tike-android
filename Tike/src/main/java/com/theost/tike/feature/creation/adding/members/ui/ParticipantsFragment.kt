@@ -61,7 +61,7 @@ class ParticipantsFragment : SearchStateFragment(R.layout.fragment_participants)
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingView,
         errorView = binding.errorView,
         disabledAdapter = adapter
     )

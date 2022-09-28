@@ -74,7 +74,7 @@ class ProfileFragment : ToolbarStateFragment(R.layout.fragment_profile) {
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
-        loadingView = binding.loadingBar.root,
+        loadingView = binding.loadingView.root,
         errorView = binding.errorView,
         disabledViews = listOf(
             binding.profileShareButton,

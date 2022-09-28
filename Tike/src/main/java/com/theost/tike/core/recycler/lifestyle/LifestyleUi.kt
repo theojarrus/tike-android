@@ -1,7 +1,6 @@
-package com.theost.tike.feature.auth.ui.recycler
+package com.theost.tike.core.recycler.lifestyle
 
 import com.theost.tike.common.recycler.delegate.DelegateItem
-import com.theost.tike.domain.model.core.Lifestyle
 
 data class LifestyleUi(
     val id: String,
@@ -10,12 +9,4 @@ data class LifestyleUi(
 ) : DelegateItem {
     override fun id(): Any = id
     override fun content(): Any = isSelected
-}
-
-fun Lifestyle.mapToLifestyleUi(): LifestyleUi {
-    return LifestyleUi(
-        id = id,
-        text = text,
-        isSelected = false
-    )
 }

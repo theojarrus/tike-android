@@ -33,15 +33,4 @@
         app:menu="@menu/menu_bottom"
         app:textSize="0sp" />
 
-    <include
-        android:id="@+id/networkPopup"
-        layout="@layout/view_popup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

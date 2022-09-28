@@ -1,140 +1,110 @@
 package com.theost.tike.feature.auth.presentation
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.androidhuman.rxfirebase2.auth.RxFirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.theost.tike.common.exception.AuthException
 import com.theost.tike.common.exception.ExistException
-import com.theost.tike.common.util.ApiUtils.getQualityAvatar
-import com.theost.tike.common.util.LogUtils.LOG_VIEW_MODEL_SIGN_UP
-import com.theost.tike.common.util.StringUtils.formatName
+import com.theost.tike.common.extension.appendExcluding
+import com.theost.tike.common.util.LogUtils.log
 import com.theost.tike.common.util.StringUtils.formatNameLetterCase
-import com.theost.tike.common.util.StringUtils.formatNick
 import com.theost.tike.common.util.StringUtils.formatNickLetterCase
 import com.theost.tike.common.util.StringUtils.isNameCorrect
 import com.theost.tike.common.util.StringUtils.isNickCorrect
-import com.theost.tike.domain.model.multi.ExistStatus
-import com.theost.tike.domain.model.multi.ExistStatus.Exist
-import com.theost.tike.domain.model.multi.Status
-import com.theost.tike.domain.model.multi.Status.*
+import com.theost.tike.core.component.model.StateStatus.*
+import com.theost.tike.core.component.presentation.BaseStateViewModel
+import com.theost.tike.core.recycler.lifestyle.LifestyleToLifestyleUiMapper
+import com.theost.tike.domain.model.core.mapper.FirebaseUserToUserMapper
+import com.theost.tike.domain.model.dto.mapper.UserToUserDtoMapper
+import com.theost.tike.domain.model.multi.AuthStatus.SignedIn
+import com.theost.tike.domain.model.multi.AuthStatus.SignedOut
+import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.LifestylesRepository
 import com.theost.tike.domain.repository.UsersRepository
-import com.theost.tike.feature.auth.ui.recycler.LifestyleUi
-import com.theost.tike.feature.auth.ui.recycler.mapToLifestyleUi
-import io.reactivex.disposables.CompositeDisposable
+import com.theost.tike.feature.auth.business.*
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel : BaseStateViewModel<SignUpState>() {
 
-    private val _loadingStatus = MutableLiveData<Status>()
-    val loadingStatus: LiveData<Status> = _loadingStatus
+    private val userMapper = FirebaseUserToUserMapper()
+    private val lifestyleMapper = LifestyleToLifestyleUiMapper()
+    private val dtoMapper = UserToUserDtoMapper()
 
-    private val _nickExistStatus = MutableLiveData<ExistStatus>()
-    val nickExistStatus: LiveData<ExistStatus> = _nickExistStatus
-
-    private val _nameStatus = MutableLiveData<Status>()
-    val nameStatus: LiveData<Status> = _nameStatus
-
-    private val _nickStatus = MutableLiveData<Status>()
-    val nickStatus: LiveData<Status> = _nickStatus
-
-    private val _lifestyles = MutableLiveData<List<LifestyleUi>>()
-    val lifestyles: LiveData<List<LifestyleUi>> = _lifestyles
-
-    private val _userName = MutableLiveData<String>()
-    val userName: LiveData<String> = _userName
-
-    private val _userNick = MutableLiveData<String>()
-    val userNick: LiveData<String> = _userNick
-
-    private var userId: String = ""
-    private var userEmail: String = ""
-    private var userPhone: String = ""
-    private var userAvatar: String = ""
-
-    private val selectedLifestyles: MutableList<String> = mutableListOf()
-
-    private val compositeDisposable = CompositeDisposable()
-
-    fun init() {
-        restoreFirebaseUser()
-        loadLifecycles()
+    fun fetchUser() {
+        disposable {
+            FetchUser(AuthRepository, userMapper).invoke()
+                .subscribe({ user ->
+                    update { copy(user = user) }
+                }, { error ->
+                    log(this, error)
+                })
+        }
     }
 
-    private fun restoreFirebaseUser() {
-        _loadingStatus.postValue(Loading)
-        compositeDisposable.add(
-            RxFirebaseAuth.getCurrentUser(Firebase.auth).subscribe({ user ->
-                if (_userName.value == null) _userName.value = formatName(user.displayName.orEmpty())
-                if (_userNick.value == null) _userNick.value = formatNick(user.displayName.orEmpty())
-                userId = user.uid
-                userEmail = user.email.orEmpty()
-                userPhone = user.phoneNumber.orEmpty()
-                userAvatar = getQualityAvatar(user.photoUrl.toString())
-                _loadingStatus.postValue(Success)
-            }, {
-                _loadingStatus.postValue(Error)
-            })
-        )
+    fun fetchLifestyles() {
+        disposable {
+            FetchLifestyles(LifestylesRepository, lifestyleMapper).invoke()
+                .subscribe({ lifestyles ->
+                    update { copy(lifestyles = lifestyles) }
+                }, { error ->
+                    log(this, error)
+                })
+        }
     }
 
-    private fun loadLifecycles() {
-        compositeDisposable.add(
-            LifestylesRepository.getLifestyles().subscribe({ styles ->
-                _lifestyles.postValue(styles.map { lifestyle -> lifestyle.mapToLifestyleUi() })
-            }, { error ->
-                Log.e(LOG_VIEW_MODEL_SIGN_UP, error.toString())
-            })
-        )
+    fun updateLifestyle(id: String) {
+        state.value?.lifestyles?.let { lifestyles ->
+            val selected = state.value?.userLifestyles.orEmpty().appendExcluding(id)
+            val mapped = lifestyles.map { it.copy(isSelected = selected.contains(it.id)) }
+            update { copy(lifestyles = mapped, userLifestyles = selected) }
+        }
     }
 
-    fun selectLifestyle(id: String) {
-        lifestyles.value?.let { lifestyles ->
-            selectedLifestyles.apply { if (contains(id)) remove(id) else add(id) }
-            _lifestyles.postValue(lifestyles.map { lifestyle ->
-                lifestyle.copy(isSelected = selectedLifestyles.contains(lifestyle.id))
-            })
+    fun signOut() {
+        update { copy(status = Loading) }
+        disposableSwitch {
+            DoSignOut(AuthRepository).invoke()
+                .subscribe({
+                    update { copy(status = Success, authStatus = SignedOut) }
+                }, { error ->
+                    log(this, error)
+                    update { copy(status = Success, authStatus = SignedOut) }
+                })
         }
     }
 
     fun signUp(name: String, nick: String) {
         val isNameCorrect = isNameCorrect(name)
         val isNickCorrect = isNickCorrect(nick)
-        val formattedName = formatNameLetterCase(name)
-        val formattedNick = formatNickLetterCase(nick)
-        _userName.value = formattedName
-        _userNick.value = formattedNick
+        val formatName = formatNameLetterCase(name)
+        val formatNick = formatNickLetterCase(nick)
         if (isNameCorrect && isNickCorrect) {
-            _loadingStatus.postValue(Loading)
-            _nameStatus.postValue(Success)
-            _nickStatus.postValue(Success)
-            compositeDisposable.add(
-                UsersRepository.addUser(
-                    uid = userId,
-                    name = formattedName,
-                    nick = formattedNick,
-                    email = userEmail,
-                    phone = userPhone,
-                    avatar = userAvatar,
-                    lifestyles = selectedLifestyles
-                ).subscribe({
-                    _loadingStatus.postValue(Success)
-                }, { error ->
-                    if (error is ExistException) _nickExistStatus.postValue(Exist)
-                    _loadingStatus.postValue(Error)
-                    Log.e(LOG_VIEW_MODEL_SIGN_UP, error.toString())
-                })
-            )
+            state.value?.user?.let { user ->
+                update {
+                    copy(
+                        status = Loading,
+                        user = user.copy(name = formatName.trim(), nick = formatNick.trim())
+                    )
+                }
+                disposableSwitch {
+                    FetchAuthStatus(AuthRepository).invoke()
+                        .flatMapCompletable { DoSignUp(UsersRepository, dtoMapper).invoke(user) }
+                        .subscribe({
+                            update { copy(status = Success, authStatus = SignedIn) }
+                        }, { error ->
+                            log(this, error)
+                            update { copy(status = Error, isUserExist = error is ExistException) }
+                        })
+                }
+            } ?: run {
+                log(this, AuthException())
+                update { copy(status = Error) }
+            }
         } else {
-            if (!isNameCorrect) _nameStatus.postValue(Error)
-            if (!isNickCorrect) _nickStatus.postValue(Error)
+            update {
+                copy(
+                    status = Error,
+                    user = user.copy(name = formatName, nick = formatNick),
+                    isNameError = !isNameCorrect,
+                    isNickError = !isNickCorrect
+                )
+            }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
     }
 }

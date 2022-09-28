@@ -85,6 +85,18 @@ object UsersRepository {
             .subscribeOn(io())
     }
 
+    fun addUser(userDto: UserDto): Completable {
+        return getUserNickStatus(userDto.nick).flatMapCompletable { status ->
+            when (status) {
+                Exist -> Completable.error(ExistException())
+                NotFound -> RxFirebaseFirestore.set(
+                    provideUsersCollection().document(userDto.uid),
+                    userDto
+                )
+            }
+        }.subscribeOn(io())
+    }
+
     fun addUser(
         uid: String,
         name: String,

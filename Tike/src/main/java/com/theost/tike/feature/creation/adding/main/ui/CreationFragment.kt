@@ -5,7 +5,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -122,7 +121,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     override fun bindState(): StateViews = StateViews(
         rootView = binding.root,
         actionView = binding.createEventButton,
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingView,
         errorMessage = getString(R.string.error_network),
         disabledAdapter = adapter,
         disabledViews = listOf(
@@ -197,7 +196,7 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
 
     companion object {
 
-        fun newInstance(): Fragment {
+        fun newInstance(): CreationFragment {
             return CreationFragment()
         }
     }

@@ -49,9 +49,15 @@ object AuthRepository {
 
     fun getUserAuthStatus(): Single<AuthStatus> {
         return RxFirebaseAuthUser.tryReload(Firebase.auth)
-            .flatMap { getUserExist(it.uid) }
+            .flatMap { getUserExist(it.uid).onErrorReturn { NotFound } }
             .map { if (it is Exist) SignedIn else SigningUp }
-            .onErrorReturn { SignedOut }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getRemoteUserAuthStatus(): Single<AuthStatus> {
+        return RxFirebaseAuthUser.requireReload(Firebase.auth)
+            .flatMap { getUserExist(it.uid).onErrorReturn { NotFound } }
+            .map { if (it is Exist) SignedIn else SigningUp }
             .subscribeOn(Schedulers.io())
     }
 

@@ -135,14 +135,14 @@
         android:label="@string/friends"
         tools:layout="@layout/fragment_friends">
         <action
-            android:id="@+id/action_friendsFragment_to_peopleFragment"
+            android:id="@+id/action_friends_to_people"
             app:destination="@id/peopleFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
         <action
-            android:id="@+id/action_friendsFragment_to_profileFragment"
+            android:id="@+id/action_friends_to_profile"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -156,7 +156,7 @@
         android:label="@string/people"
         tools:layout="@layout/fragment_people">
         <action
-            android:id="@+id/action_peopleFragment_to_profileFragment"
+            android:id="@+id/action_people_to_profile"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -187,7 +187,7 @@
         android:label="@string/blacklist"
         tools:layout="@layout/fragment_blacklist">
         <action
-            android:id="@+id/action_blacklistFragment_to_profileFragment"
+            android:id="@+id/action_blacklist_to_profile"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"

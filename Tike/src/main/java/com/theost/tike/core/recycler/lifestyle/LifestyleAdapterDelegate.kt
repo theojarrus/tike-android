@@ -1,4 +1,4 @@
-package com.theost.tike.feature.auth.ui.recycler
+package com.theost.tike.core.recycler.lifestyle
 
 import android.view.LayoutInflater.from
 import android.view.ViewGroup

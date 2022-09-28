@@ -1,49 +1,68 @@
 package com.theost.tike.feature.people.ui
 
-import android.os.Bundle
-import android.view.View
+import android.view.MenuItem
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.recycler.base.BaseAdapter
+import com.theost.tike.core.component.model.StateStatus.Initial
+import com.theost.tike.core.component.model.StateViews
+import com.theost.tike.core.component.ui.BaseSearchStateFragment
 import com.theost.tike.core.recycler.user.UserAdapterDelegate
-import com.theost.tike.core.screen.SearchStateFragment
 import com.theost.tike.databinding.FragmentPeopleBinding
+import com.theost.tike.feature.people.presentation.PeopleState
 import com.theost.tike.feature.people.presentation.PeopleViewModel
-import com.theost.tike.feature.people.ui.PeopleFragmentDirections.Companion.actionPeopleFragmentToProfileFragment
+import com.theost.tike.feature.people.ui.PeopleFragmentDirections.Companion.actionPeopleToProfile
 
-class PeopleFragment : SearchStateFragment(R.layout.fragment_people) {
+class PeopleFragment : BaseSearchStateFragment<PeopleState, PeopleViewModel>(
+    R.layout.fragment_people
+) {
 
+    private val binding: FragmentPeopleBinding by viewBinding()
     private val adapter: BaseAdapter = BaseAdapter()
 
-    private val viewModel: PeopleViewModel by viewModels()
-    private val binding: FragmentPeopleBinding by viewBinding()
+    override val searchMenuItem: MenuItem
+        get() = binding.toolbar.menu.findItem(R.id.menuSearch)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupSearchToolbar(true)
+    override val viewModel: PeopleViewModel by viewModels()
 
-        viewModel.loadingStatus.observe(viewLifecycleOwner) { handleStatus(it) }
-        viewModel.users.observe(viewLifecycleOwner) { users ->
-            binding.emptyView.isGone = users.isNotEmpty()
-            adapter.submitList(users)
-        }
+    override val isHandlingState: Boolean = true
+    override val isLoadingEndless: Boolean = false
+    override val isRefreshingErrorOnly: Boolean = true
 
-        binding.usersList.adapter = adapter.apply {
+    override fun setupView() = with(binding) {
+        toolbar.setNavigationOnClickListener { activity.pressBack() }
+        recyclerView.adapter = adapter.apply {
             addDelegate(UserAdapterDelegate { uid ->
-                findNavController().navigate(actionPeopleFragmentToProfileFragment(uid))
+                findNavController().navigate(actionPeopleToProfile(uid))
             })
         }
     }
 
-    override fun onSearch(query: String) = viewModel.searchUsers(query)
+    override fun render(state: PeopleState) {
+        binding.emptyView.isGone = !state.status.isLoaded() || state.items.isNotEmpty()
+        adapter.submitList(state.items)
+    }
 
-    override fun bindState(): StateViews = StateViews(
-        toolbar = binding.toolbar,
-        loadingView = binding.loadingBar,
-        errorView = binding.errorView,
-        disabledAdapter = adapter
-    )
+    override val stateViews: StateViews
+        get() = StateViews(
+            swipeRefresh = binding.swipeRefresh,
+            loadingView = binding.loadingView,
+            errorView = binding.errorView
+        )
+
+    override val initialState: PeopleState
+        get() = PeopleState(
+            status = Initial,
+            items = emptyList(),
+            cache = emptyList(),
+            query = null
+        )
+
+    override val initialAction: PeopleViewModel.() -> Unit = {
+        observePeople()
+    }
 }

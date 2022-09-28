@@ -1,39 +1,47 @@
 package com.theost.tike.feature.splash.ui
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.theost.tike.R
-import com.theost.tike.domain.model.multi.AuthStatus
+import com.theost.tike.core.component.model.StateStatus.Initial
+import com.theost.tike.core.component.model.StateViews
+import com.theost.tike.core.component.ui.BaseStateActivity
 import com.theost.tike.domain.model.multi.AuthStatus.SignedIn
+import com.theost.tike.domain.model.multi.AuthStatus.Unknown
 import com.theost.tike.feature.auth.ui.AuthActivity
+import com.theost.tike.feature.splash.presentation.SplashState
 import com.theost.tike.feature.splash.presentation.SplashViewModel
 import com.theost.tike.feature.tike.TikeActivity
 
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : AppCompatActivity(R.layout.activity_splash) {
+class SplashActivity : BaseStateActivity<SplashState, SplashViewModel>(R.layout.activity_splash) {
 
-    private val viewModel: SplashViewModel by viewModels()
+    override val viewModel: SplashViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override val isHandlingState: Boolean = false
+    override val isLoadingEndless: Boolean = false
+    override val isRefreshingErrorOnly: Boolean = false
 
-        viewModel.authStatus.observe(this) { authStatus ->
-            when (authStatus) {
-                SignedIn -> startTikeActivity()
-                else -> startAuthActivity(authStatus)
-            }
+    override fun setupView() {}
+
+    override fun render(state: SplashState) {
+        when (state.authStatus) {
+            SignedIn -> startActivity(TikeActivity.newIntent(this))
+            Unknown -> {}
+            else -> startActivity(AuthActivity.newIntent(this, state.authStatus))
         }
-
-        viewModel.init()
     }
 
-    private fun startAuthActivity(authStatus: AuthStatus) {
-        startActivity(AuthActivity.newIntent(this, authStatus))
-    }
+    override val stateViews: StateViews
+        get() = StateViews()
 
-    private fun startTikeActivity() {
-        startActivity(TikeActivity.newIntent(this))
+    override val initialState: SplashState
+        get() = SplashState(
+            status = Initial,
+            authStatus = Unknown
+        )
+
+    override val initialAction: SplashViewModel.() -> Unit = {
+        fetchAuth()
     }
 }

@@ -10,8 +10,13 @@ data class UserUi(
     val avatar: String,
     val hasAccess: Boolean
 ) : DelegateItem {
+
     override fun id(): Any = uid
     override fun content(): Any = name + nick + avatar + hasAccess
+
+    fun isRespondQuery(query: String): Boolean {
+        return nick.lowercase().contains(query) || name.lowercase().contains(query)
+    }
 }
 
 fun User.mapToUserUi(currentUid: String = ""): UserUi {

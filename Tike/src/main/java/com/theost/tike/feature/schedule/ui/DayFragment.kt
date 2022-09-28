@@ -69,7 +69,7 @@ class DayFragment : StateFragment(R.layout.fragment_day) {
     }
 
     override fun bindState(): StateViews = StateViews(
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingView,
         errorMessage = getString(R.string.error_network)
     )
 

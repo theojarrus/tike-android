@@ -48,7 +48,7 @@ class AccountFragment : StateFragment(R.layout.fragment_account) {
 
     override fun bindState(): StateViews = StateViews(
         toolbar = binding.toolbar,
-        loadingView = binding.loadingBar.root,
+        loadingView = binding.loadingView.root,
         errorMessage = getString(R.string.error_unknown),
         disabledViews = listOf(
             binding.accountShareButton,

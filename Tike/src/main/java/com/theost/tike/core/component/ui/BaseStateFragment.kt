@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
-import androidx.fragment.app.Fragment
 import com.theost.tike.common.util.DisplayUtils.hideKeyboard
 import com.theost.tike.common.util.DisplayUtils.showError
 import com.theost.tike.core.component.model.StateStatus
@@ -16,7 +15,7 @@ import com.theost.tike.core.component.presentation.BaseStateViewModel
 
 abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewModel<State>>(
     @LayoutRes contentLayoutId: Int
-) : Fragment(contentLayoutId) {
+) : BaseRxFragment(contentLayoutId) {
 
     protected abstract val viewModel: ViewModel
 
@@ -37,6 +36,10 @@ abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
+        stateViews.rootView?.setOnClickListener { rootView ->
+            hideKeyboard(rootView)
+            rootView.clearFocus()
+        }
         viewModel.apply {
             state.observe(viewLifecycleOwner) { state ->
                 if (isHandlingState) handleStatus(state.status)
@@ -47,7 +50,7 @@ abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewMod
         }
     }
 
-    fun handleStatus(status: StateStatus) {
+    open fun handleStatus(status: StateStatus) {
         when (status) {
             Error -> {
                 handleLoading(isLoading = false)
@@ -71,11 +74,9 @@ abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewMod
     }
 
     private fun handleError(isError: Boolean) {
-        with(stateViews) {
-            errorView
-                ?.let { it.isGone = !isError }
-                ?: let { if (isError) errorMessage?.let { showError(context, it) } }
-        }
+        stateViews.errorView
+            ?.let { it.isGone = !isError }
+            ?: let { if (isError) stateViews.errorMessage?.let { showError(context, it) } }
     }
 
     private fun handleLoading(isLoading: Boolean) {
@@ -84,7 +85,10 @@ abstract class BaseStateFragment<State : BaseState, ViewModel : BaseStateViewMod
             actionView?.isInvisible = isLoading
             loadingView?.isGone = !isLoading
             disabledAdapter?.setEnabled(!isLoading)
-            disabledViews.forEach { it.isEnabled = !isLoading }
+            disabledViews.forEach { view ->
+                view.isEnabled = !isLoading
+                view.clearFocus()
+            }
         }
     }
 

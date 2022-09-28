@@ -4,62 +4,33 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
-import com.theost.tike.common.extension.handleBackPress
-import com.theost.tike.common.extension.pressBack
-import com.theost.tike.databinding.ActivityAuthBinding
+import com.theost.tike.common.exception.AuthException
+import com.theost.tike.common.extension.getSerializable
+import com.theost.tike.common.util.LogUtils.log
 import com.theost.tike.domain.model.multi.AuthStatus
 import com.theost.tike.domain.model.multi.AuthStatus.*
-import com.theost.tike.domain.model.multi.Status.*
-import com.theost.tike.domain.model.multi.getAuthStatusByName
 import com.theost.tike.feature.auth.presentation.AuthViewModel
 import com.theost.tike.feature.tike.TikeActivity
 
 class AuthActivity : FragmentActivity(R.layout.activity_auth) {
 
     private val viewModel: AuthViewModel by viewModels()
-    private val binding: ActivityAuthBinding by viewBinding(R.id.root)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
-        handleBackPress {
-            when (viewModel.authStatus.value) {
-                SigningUp -> viewModel.clearAuthData()
-                else -> pressBack()
-            }
-        }
-
+        val initialAuthStatus = intent.getSerializable(EXTRA_AUTH, AuthStatus::class.java, Unknown)
+        viewModel.updateAuthStatus(initialAuthStatus)
         viewModel.authStatus.observe(this) { authStatus ->
             when (authStatus) {
-                SignedIn -> startTikeActivity(TikeActivity.newTaskIntent(this))
-                SigningUp -> startFragment(SignUpFragment.newInstance())
-                SignedOut -> startFragment(SignInFragment.newInstance())
+                is SignedIn -> startActivity(TikeActivity.newTaskIntent(this))
+                is SignedOut -> startFragment(SignInFragment.newInstance())
+                is SigningUp -> startFragment(SignUpFragment.newInstance())
+                is Unknown -> { log(this, AuthException()) }
             }
         }
-
-        viewModel.loadingStatus.observe(this) { status ->
-            when (status) {
-                Loading -> showLoading()
-                Success -> hideLoading()
-                Error -> hideLoading()
-            }
-        }
-
-        viewModel.loadAuthStatus(getAuthStatusByName(intent.getStringExtra(EXTRA_KEY_AUTH_STATUS)))
-    }
-
-    private fun showLoading() {
-        binding.loadingBar.root.isGone = false
-    }
-
-    private fun hideLoading() {
-        binding.loadingBar.root.isGone = true
     }
 
     private fun startFragment(fragment: Fragment) {
@@ -74,22 +45,18 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
             .commit()
     }
 
-    private fun startTikeActivity(intent: Intent) {
-        startActivity(intent)
-    }
-
     companion object {
 
-        private const val EXTRA_KEY_AUTH_STATUS = "auth_status"
+        private const val EXTRA_AUTH = "auth_status"
 
-        fun newIntent(context: Context, authStatus: AuthStatus? = null): Intent {
+        fun newIntent(context: Context, auth: AuthStatus = SignedOut): Intent {
             return Intent(context, AuthActivity::class.java).apply {
-                authStatus?.let { putExtra(EXTRA_KEY_AUTH_STATUS, it.name) }
+                putExtra(EXTRA_AUTH, auth)
             }
         }
 
-        fun newTaskIntent(context: Context, authStatus: AuthStatus? = null): Intent {
-            return newIntent(context, authStatus).apply {
+        fun newTaskIntent(context: Context): Intent {
+            return newIntent(context).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or
                         Intent.FLAG_ACTIVITY_NEW_TASK

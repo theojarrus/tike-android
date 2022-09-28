@@ -82,7 +82,7 @@ class InboxFragment : StateFragment(R.layout.fragment_inbox) {
     }
 
     override fun bindState(): StateViews = StateViews(
-        loadingView = binding.loadingBar,
+        loadingView = binding.loadingView,
         errorView = binding.errorView
     )
 

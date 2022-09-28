@@ -41,10 +41,10 @@ class InfoFragment : BottomSheetDialogFragment() {
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                Loading -> binding.loadingBar.isGone = false
-                Success -> binding.loadingBar.isGone = true
+                Loading -> binding.loadingView.isGone = false
+                Success -> binding.loadingView.isGone = true
                 Error -> {
-                    binding.loadingBar.isGone = true
+                    binding.loadingView.isGone = true
                     binding.errorView.isGone = false
                 }
             }

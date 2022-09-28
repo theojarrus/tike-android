@@ -75,7 +75,7 @@
     <string name="no">Нет</string>
 
     <string name="error_name_format">Некорректный формат имени</string>
-    <string name="error_nick_format">Содержит недопустимые символы</string>
+    <string name="error_nick_format">Некорректный формат ника</string>
     <string name="error_nick_exist">Такой ник уже существует</string>
     <string name="error_network">Ошибка загрузки</string>
     <string name="error_auth">Ошибка авторизации</string>

@@ -1,12 +1,13 @@
 package com.theost.tike.feature.dialogs.business
 
+import com.theost.tike.common.extension.mapList
 import com.theost.tike.core.recycler.user.UserToUserUiMapper
 import com.theost.tike.core.recycler.user.UserUi
 import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.UsersRepository
 import io.reactivex.Single
 
-class GetCurrentUserFriends(
+class FetchDialogs(
     private val authRepository: AuthRepository,
     private val usersRepository: UsersRepository,
     private val mapper: UserToUserUiMapper
@@ -17,7 +18,7 @@ class GetCurrentUserFriends(
             .flatMapSingle { firebaseUser ->
                 usersRepository.getUser(firebaseUser.uid)
                     .flatMap { usersRepository.getUsers(it.friends) }
-                    .map { items -> items.map { mapper.invoke(it, firebaseUser.uid) } }
+                    .mapList { mapper.invoke(this, firebaseUser.uid) }
             }
     }
 }

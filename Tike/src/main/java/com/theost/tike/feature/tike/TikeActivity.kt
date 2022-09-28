@@ -23,8 +23,8 @@ class TikeActivity : FragmentActivity(R.layout.activity_tike) {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(KEY_NAVIGATION_STATE, binding.bottomNavigation.itemActiveIndex)
         super.onSaveInstanceState(outState)
+        outState.putInt(KEY_NAVIGATION_STATE, binding.bottomNavigation.itemActiveIndex)
     }
 
     private fun setupNavController() {

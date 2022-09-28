@@ -1,53 +1,67 @@
 package com.theost.tike.feature.auth.ui
 
 import android.app.Activity.RESULT_OK
-import android.os.Bundle
-import android.view.View
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.firebase.auth.GoogleAuthProvider
 import com.theost.tike.R
+import com.theost.tike.common.util.AuthUtils.getCredential
 import com.theost.tike.common.util.AuthUtils.getSignInIntent
-import com.theost.tike.core.screen.StateFragment
+import com.theost.tike.common.util.AuthUtils.getSignedInAccountFromIntent
+import com.theost.tike.core.component.model.StateStatus.*
+import com.theost.tike.core.component.model.StateViews
+import com.theost.tike.core.component.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentSignInBinding
+import com.theost.tike.domain.model.multi.AuthStatus.SignedOut
+import com.theost.tike.feature.auth.presentation.AuthViewModel
+import com.theost.tike.feature.auth.presentation.SignInState
 import com.theost.tike.feature.auth.presentation.SignInViewModel
 
-class SignInFragment : StateFragment(R.layout.fragment_sign_in) {
+class SignInFragment : BaseStateFragment<SignInState, SignInViewModel>(R.layout.fragment_sign_in) {
 
-    private val authHandler = registerForActivityResult(StartActivityForResult()) { onAuth(it) }
+    private val authViewModel: AuthViewModel by activityViewModels()
 
-    private val viewModel: SignInViewModel by viewModels()
     private val binding: FragmentSignInBinding by viewBinding()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.signingStatus.observe(viewLifecycleOwner) { handleEndlessStatus(it) }
-        binding.signInButton.setOnClickListener {
-            activity?.let { authHandler.launch(getSignInIntent(it)) }
-        }
+    override val viewModel: SignInViewModel by viewModels()
+
+    override val isHandlingState: Boolean = true
+    override val isLoadingEndless: Boolean = true
+    override val isRefreshingErrorOnly: Boolean = true
+
+    private val authHandler = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) getSignedInAccountFromIntent(result)?.idToken
+            ?.let { viewModel.signIn(getCredential(it)) }
+            ?: handleStatus(Error)
     }
 
-    override fun bindState(): StateViews = StateViews(
-        actionView = binding.signInButton,
-        loadingView = binding.loadingBar,
-        errorMessage = getString(R.string.error_auth)
-    )
-
-    private fun onAuth(result: ActivityResult) {
-        if (result.resultCode == RESULT_OK) {
-            GoogleSignIn.getSignedInAccountFromIntent(result.data).result.idToken
-                ?.let { viewModel.signIn(GoogleAuthProvider.getCredential(it, null)) }
-                ?: showErrorToast()
-        }
+    override fun setupView() = with(binding) {
+        signIn.setOnClickListener { authHandler.launch(getSignInIntent(requireActivity())) }
     }
+
+    override fun render(state: SignInState) {
+        if (state.status == Success) authViewModel.updateAuthStatus(state.authStatus)
+    }
+
+    override val stateViews: StateViews
+        get() = StateViews(
+            actionView = binding.signIn,
+            loadingView = binding.loadingView,
+            errorMessage = getString(R.string.error_auth)
+        )
+
+    override val initialState: SignInState
+        get() = SignInState(
+            status = Initial,
+            authStatus = SignedOut
+        )
+
+    override val initialAction: SignInViewModel.() -> Unit = {}
 
     companion object {
 
-        fun newInstance(): Fragment {
+        fun newInstance(): SignInFragment {
             return SignInFragment()
         }
     }

@@ -13,19 +13,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_search"
+        app:navigationIcon="@drawable/ic_back"
         app:title="@string/blacklist"
         app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/usersList"
+    <com.theost.tike.common.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
-        android:paddingBottom="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:listitem="@layout/item_user" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            android:paddingBottom="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_user" />
+
+    </com.theost.tike.common.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/emptyView"
@@ -52,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <ProgressBar
-        android:id="@+id/loadingBar"
+        android:id="@+id/loadingView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"
