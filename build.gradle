@@ -13,5 +13,6 @@ buildscript {
         classpath "com.google.gms:google-services:$gradle_gms"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$gradle_navigation_args"
         classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$gradle_plugin_maps"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$gradle_crash_analytics"
     }
 }

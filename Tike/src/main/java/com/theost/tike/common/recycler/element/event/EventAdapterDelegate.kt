@@ -11,16 +11,19 @@ import com.theost.tike.common.recycler.delegate.DelegateItem
 import com.theost.tike.common.recycler.element.user.UserUi
 import com.theost.tike.databinding.ItemAvatarBinding
 import com.theost.tike.databinding.ItemEventBinding
+import com.theost.tike.domain.model.multi.Direction.Out
 import com.theost.tike.domain.model.multi.EventAction
 import com.theost.tike.domain.model.multi.EventAction.*
-import com.theost.tike.domain.model.multi.EventMode
-import com.theost.tike.domain.model.multi.EventMode.*
+import com.theost.tike.domain.model.multi.EventType
+import com.theost.tike.domain.model.multi.EventType.*
 
-class EventAdapterDelegate(private val clickListener: (EventAction) -> Unit) : AdapterDelegate {
+class EventAdapterDelegate(
+    private val actionListener: (EventAction) -> Unit
+) : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemEventBinding.inflate(from(parent.context), parent, false)
-        return ViewHolder(binding, clickListener)
+        return ViewHolder(binding, actionListener)
     }
 
     override fun onBindViewHolder(
@@ -36,12 +39,12 @@ class EventAdapterDelegate(private val clickListener: (EventAction) -> Unit) : A
 
     class ViewHolder(
         private val binding: ItemEventBinding,
-        private val clickListener: (EventAction) -> Unit
+        private val actionListener: (EventAction) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: EventUi) {
             with(binding) {
-                setupWithMode(item.mode)
+                setupWithType(item.type)
                 eventTitle.text = item.title
                 eventDescription.text = item.description
                 eventTime.text = item.time
@@ -56,60 +59,60 @@ class EventAdapterDelegate(private val clickListener: (EventAction) -> Unit) : A
                     }
                 }
                 root.setOnClickListener {
-                    clickListener(
+                    actionListener(
                         Info(
                             item.id,
-                            item.creator,
-                            item.participants
+                            item.id(),
+                            item.creator
                         )
                     )
                 }
-                acceptButton.setOnClickListener {
-                    clickListener(
+                accept.setOnClickListener {
+                    actionListener(
                         Accept(
                             item.id,
+                            item.id(),
                             item.creator,
-                            item.participants,
-                            item.mode
+                            item.participants.takeIf(List<UserUi>::isNotEmpty)?.first()?.uid.orEmpty(),
+                            item.type
                         )
                     )
                 }
-                rejectButton.setOnClickListener {
-                    clickListener(
-                        Reject(
+                decline.setOnClickListener {
+                    actionListener(
+                        Decline(
                             item.id,
+                            item.id(),
                             item.creator,
-                            item.participants,
-                            item.mode
+                            item.participants.takeIf(List<UserUi>::isNotEmpty)?.first()?.uid,
+                            item.type
                         )
                     )
                 }
             }
         }
 
-        private fun ItemEventBinding.setupWithMode(mode: EventMode) {
-            when (mode) {
-                SCHEDULE_PROPER, SCHEDULE_REFERENCE -> {
+        private fun ItemEventBinding.setupWithType(type: EventType) {
+            when {
+                type is Schedule -> {
                     eventDate.isGone = true
-                    acceptButton.isGone = true
+                    accept.isGone = true
                 }
-                REQUESTING_OUT, PENDING_OUT -> {
-                    acceptButton.isGone = true
+                type is Pending && type.direction is Out || type is Requesting && type.direction is Out -> {
+                    accept.isGone = true
                 }
-                JOINING -> {
-                    rejectButton.isGone = true
+                type is Joining -> {
+                    decline.isGone = true
                 }
-                else -> {}
             }
         }
 
         private fun ItemAvatarBinding.displayAvatar(user: UserUi?) {
             root.isGone = user == null
-            user?.let {
-                when (it.hasAccess) {
-                    true -> participantAvatar.load(it.avatar)
-                    false -> participantAvatar.load(R.drawable.ic_blocked)
-                }
+            when {
+                user?.avatar != null && user.hasAccess -> avatar.load(user.avatar)
+                user?.avatar != null && !user.hasAccess -> avatar.load(R.drawable.ic_blocked)
+                else -> avatar.load(R.drawable.ic_deleted)
             }
         }
     }

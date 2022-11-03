@@ -7,6 +7,6 @@ data class LifestyleUi(
     val text: String,
     val isSelected: Boolean
 ) : DelegateItem {
-    override fun id(): Any = id
-    override fun content(): Any = isSelected
+    override fun id(): String = id
+    override fun content(): String = "$isSelected"
 }

@@ -7,8 +7,8 @@ import org.threeten.bp.LocalDate
 
 class CalendarViewModel : ViewModel() {
 
-    private val _pendingDate = MutableLiveData<LocalDate?>()
-    val pendingDate: LiveData<LocalDate?> = _pendingDate
+    private val _date = MutableLiveData<LocalDate?>()
+    val date: LiveData<LocalDate?> = _date
 
-    fun setPendingDate(date: LocalDate?) = _pendingDate.postValue(date)
+    fun setDate(date: LocalDate?) = _date.postValue(date)
 }

@@ -11,17 +11,18 @@ import com.theost.tike.domain.model.core.Event
 import com.theost.tike.domain.model.dto.EventDto
 import com.theost.tike.domain.model.dto.EventReferenceDto
 import com.theost.tike.domain.model.dto.mapToEvent
-import com.theost.tike.domain.model.multi.EventType.PROPER
-import com.theost.tike.domain.model.multi.EventType.REFERENCE
+import com.theost.tike.domain.model.multi.EventTypeOld.PROPER
+import com.theost.tike.domain.model.multi.EventTypeOld.REFERENCE
 import com.theost.tike.domain.model.multi.ReferenceType.*
 import com.theost.tike.domain.model.multi.RepeatMode.*
 import com.theost.tike.domain.model.multi.Source.Empty
+import com.theost.tike.network.model.core.NetworkRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-object EventsRepository {
+object EventsRepository : NetworkRepository() {
 
     fun observeEvents(
         uid: String,
@@ -298,16 +299,29 @@ object EventsRepository {
             provideProperEventsCollection(uid)
                 .whereNotEqualTo(EventDto::pending.name, emptyList<String>())
         ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }
-            .map { events -> events.map { it.mapToEvent() } }
+            .map { events ->
+                events.asSequence().map { it.mapToEvent() }
+                    .sortedBy { it.id }
+                    .sortedBy { it.endTime }
+                    .sortedBy { it.beginTime }
+                    .sortedBy { it.date }
+                    .toList()
+            }
             .subscribeOn(Schedulers.io())
     }
 
     fun observeProperRequestingEvents(uid: String): Observable<List<Event>> {
         return RxFirebaseFirestore.dataChanges(
-            provideProperEventsCollection(uid).whereNotEqualTo(EventDto::requesting.name, 0)
+            provideProperEventsCollection(uid)
+                .whereNotEqualTo(EventDto::requesting.name, emptyList<String>())
         ).map { it.getOrNull()?.toObjects(EventDto::class.java) ?: emptyList() }.map { events ->
-            events.filter { (it.pending.size + it.participants.size < it.participantsLimit) }
+            events.asSequence()
+                .filter { (it.pending.size + it.participants.size < it.participantsLimit) }
                 .map { it.mapToEvent() }
+                .sortedBy { it.id }
+                .sortedBy { it.endTime }
+                .sortedBy { it.beginTime }
+                .sortedBy { it.endTime }.toList()
         }.subscribeOn(Schedulers.io())
     }
 
@@ -364,6 +378,7 @@ object EventsRepository {
         creator: String,
         participantsLimit: Int
     ): Completable {
+        val a = provideReferenceEventsCollection(uid)
         return RxFirebaseFirestore.delete(provideReferenceEventsCollection(uid).document(id))
             .andThen(
                 RxFirebaseFirestore.update(

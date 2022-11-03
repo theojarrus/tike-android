@@ -5,10 +5,11 @@ import com.google.firebase.firestore.FieldValue.arrayRemove
 import com.theost.tike.common.extension.append
 import com.theost.tike.domain.api.FirestoreApi.provideUsersCollection
 import com.theost.tike.domain.model.dto.UserDto
+import com.theost.tike.network.model.core.NetworkRepository
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 
-object FriendsRepository {
+object FriendsRepository : NetworkRepository() {
 
     fun addFriendRequest(
         requesting: String,

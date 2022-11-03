@@ -5,8 +5,14 @@ import com.theost.tike.common.recycler.element.user.UserUi
 import com.theost.tike.common.util.DateUtils.formatBeginEndTime
 import com.theost.tike.common.util.DateUtils.formatDate
 import com.theost.tike.domain.model.core.Event
+import com.theost.tike.domain.model.multi.Direction.In
+import com.theost.tike.domain.model.multi.Direction.Out
 import com.theost.tike.domain.model.multi.EventMode
-import com.theost.tike.domain.model.multi.EventMode.SCHEDULE_PROPER
+import com.theost.tike.domain.model.multi.EventMode.*
+import com.theost.tike.domain.model.multi.EventRole.Author
+import com.theost.tike.domain.model.multi.EventRole.Member
+import com.theost.tike.domain.model.multi.EventType
+import com.theost.tike.domain.model.multi.EventType.*
 
 data class EventUi(
     val id: String,
@@ -16,10 +22,10 @@ data class EventUi(
     val date: String,
     val creator: String,
     val participants: List<UserUi>,
-    val mode: EventMode
+    val type: EventType
 ) : DelegateItem {
-    override fun id(): Any = id + if (mode != SCHEDULE_PROPER) participants else ""
-    override fun content(): Any = title + description + date + time + participants
+    override fun id(): String = id + if (type is Pending || type is Requesting) participants else ""
+    override fun content(): String = title + description + date + time + participants
 }
 
 fun Event.mapToEventUi(participants: List<UserUi>, mode: EventMode): EventUi {
@@ -29,7 +35,6 @@ fun Event.mapToEventUi(participants: List<UserUi>, mode: EventMode): EventUi {
         description = description,
         creator = creatorId,
         participants = participants,
-        mode = mode,
         time = formatBeginEndTime(
             beginTime.hour,
             beginTime.minute,
@@ -40,6 +45,15 @@ fun Event.mapToEventUi(participants: List<UserUi>, mode: EventMode): EventUi {
             date.year,
             date.monthValue,
             date.dayOfMonth
-        )
+        ),
+        type = when (mode) {
+            SCHEDULE_PROPER -> Schedule(Author)
+            SCHEDULE_REFERENCE -> Schedule(Member)
+            REQUESTING_IN -> Requesting(In)
+            REQUESTING_OUT -> Requesting(Out)
+            PENDING_IN -> Pending(In)
+            PENDING_OUT -> Pending(Out)
+            JOINING -> Joining
+        }
     )
 }

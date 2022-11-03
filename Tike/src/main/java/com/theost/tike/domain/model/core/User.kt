@@ -11,5 +11,6 @@ data class User(
     val requesting: List<String>,
     val pending: List<String>,
     val blocked: List<String>,
-    val lifestyles: List<Lifestyle>
+    val lifestyles: List<Lifestyle>,
+    val isActive: Boolean
 )

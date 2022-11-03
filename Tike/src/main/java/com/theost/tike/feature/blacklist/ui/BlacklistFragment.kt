@@ -3,9 +3,9 @@ package com.theost.tike.feature.blacklist.ui
 import android.view.MenuItem
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.common.extension.navigate
 import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.recycler.base.BaseAdapter
 import com.theost.tike.common.recycler.element.user.UserAdapterDelegate
@@ -30,20 +30,17 @@ class BlacklistFragment : BaseSearchStateFragment<BlacklistState, BlacklistViewM
     override val viewModel: BlacklistViewModel by viewModels()
 
     override val isHandlingState: Boolean = true
-    override val isLoadingEndless: Boolean = false
     override val isRefreshingErrorOnly: Boolean = true
 
     override fun setupView() = with(binding) {
         toolbar.setNavigationOnClickListener { activity.pressBack() }
         recyclerView.adapter = adapter.apply {
-            addDelegate(UserAdapterDelegate { uid ->
-                findNavController().navigate(actionBlacklistToProfile(uid))
-            })
+            addDelegate(UserAdapterDelegate { navigate(actionBlacklistToProfile(it)) })
         }
     }
 
-    override fun render(state: BlacklistState) {
-        binding.emptyView.isGone = !state.status.isLoaded() || state.items.isNotEmpty()
+    override fun render(state: BlacklistState) = with(binding) {
+        emptyView.isGone = !state.status.isLoaded() || state.items.isNotEmpty()
         adapter.submitList(state.items)
     }
 

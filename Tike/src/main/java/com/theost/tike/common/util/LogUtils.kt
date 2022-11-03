@@ -19,6 +19,10 @@ object LogUtils {
 
     const val LOG_FRAGMENT_LOCATION = "fragment_location"
 
+    inline fun <reified T : Any> log(root: T, message: String) {
+        Log.d(root::class.simpleName, message)
+    }
+
     inline fun <reified T : Any> log(root: T, error: Throwable) {
         Log.e(root::class.simpleName, error.message.orEmpty())
         error.printStackTrace()

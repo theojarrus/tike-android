@@ -9,7 +9,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.theost.tike.R
-import com.theost.tike.common.extension.fazy
 import com.theost.tike.common.util.DisplayUtils.showError
 import com.theost.tike.common.util.LocationUtils.MOSCOW_LAT
 import com.theost.tike.common.util.LocationUtils.MOSCOW_LNG
@@ -22,7 +21,7 @@ class MapController(
     @IdRes id: Int
 ) {
 
-    private val mapFragment by fazy { fragmentManager.findFragmentById(id) as SupportMapFragment }
+    private val mapFragment by lazy { fragmentManager.findFragmentById(id) as SupportMapFragment }
 
     fun init(location: Location?, isEditable: Boolean) {
         mapFragment.getMapAsync { map ->

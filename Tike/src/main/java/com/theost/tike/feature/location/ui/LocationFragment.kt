@@ -15,14 +15,13 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
 import com.theost.tike.common.extension.changeText
-import com.theost.tike.common.extension.fazy
 import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.util.DisplayUtils.showError
 import com.theost.tike.common.util.LocationUtils.hasLocationPermission
 import com.theost.tike.common.util.LogUtils.LOG_FRAGMENT_LOCATION
 import com.theost.tike.databinding.FragmentLocationBinding
 import com.theost.tike.domain.model.core.Location
-import com.theost.tike.feature.creation.adding.main.presentation.EventViewModel
+import com.theost.tike.feature.adding.presentation.EventViewModel
 import com.theost.tike.feature.location.presentation.LocationViewModel
 import com.theost.tike.feature.location.ui.adapter.LocationsAdapter
 import com.theost.tike.feature.location.ui.map.MapController
@@ -36,7 +35,7 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class LocationFragment : Fragment(R.layout.fragment_location) {
 
-    private val permissionLauncher by fazy {
+    private val permissionLauncher by lazy {
         registerForActivityResult(RequestPermission()) { isGranted ->
             if (isGranted) {
                 mapController.enableMyLocation()
@@ -46,12 +45,12 @@ class LocationFragment : Fragment(R.layout.fragment_location) {
         }
     }
 
-    private val mapGeocoder by fazy { MapGeocoder(requireContext()) }
-    private val mapController by fazy {
+    private val mapGeocoder by lazy { MapGeocoder(requireContext()) }
+    private val mapController by lazy {
         MapController(requireContext(), childFragmentManager, R.id.map)
     }
 
-    private val locationsAdapter by fazy { LocationsAdapter(requireContext()) }
+    private val locationsAdapter by lazy { LocationsAdapter(requireContext()) }
 
     private val eventViewModel: EventViewModel by activityViewModels()
     private val viewModel: LocationViewModel by viewModels()
@@ -172,7 +171,9 @@ class LocationFragment : Fragment(R.layout.fragment_location) {
 
     private fun updateDropdown(locations: List<Location>) {
         locationsAdapter.setItems(locations)
-        if (locations.none { it.address == binding.locationInput.text.toString() }) binding.locationInput.showDropDown()
+        if (locations.none { it.address == binding.locationInput.text.toString() }) {
+            binding.locationInput.showDropDown()
+        }
     }
 
     override fun onDestroy() {

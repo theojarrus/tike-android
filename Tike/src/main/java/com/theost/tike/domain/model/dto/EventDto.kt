@@ -2,10 +2,9 @@ package com.theost.tike.domain.model.dto
 
 import com.google.firebase.firestore.DocumentId
 import com.theost.tike.domain.model.core.Event
-import com.theost.tike.domain.model.multi.EventType.PROPER
-import com.theost.tike.domain.model.multi.EventType.REFERENCE
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalTime
+import com.theost.tike.domain.model.core.mapper.EventMapper
+import com.theost.tike.domain.model.core.mapper.LocationMapper
+import com.theost.tike.domain.model.multi.EventTypeOld.PROPER
 
 data class EventDto(
     @DocumentId
@@ -32,22 +31,5 @@ data class EventDto(
 )
 
 fun EventDto.mapToEvent(type: String = PROPER.name): Event {
-    return Event(
-        id = id,
-        title = title,
-        description = description,
-        creatorId = creatorId,
-        requesting = requesting,
-        pending = pending,
-        participants = participants,
-        participantsLimit = participantsLimit,
-        date = LocalDate.of(year, month, monthDay),
-        beginTime = LocalTime.ofNanoOfDay(beginTime),
-        endTime = LocalTime.ofNanoOfDay(endTime),
-        repeatMode = repeatMode,
-        locationAddress = locationAddress,
-        locationLatitude = locationLatitude,
-        locationLongitude = locationLongitude,
-        type = if (type == REFERENCE.name) REFERENCE else PROPER
-    )
+    return EventMapper(LocationMapper()).invoke(this, type)
 }

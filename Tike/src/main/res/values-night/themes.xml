@@ -2,7 +2,7 @@
     <style name="Theme.Tike" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/blue</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/blue</item>
@@ -24,5 +24,19 @@
 
     <style name="Theme.Tike.Splash" parent="Theme.Tike">
         <item name="android:windowBackground">@drawable/splash_background_dark</item>
+    </style>
+
+    <style name="Theme.Tike.BottomSheetDialogStyle" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Theme.Tike.BottomSheetDialogStyle.Modal</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:navigationBarColor">?attr/primaryBackgroundColor</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryVariant">@color/blue</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorSecondaryVariant">@color/blue</item>
+        <item name="colorOnSecondary">@color/white</item>
     </style>
 </resources>

@@ -1,10 +1,10 @@
 package com.theost.tike.core.presentation
 
-import android.util.Log
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.theost.tike.core.exception.StateException
 import com.theost.tike.core.model.StateStatus
+import com.theost.tike.core.model.exception.StateException
 
 abstract class BaseStateViewModel<State : BaseState> : BaseRxViewModel() {
 
@@ -24,7 +24,15 @@ abstract class BaseStateViewModel<State : BaseState> : BaseRxViewModel() {
     fun update(block: State.() -> State) {
         val oldState = state.value ?: throw StateException()
         val newState = block(oldState)
-        if (newState != oldState) _state.postValue(newState)
-        Log.wtf("NEWSTATE", "${newState.status}, $newState")
+        if (newState != oldState) update(newState)
+    }
+
+    private fun update(newState: State) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            _state.value = newState
+        } else {
+            _state.postValue(newState)
+        }
+        println(newState)
     }
 }

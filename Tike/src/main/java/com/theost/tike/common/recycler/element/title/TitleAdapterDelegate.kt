@@ -30,7 +30,7 @@ class TitleAdapterDelegate : AdapterDelegate {
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: TitleUi) {
-            binding.title.text = itemView.context.getString(item.stringRes)
+            binding.title.text = itemView.context.getString(item.text)
         }
     }
 }

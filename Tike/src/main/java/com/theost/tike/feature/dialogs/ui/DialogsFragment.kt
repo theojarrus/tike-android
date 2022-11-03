@@ -15,7 +15,7 @@ import com.theost.tike.feature.dialogs.presentation.DialogsState
 import com.theost.tike.feature.dialogs.presentation.DialogsViewModel
 
 class DialogsFragment : BaseStateFragment<DialogsState, DialogsViewModel>(
- R.layout.fragment_dialogs
+    R.layout.fragment_dialogs
 ) {
 
     private val binding: FragmentDialogsBinding by viewBinding()
@@ -24,7 +24,6 @@ class DialogsFragment : BaseStateFragment<DialogsState, DialogsViewModel>(
     override val viewModel: DialogsViewModel by viewModels()
 
     override val isHandlingState: Boolean = true
-    override val isLoadingEndless: Boolean = false
     override val isRefreshingErrorOnly: Boolean = false
 
     override fun setupView() = with(binding) {
@@ -33,8 +32,8 @@ class DialogsFragment : BaseStateFragment<DialogsState, DialogsViewModel>(
         }
     }
 
-    override fun render(state: DialogsState) {
-        binding.emptyView.isGone = !state.status.isLoaded() || state.items.isNotEmpty()
+    override fun render(state: DialogsState) = with(binding) {
+        emptyView.isGone = !state.status.isLoaded() || state.items.isNotEmpty()
         adapter.submitList(state.items)
     }
 

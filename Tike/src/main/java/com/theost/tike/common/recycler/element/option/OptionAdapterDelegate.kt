@@ -44,8 +44,8 @@ class OptionAdapterDelegate(
                     }
                 }
                 arrow.isVisible = clickListener != null && item.action != null
-                title.text = item.title
-                subtitle.text = item.subtitle
+                title.text = itemView.context.getString(item.title)
+                subtitle.text = item.content
                 avatar.setImageResource(item.icon)
             }
         }

@@ -1,9 +1,14 @@
 package com.theost.tike.common.util
 
+import org.threeten.bp.LocalDate
 import java.text.SimpleDateFormat
 import java.util.*
 
 object DateUtils {
+
+    fun subtractEpochDay(first: LocalDate?, second: LocalDate?): Long {
+        return first?.toEpochDay()?.minus(second?.toEpochDay() ?: 0) ?: 0
+    }
 
     fun formatMonthYear(month: Int, year: Int): String {
         return SimpleDateFormat("LLLL, yyyy", Locale.getDefault())

@@ -17,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/userAvatarLayout"
+            android:id="@+id/avatarLayout"
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:backgroundTint="@color/blue"
@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/userAvatar"
+                android:id="@+id/avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
@@ -39,22 +39,22 @@
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/name"
             style="@style/Theme.Tike.TextView.RobotoMedium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textColor="?attr/eventTitleColor"
-            app:layout_constraintBottom_toTopOf="@id/userNick"
-            app:layout_constraintEnd_toStartOf="@id/actionButtons"
-            app:layout_constraintStart_toEndOf="@id/userAvatarLayout"
+            app:layout_constraintBottom_toTopOf="@id/nick"
+            app:layout_constraintEnd_toStartOf="@id/actionsLayout"
+            app:layout_constraintStart_toEndOf="@id/avatarLayout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Theo Jedi" />
 
         <TextView
-            android:id="@+id/userNick"
+            android:id="@+id/nick"
             style="@style/Theme.Tike.TextView.RobotoMedium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -63,14 +63,14 @@
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/actionButtons"
-            app:layout_constraintStart_toEndOf="@id/userAvatarLayout"
-            app:layout_constraintTop_toBottomOf="@id/userName"
+            app:layout_constraintEnd_toStartOf="@id/actionsLayout"
+            app:layout_constraintStart_toEndOf="@id/avatarLayout"
+            app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="theo" />
 
         <LinearLayout
-            android:id="@+id/actionButtons"
+            android:id="@+id/actionsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -78,29 +78,29 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/acceptButton"
+                android:id="@+id/accept"
                 style="@style/Theme.Tike.EventButton.Action"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="10dp"
                 app:icon="@drawable/ic_accept"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/rejectButton"
+                app:layout_constraintEnd_toStartOf="@id/decline"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/rejectButton"
+                android:id="@+id/decline"
                 style="@style/Theme.Tike.EventButton.Action"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 app:icon="@drawable/ic_close"
                 android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/blockButton"
+                app:layout_constraintEnd_toStartOf="@id/block"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/blockButton"
+                android:id="@+id/block"
                 style="@style/Theme.Tike.EventButton.Action"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

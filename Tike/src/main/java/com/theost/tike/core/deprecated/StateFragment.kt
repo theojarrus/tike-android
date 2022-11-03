@@ -13,6 +13,7 @@ import com.theost.tike.common.util.DisplayUtils.hideKeyboard
 import com.theost.tike.domain.model.multi.Status
 import com.theost.tike.domain.model.multi.Status.*
 
+@Deprecated("Use 'BaseStateFragment' instead")
 abstract class StateFragment(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
     protected data class StateViews(

@@ -1,26 +1,30 @@
 package com.theost.tike.domain.model.multi
 
-import com.theost.tike.common.recycler.element.user.UserUi
-
-sealed class EventAction {
-
-    class Accept(
-        val id: String,
-        val creator: String,
-        val participants: List<UserUi>,
-        val mode: EventMode
-    ) : EventAction()
-
-    class Reject(
-        val id: String,
-        val creator: String,
-        val participants: List<UserUi>,
-        val mode: EventMode
-    ) : EventAction()
+sealed class EventAction(
+    val id: String,
+    val item: String,
+    val creator: String,
+) {
 
     class Info(
-        val id: String,
-        val creator: String,
-        val participants: List<UserUi>
-    ) : EventAction()
+        id: String,
+        item: String,
+        creator: String
+    ) : EventAction(id, item, creator)
+
+    class Accept(
+        id: String,
+        item: String,
+        creator: String,
+        val uid: String,
+        val type: EventType
+    ) : EventAction(id, item, creator)
+
+    class Decline(
+        id: String,
+        item: String,
+        creator: String,
+        val uid: String?,
+        val type: EventType,
+    ) : EventAction(id, item, creator)
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/filled"
+        style="@style/Theme.Tike.BlueButton.Action.Filled"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/outlined"
+        style="@style/Theme.Tike.BlueButton.Action.Outlined"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/texted"
+        style="@style/Theme.Tike.BlueButton.Action.Texted"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:visibility="gone" />
+
+</FrameLayout>

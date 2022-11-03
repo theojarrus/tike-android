@@ -13,15 +13,22 @@
         app:title="@string/inbox"
         app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/inboxList"
+    <com.theost.tike.common.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:listitem="@layout/item_friend" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_friend" />
+
+    </com.theost.tike.common.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/emptyView"

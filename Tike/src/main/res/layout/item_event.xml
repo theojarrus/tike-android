@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:textColor="?attr/eventTitleColor"
-            app:layout_constraintEnd_toStartOf="@id/actionButtons"
+            app:layout_constraintEnd_toStartOf="@id/actionsLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Это новое событие" />
@@ -38,21 +38,21 @@
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/eventTime"
-            app:layout_constraintEnd_toStartOf="@id/actionButtons"
+            app:layout_constraintEnd_toStartOf="@id/actionsLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/eventTitle"
             app:layout_constraintVertical_chainStyle="spread_inside"
             tools:text="Просто какое-то описание нового события" />
 
         <LinearLayout
-            android:id="@+id/actionButtons"
+            android:id="@+id/actionsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/acceptButton"
+                android:id="@+id/accept"
                 style="@style/Theme.Tike.EventButton.Action"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -60,7 +60,7 @@
                 app:icon="@drawable/ic_accept" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/rejectButton"
+                android:id="@+id/decline"
                 style="@style/Theme.Tike.EventButton.Action"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

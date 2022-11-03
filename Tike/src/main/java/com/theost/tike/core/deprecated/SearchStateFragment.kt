@@ -10,6 +10,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
+@Deprecated("Use 'BaseSearchStateFragment' instead")
 abstract class SearchStateFragment(
     @LayoutRes contentLayoutId: Int
 ) : ToolbarStateFragment(contentLayoutId) {

@@ -4,6 +4,7 @@ import androidx.annotation.LayoutRes
 import com.theost.tike.R
 import com.theost.tike.common.extension.pressBack
 
+@Deprecated("Use 'BaseStateFragment' instead")
 abstract class ToolbarStateFragment(
     @LayoutRes contentLayoutId: Int
 ) : StateFragment(contentLayoutId) {

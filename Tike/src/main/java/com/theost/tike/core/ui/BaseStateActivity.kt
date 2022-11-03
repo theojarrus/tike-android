@@ -19,10 +19,10 @@ abstract class BaseStateActivity<State : BaseState, ViewModel : BaseStateViewMod
     protected abstract val viewModel: ViewModel
 
     protected abstract val isHandlingState: Boolean
-    protected abstract val isLoadingEndless: Boolean
     protected abstract val isRefreshingErrorOnly: Boolean
+    protected open val isLoadingEndless: Boolean = false
 
-    protected abstract fun setupView()
+    protected abstract fun setupView(savedInstanceState: Bundle?)
     protected abstract fun render(state: State)
 
     protected abstract val stateViews: StateViews
@@ -34,7 +34,7 @@ abstract class BaseStateActivity<State : BaseState, ViewModel : BaseStateViewMod
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupView()
+        setupView(savedInstanceState)
         let { activity ->
             viewModel.apply {
                 state.observe(activity) { state ->
@@ -61,6 +61,7 @@ abstract class BaseStateActivity<State : BaseState, ViewModel : BaseStateViewMod
                 controlRefreshing(isEnabled = false)
             }
             Refreshing -> handleRefreshing(isRefreshing = true)
+            Reloading -> handleRefreshing(isRefreshing = true)
             Success -> {
                 if (!isLoadingEndless) handleLoading(isLoading = false)
                 handleError(isError = false)

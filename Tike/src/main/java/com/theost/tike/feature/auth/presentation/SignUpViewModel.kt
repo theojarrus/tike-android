@@ -3,7 +3,7 @@ package com.theost.tike.feature.auth.presentation
 import com.theost.tike.common.exception.AuthException
 import com.theost.tike.common.exception.ExistException
 import com.theost.tike.common.extension.appendExcluding
-import com.theost.tike.common.recycler.element.lifestyle.LifestyleToLifestyleUiMapper
+import com.theost.tike.common.recycler.element.lifestyle.LifestyleUiMapper
 import com.theost.tike.common.util.LogUtils.log
 import com.theost.tike.common.util.StringUtils.formatNameLetterCase
 import com.theost.tike.common.util.StringUtils.formatNickLetterCase
@@ -11,24 +11,34 @@ import com.theost.tike.common.util.StringUtils.isNameCorrect
 import com.theost.tike.common.util.StringUtils.isNickCorrect
 import com.theost.tike.core.model.StateStatus.*
 import com.theost.tike.core.presentation.BaseStateViewModel
-import com.theost.tike.domain.model.core.mapper.FirebaseUserToUserMapper
-import com.theost.tike.domain.model.dto.mapper.UserToUserDtoMapper
+import com.theost.tike.domain.model.core.mapper.UserFirebaseMapper
+import com.theost.tike.domain.model.dto.mapper.UserDtoMapper
 import com.theost.tike.domain.model.multi.AuthStatus.SignedIn
-import com.theost.tike.domain.model.multi.AuthStatus.SignedOut
 import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.LifestylesRepository
 import com.theost.tike.domain.repository.UsersRepository
-import com.theost.tike.feature.auth.business.*
+import com.theost.tike.feature.auth.business.FetchAuthStatusInteractor
+import com.theost.tike.feature.auth.business.FetchLifestylesInteractor
+import com.theost.tike.feature.auth.business.FetchUserInteractor
+import com.theost.tike.feature.auth.business.SignUpInteractor
 
 class SignUpViewModel : BaseStateViewModel<SignUpState>() {
 
-    private val userMapper = FirebaseUserToUserMapper()
-    private val lifestyleMapper = LifestyleToLifestyleUiMapper()
-    private val dtoMapper = UserToUserDtoMapper()
+    private val userMapper = UserFirebaseMapper()
+    private val lifestyleMapper = LifestyleUiMapper()
+    private val dtoMapper = UserDtoMapper()
+
+    private val signUpInteractor = SignUpInteractor(UsersRepository, dtoMapper)
+    private val fetchAuthStatusInteractor = FetchAuthStatusInteractor(AuthRepository)
+    private val fetchUserInteractor = FetchUserInteractor(AuthRepository, userMapper)
+    private val fetchLifestylesInteractor = FetchLifestylesInteractor(
+        LifestylesRepository,
+        lifestyleMapper
+    )
 
     fun fetchUser() {
         disposable {
-            FetchUser(AuthRepository, userMapper).invoke()
+            fetchUserInteractor()
                 .subscribe({ user ->
                     update { copy(user = user) }
                 }, { error ->
@@ -39,7 +49,7 @@ class SignUpViewModel : BaseStateViewModel<SignUpState>() {
 
     fun fetchLifestyles() {
         disposable {
-            FetchLifestyles(LifestylesRepository, lifestyleMapper).invoke()
+            fetchLifestylesInteractor()
                 .subscribe({ lifestyles ->
                     update { copy(lifestyles = lifestyles) }
                 }, { error ->
@@ -50,22 +60,9 @@ class SignUpViewModel : BaseStateViewModel<SignUpState>() {
 
     fun updateLifestyle(id: String) {
         state.value?.lifestyles?.let { lifestyles ->
-            val selected = state.value?.userLifestyles.orEmpty().appendExcluding(id)
+            val selected = state.value?.userLifestyles.appendExcluding(id)
             val mapped = lifestyles.map { it.copy(isSelected = selected.contains(it.id)) }
             update { copy(lifestyles = mapped, userLifestyles = selected) }
-        }
-    }
-
-    fun signOut() {
-        update { copy(status = Loading) }
-        disposableSwitch {
-            DoSignOut(AuthRepository).invoke()
-                .subscribe({
-                    update { copy(status = Success, authStatus = SignedOut) }
-                }, { error ->
-                    log(this, error)
-                    update { copy(status = Success, authStatus = SignedOut) }
-                })
         }
     }
 
@@ -83,13 +80,13 @@ class SignUpViewModel : BaseStateViewModel<SignUpState>() {
                     )
                 }
                 disposableSwitch {
-                    FetchAuthStatus(AuthRepository).invoke()
-                        .flatMapCompletable { DoSignUp(UsersRepository, dtoMapper).invoke(user) }
+                    fetchAuthStatusInteractor()
+                        .flatMapCompletable { signUpInteractor(user) }
                         .subscribe({
                             update { copy(status = Success, authStatus = SignedIn) }
                         }, { error ->
-                            log(this, error)
                             update { copy(status = Error, isUserExist = error is ExistException) }
+                            log(this, error)
                         })
                 }
             } ?: run {
@@ -100,7 +97,7 @@ class SignUpViewModel : BaseStateViewModel<SignUpState>() {
             update {
                 copy(
                     status = Error,
-                    user = user.copy(name = formatName, nick = formatNick),
+                    user = user?.copy(name = formatName, nick = formatNick),
                     isNameError = !isNameCorrect,
                     isNickError = !isNickCorrect
                 )

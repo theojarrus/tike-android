@@ -3,17 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menuTodayLight"
-        android:icon="@drawable/ic_day"
+        android:id="@+id/menuToday"
+        android:icon="@drawable/ic_today"
         android:title="@string/today"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menuTodayDark"
-        android:icon="@drawable/ic_night"
-        android:title="@string/today"
-        android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item

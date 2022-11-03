@@ -37,12 +37,13 @@ class MemberAdapterDelegate(private val clickListener: (uid: String) -> Unit) :
         fun bind(item: MemberUi) {
             with(binding) {
                 root.setOnClickListener { clickListener(item.uid) }
-                userName.text = item.name
-                userNick.text = item.nick
                 indicatorSelected.isVisible = (item.isSelected)
-                when (item.hasAccess) {
-                    true -> userAvatar.load(item.avatar)
-                    false -> userAvatar.load(R.drawable.ic_blocked)
+                name.text = item.name ?: itemView.context.getString(R.string.no_user)
+                nick.text = item.nick ?: itemView.context.getString(R.string.no_nick)
+                when {
+                    item.avatar != null && item.hasAccess -> avatar.load(item.avatar)
+                    item.avatar != null && !item.hasAccess -> avatar.load(R.drawable.ic_blocked)
+                    else ->avatar.load(R.drawable.ic_deleted)
                 }
             }
         }

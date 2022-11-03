@@ -5,31 +5,59 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.theost.tike.R
+import com.theost.tike.app.TikeApp
 import com.theost.tike.common.exception.AuthException
 import com.theost.tike.common.extension.getSerializable
 import com.theost.tike.common.util.LogUtils.log
+import com.theost.tike.common.widget.NetworkView
+import com.theost.tike.core.model.StateStatus.Initial
+import com.theost.tike.core.model.StateViews
+import com.theost.tike.core.ui.BaseStateActivity
+import com.theost.tike.databinding.ActivityAuthBinding
 import com.theost.tike.domain.model.multi.AuthStatus
 import com.theost.tike.domain.model.multi.AuthStatus.*
+import com.theost.tike.feature.auth.presentation.AuthState
 import com.theost.tike.feature.auth.presentation.AuthViewModel
 import com.theost.tike.feature.tike.TikeActivity
+import com.theost.tike.network.model.multi.NetworkStatus.Online
 
-class AuthActivity : FragmentActivity(R.layout.activity_auth) {
+class AuthActivity : BaseStateActivity<AuthState, AuthViewModel>(R.layout.activity_auth) {
 
-    private val viewModel: AuthViewModel by viewModels()
+    private val binding: ActivityAuthBinding by viewBinding()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val initialAuthStatus = intent.getSerializable(EXTRA_AUTH, AuthStatus::class.java, Unknown)
-        viewModel.updateAuthStatus(initialAuthStatus)
-        viewModel.authStatus.observe(this) { authStatus ->
-            when (authStatus) {
-                is SignedIn -> startActivity(TikeActivity.newTaskIntent(this))
-                is SignedOut -> startFragment(SignInFragment.newInstance())
-                is SigningUp -> startFragment(SignUpFragment.newInstance())
-                is Unknown -> { log(this, AuthException()) }
+    override val viewModel: AuthViewModel by viewModels()
+
+    override val isHandlingState: Boolean = true
+    override val isRefreshingErrorOnly: Boolean = true
+
+    private val networkManager by lazy { (application as TikeApp).networkManager }
+    private val networkView by lazy {
+        NetworkView(
+            context = this,
+            window = window,
+            rootView = binding.networkView.root,
+            contentView = binding.networkView.content,
+            backgroundColor = R.color.red
+        )
+    }
+
+    override fun setupView(savedInstanceState: Bundle?) {
+        networkManager.status.observe(this) { networkStatus ->
+            when (networkStatus) {
+                Online -> networkView.isEnabled = false
+                else -> networkView.isEnabled = true
             }
+        }
+    }
+
+    override fun render(state: AuthState) {
+        when (state.authStatus) {
+            is SignedIn -> startActivity(TikeActivity.newTaskIntent(this))
+            is SignedOut -> startFragment(SignInFragment.newInstance())
+            is SigningUp -> startFragment(SignUpFragment.newInstance())
+            is Unknown -> { log(this, AuthException()) }
         }
     }
 
@@ -44,6 +72,20 @@ class AuthActivity : FragmentActivity(R.layout.activity_auth) {
             .replace(R.id.fragmentContainer, fragment)
             .commit()
     }
+
+    override val stateViews: StateViews
+        get() = StateViews(
+            loadingView = binding.loadingView.root,
+            errorMessage = getString(R.string.error_auth)
+        )
+
+    override val initialState: AuthState
+        get() = AuthState(
+            status = Initial,
+            authStatus = intent.getSerializable(EXTRA_AUTH, AuthStatus::class.java, Unknown)
+        )
+
+    override val initialAction: AuthViewModel.() -> Unit = {}
 
     companion object {
 

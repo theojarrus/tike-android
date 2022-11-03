@@ -12,12 +12,13 @@ import com.theost.tike.domain.model.dto.mapToUser
 import com.theost.tike.domain.model.multi.ExistStatus
 import com.theost.tike.domain.model.multi.ExistStatus.Exist
 import com.theost.tike.domain.model.multi.ExistStatus.NotFound
+import com.theost.tike.network.model.core.NetworkRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers.io
 
-object UsersRepository {
+object UsersRepository : NetworkRepository() {
 
     fun observeUsers(ids: List<String>): Observable<List<User>> {
         return if (ids.isNotEmpty()) {
@@ -68,14 +69,20 @@ object UsersRepository {
 
     fun observeUser(uid: String): Observable<User> {
         return RxFirebaseFirestore.dataChanges(provideUserDocument(uid))
-            .map { it.value().toObject(UserDto::class.java) }
+            .map { value ->
+                value.getOrNull()?.toObject(UserDto::class.java)
+                    ?: UserDto(uid = uid, isActive = false)
+            }
             .map { entity -> entity.mapToUser() }
             .subscribeOn(io())
     }
 
     fun getUser(uid: String): Single<User> {
         return RxFirebaseFirestore.data(provideUserDocument(uid))
-            .map { it.value().toObject(UserDto::class.java) }
+            .map { value ->
+                value.getOrNull()?.toObject(UserDto::class.java)
+                    ?: UserDto(uid = uid, isActive = false)
+            }
             .map { entity -> entity.mapToUser() }
             .subscribeOn(io())
     }

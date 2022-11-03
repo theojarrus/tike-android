@@ -40,13 +40,14 @@ class CardAdapterDelegate(private val clickListener: (participantId: String) -> 
                 participantName.text = item.name
                 participantName.isEnabled = enabled
                 removeParticipantButton.isEnabled = enabled
-                when (item.hasAccess) {
-                    true -> participantAvatar.loadWithPlaceholder(item.avatar, R.color.blue)
-                    false -> participantAvatar.load(R.drawable.ic_blocked)
-                }
                 when (enabled) {
                     true -> removeParticipantButton.setOnClickListener { clickListener(item.uid) }
                     else -> removeParticipantButton.setOnClickListener(null)
+                }
+                when {
+                    item.avatar != null && item.hasAccess -> avatar.loadWithPlaceholder(item.avatar, R.color.blue)
+                    item.avatar != null && !item.hasAccess -> avatar.load(R.drawable.ic_blocked)
+                    else -> avatar.load(R.drawable.ic_deleted)
                 }
             }
         }

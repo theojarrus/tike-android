@@ -9,6 +9,7 @@
         android:id="@+id/emptyImageLayout"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        app:cardBackgroundColor="?attr/primaryBackgroundColor"
         app:cardCornerRadius="200dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toTopOf="@id/emptyTitle"
@@ -23,8 +24,7 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:contentDescription="@string/no_events"
-            android:scaleType="centerCrop"
-            android:src="?attr/primaryBackgroundColor" />
+            android:scaleType="centerCrop" />
 
     </com.google.android.material.card.MaterialCardView>
 

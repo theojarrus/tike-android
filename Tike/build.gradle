@@ -6,6 +6,7 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_serialization"
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -41,9 +42,14 @@ android {
 }
 
 dependencies {
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_reflect"
+
     // Android
     implementation "androidx.core:core-ktx:$android_core"
     implementation "androidx.appcompat:appcompat:$android_appcompat"
+    implementation "androidx.lifecycle:lifecycle-process:$android_lifecycle"
     implementation "com.google.android.material:material:$android_material"
     implementation "androidx.constraintlayout:constraintlayout:$android_constraint"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$android_swipe_refresh"
@@ -71,6 +77,10 @@ dependencies {
     // Firebase
     implementation "com.google.firebase:firebase-auth-ktx:$firebase_auth"
     implementation "com.google.firebase:firebase-firestore-ktx:$firebase_store"
+    implementation "com.google.firebase:firebase-database-ktx:$firebase_database"
+    implementation "com.google.firebase:firebase-config-ktx:$firebase_config"
+    implementation "com.google.firebase:firebase-analytics-ktx:$firebase_analytics"
+    implementation "com.google.firebase:firebase-crashlytics-ktx:$firebase_crash_analytics"
 
     // RxFirebase
     implementation "com.androidhuman.rxfirebase2:firebase-core:$rx_firebase_core"

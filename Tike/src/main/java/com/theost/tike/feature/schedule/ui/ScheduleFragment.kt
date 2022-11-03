@@ -1,186 +1,178 @@
 package com.theost.tike.feature.schedule.ui
 
-import android.animation.LayoutTransition
-import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.M
-import android.os.Bundle
+import android.animation.LayoutTransition.CHANGING
 import android.text.style.TextAppearanceSpan
 import android.view.View
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.view.isGone
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.transition.TransitionManager.beginDelayedTransition
-import androidx.transition.TransitionManager.endTransitions
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.CalendarDay.today
 import com.prolificinteractive.materialcalendarview.CalendarMode.MONTHS
 import com.prolificinteractive.materialcalendarview.CalendarMode.WEEKS
 import com.theost.tike.R
-import com.theost.tike.common.extension.fazy
-import com.theost.tike.common.pager.OnPageChangeCallback
+import com.theost.tike.common.extension.Locale.RU
+import com.theost.tike.common.extension.registerOnPageChangeCallback
+import com.theost.tike.common.extension.setSingleOnItemClickListener
+import com.theost.tike.common.extension.updateDecorator
 import com.theost.tike.common.pager.PageNumerator
 import com.theost.tike.common.util.DateUtils.formatMonthYear
+import com.theost.tike.common.util.DateUtils.subtractEpochDay
 import com.theost.tike.common.util.ResUtils.getAttrColor
 import com.theost.tike.common.util.ResUtils.getWeekDays
-import com.theost.tike.common.util.ThemeUtils.isDarkTheme
+import com.theost.tike.core.model.StateStatus.Initial
+import com.theost.tike.core.model.StateViews
+import com.theost.tike.core.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentScheduleBinding
-import com.theost.tike.feature.schedule.presentation.CalendarViewModel
+import com.theost.tike.domain.model.core.Dates
+import com.theost.tike.feature.day.ui.recycler.WeekDaysAdapter
+import com.theost.tike.feature.day.ui.recycler.decorator.DayDecorator
+import com.theost.tike.feature.day.ui.recycler.decorator.EventDecorator
+import com.theost.tike.feature.day.ui.recycler.decorator.TodayDecorator
+import com.theost.tike.feature.schedule.presentation.ScheduleState
 import com.theost.tike.feature.schedule.presentation.ScheduleViewModel
-import com.theost.tike.feature.schedule.ui.pager.DayPageAdapter
-import com.theost.tike.feature.schedule.ui.recycler.WeekDaysAdapter
-import com.theost.tike.feature.schedule.ui.recycler.decorator.DayDecorator
-import com.theost.tike.feature.schedule.ui.recycler.decorator.EventDecorator
-import com.theost.tike.feature.schedule.ui.recycler.decorator.TodayDecorator
+import com.theost.tike.feature.schedule.ui.pager.SchedulePageAdapter
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDate.now
 import java.util.*
-import java.util.Locale.getDefault
 
-class ScheduleFragment : Fragment(R.layout.fragment_schedule) {
+class ScheduleFragment : BaseStateFragment<ScheduleState, ScheduleViewModel>(
+    R.layout.fragment_schedule
+) {
 
-    private var todayDate: LocalDate = LocalDate.now()
+    private val binding: FragmentScheduleBinding by viewBinding()
 
-    private val pagerNumerator: PageNumerator = PageNumerator { changeDay(it) }
-    private lateinit var dayAdapter: DayPageAdapter
-
-    private val eventDecorator: EventDecorator by fazy {
+    private lateinit var pageAdapter: SchedulePageAdapter
+    private val pagerNumerator: PageNumerator = PageNumerator { changeDay(getDay(it)) }
+    private val eventDecorator: EventDecorator by lazy {
         EventDecorator(getAttrColor(requireContext(), R.attr.colorPrimary))
     }
 
-    private val calendarViewModel: CalendarViewModel by activityViewModels()
-    private val viewModel: ScheduleViewModel by viewModels()
-    private val binding: FragmentScheduleBinding by viewBinding()
+    override val viewModel: ScheduleViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override val isHandlingState: Boolean = false
+    override val isRefreshingErrorOnly: Boolean = true
+
+    private val todayDate: LocalDate?
+        get() = viewModel.state.value?.today
+
+    override fun setupView() = with(binding) {
         setupConfig()
         setupToolbar()
         setupCalendar()
-        setupAdapter()
         setupPager()
-
-        viewModel.currentPosition.observe(viewLifecycleOwner) { updatePagerDay(it) }
-        viewModel.currentDay.observe(viewLifecycleOwner) { updateCalendarDay(it) }
-        calendarViewModel.pendingDate.observe(viewLifecycleOwner) { pendingDate ->
-            pendingDate?.let {
-                changeDay(CalendarDay.from(it))
-                calendarViewModel.setPendingDate(null)
-            }
-        }
-
-        viewModel.events.observe(viewLifecycleOwner) { dates ->
-            binding.calendarView.removeDecorator(eventDecorator)
-            eventDecorator.dates = dates
-            binding.calendarView.addDecorator(eventDecorator)
-        }
-
-        viewModel.init(dayAdapter.todayPosition)
     }
 
     private fun setupConfig() {
-        Locale.setDefault(Locale("ru"))
-        binding.root.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        Locale.setDefault(RU)
+        binding.root.layoutTransition.enableTransitionType(CHANGING)
     }
 
-    private fun setupToolbar() {
-        with(binding.toolbar) {
-            when (isDarkTheme(requireContext())) {
-                true -> menu.findItem(R.id.menuTodayDark).isVisible = true
-                false -> menu.findItem(R.id.menuTodayLight).isVisible = true
-            }
-            setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.menuTodayDark -> viewModel.setToday(dayAdapter.todayPosition)
-                    R.id.menuTodayLight -> viewModel.setToday(dayAdapter.todayPosition)
-                    R.id.menuCalendar -> switchCalendarMode()
-                }
-                true
+    private fun setupToolbar() = with(binding.toolbar) {
+        setSingleOnItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menuToday -> viewModel.changeDay(today(), pageAdapter.todayPosition)
+                R.id.menuCalendar -> switchCalendarMode()
             }
         }
     }
 
-    private fun setupCalendar() {
-        binding.weekDaysView.adapter = WeekDaysAdapter(getWeekDays(requireContext(), getDefault()))
-        with(binding.calendarView) {
-            rootView.findViewById<LinearLayout>(R.id.header).isGone = true
-            addDecorators(
-                DayDecorator(getDrawable(requireContext(), R.drawable.bg_date)),
+    private fun setupCalendar() = with(binding) {
+        weekDaysView.adapter = WeekDaysAdapter(getWeekDays(requireContext(), RU))
+        calendarView.apply {
+            rootView.findViewById<View>(R.id.header).isGone = true
+            setOnDateChangedListener { _, day, _ -> changeDay(day) }
+            addDecorator(DayDecorator(getDrawable(requireContext(), R.drawable.bg_date)))
+        }
+    }
+
+    private fun setupPager() = with(binding.daysPager) {
+        registerOnPageChangeCallback { pagerNumerator.calculatePosition(it) }
+        pageAdapter = SchedulePageAdapter(childFragmentManager, lifecycle)
+        adapter = pageAdapter
+    }
+
+    override fun render(state: ScheduleState) = with(binding) {
+        renderToolbar(state)
+        renderInitial(state)
+        renderCalendar(state)
+        renderPager(state)
+        renderDates(state)
+    }
+
+    private fun renderToolbar(state: ScheduleState) = with(binding.toolbar) {
+        title = formatMonthYear(state.day.month, state.day.year)
+    }
+
+    private fun renderInitial(state: ScheduleState) = with(binding.calendarView) {
+        if (pageAdapter.todayDay != state.today) {
+            pageAdapter.todayDay = state.today
+            addDecorator(
                 TodayDecorator(
                     TextAppearanceSpan(requireContext(), R.style.Theme_Tike_Date_Today),
-                    todayDate
+                    state.today
                 )
             )
-            setOnDateChangedListener { _, date, _ ->
-                changeDay(date)
-                updateToolbarDate()
-            }
         }
     }
 
-    private fun setupAdapter() {
-        with(DayPageAdapter(childFragmentManager, lifecycle, todayDate)) {
-            binding.daysPager.adapter = this
-            dayAdapter = this
+    private fun renderCalendar(state: ScheduleState) = with(binding.calendarView) {
+        if (selectedDate != state.day) {
+            currentDate = state.day
+            selectedDate = state.day
         }
     }
 
-    private fun setupPager() {
-        with(binding.daysPager) {
-            registerOnPageChangeCallback(OnPageChangeCallback { positionOffset ->
-                pagerNumerator.calculatePosition(positionOffset)
-            })
+    private fun renderPager(state: ScheduleState) = with(binding.daysPager) {
+        if (pagerNumerator.position != state.position) {
+            pagerNumerator.position = state.position
+            setCurrentItem(state.position, false)
         }
     }
 
-    private fun switchCalendarMode() {
-        beginDelayedTransition(binding.calendarView)
-        if (SDK_INT >= M) endTransitions(binding.toolbar)
-        when (binding.calendarView.calendarMode ?: MONTHS) {
-            WEEKS -> binding.calendarView.state().edit().setCalendarDisplayMode(MONTHS).commit()
-            MONTHS -> binding.calendarView.state().edit().setCalendarDisplayMode(WEEKS).commit()
-        }
-    }
-
-    private fun updateToolbarDate() {
-        with(binding) {
-            calendarView.selectedDate?.let { toolbar.title = formatMonthYear(it.month, it.year) }
-        }
-    }
-
-    private fun updatePagerDay(position: Int) {
-        if (pagerNumerator.position != position) {
-            pagerNumerator.position = position
-            binding.daysPager.setCurrentItem(position, false)
-        }
-    }
-
-    private fun updateCalendarDay(day: CalendarDay) {
-        binding.calendarView.currentDate = day
-        binding.calendarView.selectedDate = day
-        updateToolbarDate()
+    private fun renderDates(state: ScheduleState) = with(binding.calendarView) {
+        updateDecorator(eventDecorator) { it.dates = state.dates }
     }
 
     private fun changeDay(day: CalendarDay) {
-        with(day.date.toEpochDay() - todayDate.toEpochDay() + dayAdapter.todayPosition) {
-            when {
-                this < 0 -> changeDay(0)
-                this > dayAdapter.itemCount -> changeDay(dayAdapter.itemCount)
-                else -> viewModel.updateCurrentDay(day, this.toInt())
-            }
+        val position = subtractEpochDay(day.date, todayDate).toInt() + pageAdapter.todayPosition
+        val itemCount = pageAdapter.itemCount
+        when {
+            position < 0 -> viewModel.changeDay(getDay(0), position)
+            position > itemCount -> viewModel.changeDay(getDay(itemCount), position)
+            else -> viewModel.changeDay(day, position)
         }
     }
 
-    private fun changeDay(position: Int) {
-        viewModel.updateCurrentDay(
-            CalendarDay.from(todayDate.plusDays((position - dayAdapter.todayPosition).toLong())),
-            position
-        )
+    private fun getDay(position: Int): CalendarDay {
+        val day = todayDate?.plusDays((position - pageAdapter.todayPosition).toLong()) ?: now()
+        return CalendarDay.from(day)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.daysPager.adapter = null
+    private fun switchCalendarMode() = with(binding.calendarView) {
+        beginDelayedTransition(this)
+        when (calendarMode) {
+            WEEKS -> state().edit().setCalendarDisplayMode(MONTHS).commit()
+            MONTHS -> state().edit().setCalendarDisplayMode(WEEKS).commit()
+            else -> state().edit().setCalendarDisplayMode(WEEKS).commit()
+        }
+    }
+
+    override val stateViews: StateViews
+        get() = StateViews()
+
+    override val initialState: ScheduleState
+        get() = ScheduleState(
+            status = Initial,
+            dates = Dates(),
+            today = now(),
+            day = today(),
+            position = pageAdapter.todayPosition
+        )
+
+    override val initialAction: ScheduleViewModel.() -> Unit = {
+        observeDates()
     }
 }

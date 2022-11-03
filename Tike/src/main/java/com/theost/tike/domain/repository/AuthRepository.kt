@@ -16,14 +16,14 @@ import com.theost.tike.domain.model.multi.AuthStatus.*
 import com.theost.tike.domain.model.multi.ExistStatus
 import com.theost.tike.domain.model.multi.ExistStatus.Exist
 import com.theost.tike.domain.model.multi.ExistStatus.NotFound
-import com.theost.tike.domain.util.RxFirebaseAuthUser
+import com.theost.tike.domain.widget.RxFirebaseAuthUser
+import com.theost.tike.network.model.core.NetworkRepository
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-object AuthRepository {
+object AuthRepository : NetworkRepository() {
 
     fun signIn(credential: AuthCredential): Single<FirebaseUser> {
         return RxFirebaseAuth.signInWithCredential(Firebase.auth, credential)
@@ -43,8 +43,9 @@ object AuthRepository {
         }
     }
 
-    fun getCurrentUser(): Maybe<FirebaseUser> {
-        return RxFirebaseAuth.getCurrentUser(Firebase.auth).subscribeOn(Schedulers.io())
+    fun getActualUser(): Single<FirebaseUser> {
+        return RxFirebaseAuth.getCurrentUser(Firebase.auth).toSingle()
+            .subscribeOn(Schedulers.io())
     }
 
     fun getUserAuthStatus(): Single<AuthStatus> {

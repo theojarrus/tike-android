@@ -17,7 +17,6 @@ import com.theost.tike.core.model.StateStatus.Success
 import com.theost.tike.core.model.StateViews
 import com.theost.tike.core.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentSignUpBinding
-import com.theost.tike.domain.model.core.User
 import com.theost.tike.domain.model.multi.AuthStatus.SigningUp
 import com.theost.tike.feature.auth.presentation.AuthViewModel
 import com.theost.tike.feature.auth.presentation.SignUpState
@@ -33,12 +32,12 @@ class SignUpFragment : BaseStateFragment<SignUpState, SignUpViewModel>(R.layout.
     override val viewModel: SignUpViewModel by viewModels()
 
     override val isHandlingState: Boolean = true
-    override val isLoadingEndless: Boolean = true
     override val isRefreshingErrorOnly: Boolean = true
+    override val isLoadingEndless: Boolean = true
 
     private val backPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            viewModel.signOut()
+            authViewModel.signOut()
         }
     }
 
@@ -73,9 +72,9 @@ class SignUpFragment : BaseStateFragment<SignUpState, SignUpViewModel>(R.layout.
 
     override fun render(state: SignUpState) = with(binding) {
         if (state.status == Success) authViewModel.updateAuthStatus(state.authStatus)
-        if (state.isNameError || !nameInput.hasFocus()) nameInput.changeText(state.user.name)
-        if (state.isNickError || !nickInput.hasFocus()) nickInput.changeText(state.user.nick)
-        nameLayout.error = if (state.isNameError) getString(R.string.error_name_format) else null
+        if (state.isNameError || !nameInput.hasFocus()) nameInput.changeText(state.user?.name)
+        if (state.isNickError || !nickInput.hasFocus()) nickInput.changeText(state.user?.nick)
+        nameLayout.error = getString(R.string.error_name_format).takeIf { state.isNameError }
         nickLayout.error = getNickError(state.isUserExist, state.isNickError)
         lifestylesTitle.isGone = state.lifestyles.isEmpty()
         adapter.submitList(state.lifestyles)
@@ -94,19 +93,7 @@ class SignUpFragment : BaseStateFragment<SignUpState, SignUpViewModel>(R.layout.
         get() = SignUpState(
             status = Initial,
             authStatus = SigningUp,
-            user = User(
-                uid = "",
-                name = "",
-                nick = "",
-                email = "",
-                phone = "",
-                avatar = "",
-                friends = emptyList(),
-                requesting = emptyList(),
-                pending = emptyList(),
-                blocked = emptyList(),
-                lifestyles = emptyList()
-            ),
+            user = null,
             lifestyles = emptyList(),
             userLifestyles = emptyList(),
             isUserExist = false,

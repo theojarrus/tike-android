@@ -9,7 +9,9 @@ import com.theost.tike.R
 import com.theost.tike.common.util.AuthUtils.getCredential
 import com.theost.tike.common.util.AuthUtils.getSignInIntent
 import com.theost.tike.common.util.AuthUtils.getSignedInAccountFromIntent
-import com.theost.tike.core.model.StateStatus.*
+import com.theost.tike.common.util.DisplayUtils.showError
+import com.theost.tike.core.model.StateStatus.Initial
+import com.theost.tike.core.model.StateStatus.Success
 import com.theost.tike.core.model.StateViews
 import com.theost.tike.core.ui.BaseStateFragment
 import com.theost.tike.databinding.FragmentSignInBinding
@@ -27,13 +29,13 @@ class SignInFragment : BaseStateFragment<SignInState, SignInViewModel>(R.layout.
     override val viewModel: SignInViewModel by viewModels()
 
     override val isHandlingState: Boolean = true
-    override val isLoadingEndless: Boolean = true
     override val isRefreshingErrorOnly: Boolean = true
+    override val isLoadingEndless: Boolean = true
 
     private val authHandler = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) getSignedInAccountFromIntent(result)?.idToken
             ?.let { viewModel.signIn(getCredential(it)) }
-            ?: handleStatus(Error)
+            ?: showError(requireContext(), R.string.error_auth)
     }
 
     override fun setupView() = with(binding) {

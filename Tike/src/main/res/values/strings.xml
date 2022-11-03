@@ -5,7 +5,7 @@
     <string name="creation">Создание</string>
     <string name="dialogs">Диалоги</string>
     <string name="profile">Профиль</string>
-    <string name="settings">Настройки</string>
+    <string name="preferences">Настройки</string>
     <string name="friends">Друзья</string>
     <string name="people">Люди</string>
     <string name="participants">Участники</string>
@@ -93,6 +93,9 @@
     <string name="blocked">Пользователь заблокирован</string>
     <string name="access_denied">Доступ ограничен</string>
 
+    <string name="no_user">Пользователь удалён</string>
+    <string name="no_nick">\@deleted</string>
+
     <string name="confirmation">Подтверждение</string>
     <string name="ask_event_join">Присоединиться к событию?</string>
     <string name="ask_event_delete">Вы уверены, что хотите удалить событие?</string>
@@ -143,5 +146,11 @@
     <string name="event_pending">Ожидаются</string>
     <string name="event_requesting">Запросили</string>
 
-
+    <string name="no_network_connection">Нет интернет-соединения</string>
+    
+    <string name="update_app">Обновите приложение</string>
+    <string name="update_app_message">Текущая версия приложения не поддерживается. Вы можете продолжить пользоваться им, однако взаимодействие с сервером будет приостановлено</string>
+    <string name="update">Обновить</string>
+    <string name="not_now">Не сейчас</string>
+    <string name="app_releases">https://github.com/theo-jedi/tike-android/releases</string>
 </resources>

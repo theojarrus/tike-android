@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu_profile"
+        app:title="@string/profile"
+        app:titleTextAppearance="@style/Theme.Tike.Toolbar.Title" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/profileAvatarLayout"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@id/profileName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/profileAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@color/white"
+            android:contentDescription="@string/profile"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/profileShareButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/profileName"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@id/profileNick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileAvatarLayout"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/hint_name" />
+
+    <TextView
+        android:id="@+id/profileNick"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toTopOf="@id/profileCommunicateButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileName"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/hint_nick" />
+
+    <LinearLayout
+        android:id="@+id/profileCommunicateButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/profileActionsButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileNick"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/messageProfileButton"
+            style="@style/Theme.Tike.BlueButton.Action.Filled"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="2dp"
+            app:icon="@drawable/ic_message" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileAddFriendRequestButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/add_friend"
+            app:icon="@drawable/ic_friend_add" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileRemoveFriendButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/friend"
+            app:icon="@drawable/ic_friend" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileAddFriendButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/accept_request"
+            android:visibility="gone"
+            app:icon="@drawable/ic_requested" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profilePendingFriendButton"
+            style="@style/Theme.Tike.BlueButton.Action.Texted"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/request_sent"
+            app:icon="@drawable/ic_pending" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profileActionsButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileShareButton"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_share" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profileQrCodeButton"
+            style="@style/Theme.Tike.BlueButton.Action.Outlined"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:icon="@drawable/ic_qr_code" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/errorView"
+        style="@style/Theme.Tike.InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_network"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/blockedView"
+        style="@style/Theme.Tike.InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/blocked"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileNick" />
+
+    <TextView
+        android:id="@+id/accessView"
+        style="@style/Theme.Tike.InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/access_denied"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blockedView" />
+
+    <include
+        android:id="@+id/loadingView"
+        layout="@layout/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/profileAvatarLayout"
+        app:layout_constraintEnd_toEndOf="@id/profileAvatarLayout"
+        app:layout_constraintStart_toStartOf="@id/profileAvatarLayout"
+        app:layout_constraintTop_toTopOf="@id/profileAvatarLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

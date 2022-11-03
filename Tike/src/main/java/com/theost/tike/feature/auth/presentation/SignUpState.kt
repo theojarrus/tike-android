@@ -9,7 +9,7 @@ import com.theost.tike.domain.model.multi.AuthStatus
 data class SignUpState(
     override val status: StateStatus,
     val authStatus: AuthStatus,
-    val user: User,
+    val user: User?,
     val lifestyles: List<LifestyleUi>,
     val userLifestyles: List<String>,
     val isUserExist: Boolean,

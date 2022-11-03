@@ -4,19 +4,22 @@ import android.view.LayoutInflater.from
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
+import com.theost.tike.R
 import com.theost.tike.common.extension.load
 import com.theost.tike.common.recycler.delegate.AdapterDelegate
 import com.theost.tike.common.recycler.delegate.DelegateItem
 import com.theost.tike.databinding.ItemFriendBinding
+import com.theost.tike.domain.model.multi.Direction.Out
 import com.theost.tike.domain.model.multi.FriendAction
 import com.theost.tike.domain.model.multi.FriendAction.*
-import com.theost.tike.domain.model.multi.FriendMode.PENDING
 
-class FriendAdapterDelegate(private val clickListener: (FriendAction) -> Unit) : AdapterDelegate {
+class FriendAdapterDelegate(
+    private val actionListener: (FriendAction) -> Unit
+) : AdapterDelegate {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemFriendBinding.inflate(from(parent.context), parent, false)
-        return ViewHolder(binding, clickListener)
+        return ViewHolder(binding, actionListener)
     }
 
     override fun onBindViewHolder(
@@ -32,20 +35,26 @@ class FriendAdapterDelegate(private val clickListener: (FriendAction) -> Unit) :
 
     class ViewHolder(
         private val binding: ItemFriendBinding,
-        private val clickListener: (FriendAction) -> Unit
+        private val actionListener: (FriendAction) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: FriendUi) {
             with(binding) {
-                userName.text = item.name
-                userNick.text = item.nick
-                userAvatar.load(item.avatar)
-                acceptButton.isGone = item.mode != PENDING
-                blockButton.isGone = item.mode != PENDING
-                acceptButton.setOnClickListener { clickListener(Accept(item.uid)) }
-                rejectButton.setOnClickListener { clickListener(Reject(item.uid)) }
-                blockButton.setOnClickListener { clickListener(Block(item.uid)) }
-                root.setOnClickListener { clickListener(Info(item.uid)) }
+                root.setOnClickListener { actionListener(Info(item.uid)) }
+                block.setOnClickListener { actionListener(Block(item.uid)) }
+                accept.setOnClickListener { actionListener(Accept(item.uid)) }
+                decline.setOnClickListener {
+                    actionListener(Decline(item.uid, item.direction))
+                }
+                accept.isGone = item.direction is Out
+                block.isGone = item.direction is Out
+                name.text = item.name ?: itemView.context.getString(R.string.no_user)
+                nick.text = item.nick ?: itemView.context.getString(R.string.no_nick)
+                when {
+                    item.avatar != null && item.hasAccess -> avatar.load(item.avatar)
+                    item.avatar != null && !item.hasAccess -> avatar.load(R.drawable.ic_blocked)
+                    else ->avatar.load(R.drawable.ic_deleted)
+                }
             }
         }
     }

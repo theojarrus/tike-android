@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources.Theme
 import android.util.TypedValue
 import com.theost.tike.R
+import com.theost.tike.common.extension.Locale.RU
 import java.util.*
 
 object ResUtils {
@@ -16,7 +17,7 @@ object ResUtils {
     }
 
     fun getWeekDays(context: Context, locale: Locale): List<String>  {
-        val id = if (locale == Locale("ru")) R.array.week_days_ru else R.array.week_days_en
+        val id = if (locale == RU) R.array.week_days_ru else R.array.week_days_en
         return context.resources.getStringArray(id).toList()
     }
 }

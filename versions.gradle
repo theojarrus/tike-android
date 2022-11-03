@@ -5,13 +5,16 @@ ext {
     gradle_gms = "4.3.14"
     gradle_navigation_args = "2.5.2"
     gradle_plugin_maps = "2.0.1"
+    gradle_crash_analytics = "2.9.2"
 
     // Kotlin
+    kotlin_reflect = "1.7.10"
     kotlin_serialization = "1.5.31"
 
     // Android
     android_core = "1.9.0"
     android_appcompat = "1.5.1"
+    android_lifecycle = "2.5.1"
     android_material = "1.6.1"
     android_constraint = "2.1.4"
     android_swipe_refresh = "1.1.0"
@@ -38,6 +41,10 @@ ext {
     // Firebase
     firebase_auth = "21.0.8"
     firebase_store = "24.3.1"
+    firebase_database = "20.0.6"
+    firebase_config = "21.1.2"
+    firebase_analytics = "21.1.1"
+    firebase_crash_analytics = "18.2.13"
 
     // RxFirebase
     rx_firebase_core = "16.0.5.0"

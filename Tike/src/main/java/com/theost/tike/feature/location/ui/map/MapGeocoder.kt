@@ -3,16 +3,16 @@ package com.theost.tike.feature.location.ui.map
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import com.theost.tike.common.extension.Locale.RU
 import com.theost.tike.common.extension.mapToLocation
 import com.theost.tike.domain.model.core.Location
-import com.theost.tike.domain.util.RxGeocoder
+import com.theost.tike.domain.widget.RxGeocoder
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers.newThread
-import java.util.*
 
 class MapGeocoder(val context: Context) {
 
-    private val geocoder = Geocoder(context, Locale("ru"))
+    private val geocoder = Geocoder(context, RU)
 
     fun getLocation(latitude: Double, longitude: Double): Single<Location> {
         return RxGeocoder.getFromLocation(geocoder, latitude, longitude, MAX_RESULTS_FROM_LOCATION)

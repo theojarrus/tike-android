@@ -1,6 +1,6 @@
 package com.theost.tike.domain.model.core
 
-import com.theost.tike.domain.model.multi.EventType
+import com.theost.tike.domain.model.multi.EventTypeOld
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
@@ -17,8 +17,6 @@ data class Event(
     val beginTime: LocalTime,
     val endTime: LocalTime,
     val repeatMode: String,
-    val locationAddress: String?,
-    val locationLatitude: Double?,
-    val locationLongitude: Double?,
-    val type: EventType
+    val location: Location?,
+    val type: EventTypeOld
 )

@@ -11,7 +11,7 @@
         android:label="@string/schedule"
         tools:layout="@layout/fragment_schedule">
         <action
-            android:id="@+id/action_scheduleFragment_to_infoFragment"
+            android:id="@+id/action_schedule_to_info"
             app:destination="@id/infoFragment" />
     </fragment>
 
@@ -21,25 +21,28 @@
         android:label="@string/inbox"
         tools:layout="@layout/fragment_inbox">
         <action
-            android:id="@+id/action_inboxFragment_to_profileFragment"
+            android:id="@+id/action_inbox_to_profile"
             app:destination="@id/profileFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
         <action
-            android:id="@+id/action_inboxFragment_to_infoFragment"
+            android:id="@+id/action_inbox_to_info"
             app:destination="@id/infoFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/addingFragment"
-        android:name="com.theost.tike.feature.creation.main.ui.AddingFragment"
+        android:name="com.theost.tike.feature.creation.ui.AddingFragment"
         android:label="@string/creation"
         tools:layout="@layout/fragment_adding">
         <action
             android:id="@+id/action_addingFragment_to_infoFragment"
             app:destination="@id/infoFragment" />
+        <action
+            android:id="@+id/action_addingFragment_to_locationFragment"
+            app:destination="@id/locationFragment" />
         <action
             android:id="@+id/action_addingFragment_to_participantsFragment"
             app:destination="@id/participantsFragment"
@@ -54,24 +57,17 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
-        <action
-            android:id="@+id/action_addingFragment_to_locationFragment"
-            app:destination="@id/locationFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
         android:id="@+id/participantsFragment"
-        android:name="com.theost.tike.feature.creation.adding.members.ui.ParticipantsFragment"
+        android:name="com.theost.tike.feature.members.ui.ParticipantsFragment"
         android:label="@string/participants"
         tools:layout="@layout/fragment_participants" />
 
     <fragment
         android:id="@+id/creatorFragment"
-        android:name="com.theost.tike.feature.creation.joining.creator.ui.CreatorFragment"
+        android:name="com.theost.tike.feature.creator.ui.CreatorFragment"
         android:label="@string/creator"
         tools:layout="@layout/fragment_creator" />
 
@@ -94,22 +90,27 @@
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.theost.tike.feature.profile.ui.AccountFragment"
-        android:label="@string/account"
-        tools:layout="@layout/fragment_account">
+        android:name="com.theost.tike.feature.profile.ui.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="uid"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_accountFragment_to_qrCodeFragment"
+            android:id="@+id/action_profile_to_qr"
             app:destination="@id/qrCodeFragment" />
         <action
-            android:id="@+id/action_accountFragment_to_friendsFragment"
+            android:id="@+id/action_profile_to_friends"
             app:destination="@id/friendsFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
         <action
-            android:id="@+id/action_accountFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
+            android:id="@+id/action_profile_to_preferences"
+            app:destination="@id/preferencesFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -123,10 +124,26 @@
         tools:layout="@layout/fragment_profile">
         <argument
             android:name="uid"
-            app:argType="string" />
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_profileFragment_to_qrCodeFragment"
+            android:id="@+id/action_profile_to_qr"
             app:destination="@id/qrCodeFragment" />
+        <action
+            android:id="@+id/action_profile_to_friends"
+            app:destination="@id/friendsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_profile_to_preferences"
+            app:destination="@id/preferencesFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -144,10 +161,10 @@
         <action
             android:id="@+id/action_friends_to_profile"
             app:destination="@id/profileFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -158,22 +175,24 @@
         <action
             android:id="@+id/action_people_to_profile"
             app:destination="@id/profileFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.theost.tike.feature.preferences.ui.SettingsFragment"
-        android:label="@string/settings"
-        tools:layout="@layout/fragment_settings">
+        android:id="@+id/preferencesFragment"
+        android:name="com.theost.tike.feature.preferences.PreferencesFragment"
+        android:label="@string/preferences"
+        tools:layout="@layout/fragment_preferences">
         <argument
             android:name="id"
-            app:argType="string" />
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_settingsFragment_to_blacklistFragment"
+            android:id="@+id/action_preferences_to_blacklist"
             app:destination="@id/blacklistFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
@@ -189,17 +208,17 @@
         <action
             android:id="@+id/action_blacklist_to_profile"
             app:destination="@id/profileFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <dialog
         android:id="@+id/qrCodeFragment"
-        android:name="com.theost.tike.feature.qr.QrCodeFragment"
+        android:name="com.theost.tike.feature.qr.QrFragment"
         android:label="@string/qr_code"
-        tools:layout="@layout/fragment_qr_code">
+        tools:layout="@layout/fragment_qr">
         <argument
             android:name="content"
             app:argType="string" />
@@ -210,26 +229,26 @@
         android:name="com.theost.tike.feature.info.ui.InfoFragment"
         android:label="@string/participants"
         tools:layout="@layout/fragment_info">
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <argument
-            android:name="creator"
-            app:argType="string" />
         <action
-            android:id="@+id/action_infoFragment_to_profileFragment"
+            android:id="@+id/action_info_to_profile"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
         <action
-            android:id="@+id/action_infoFragment_to_locationFragment"
+            android:id="@+id/action_info_to_location"
             app:destination="@id/locationFragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="creator"
+            app:argType="string" />
     </dialog>
 
 </navigation>

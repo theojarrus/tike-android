@@ -5,6 +5,7 @@ sealed class StateStatus {
     object Error : StateStatus()
     object Loading : StateStatus()
     object Refreshing : StateStatus()
+    object Reloading : StateStatus()
     object Success : StateStatus()
     object Initial : StateStatus()
 
@@ -13,6 +14,10 @@ sealed class StateStatus {
     }
 
     fun getLoadingStatus(): StateStatus {
-        return if (this is Initial) Loading else Refreshing
+        return when (this) {
+            is Initial -> Loading
+            is Error -> Reloading
+            else -> Refreshing
+        }
     }
 }
