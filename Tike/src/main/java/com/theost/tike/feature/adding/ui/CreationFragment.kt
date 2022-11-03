@@ -137,9 +137,9 @@ class CreationFragment : StateFragment(R.layout.fragment_creation) {
     private fun showDatePicker() {
         DatePickerDialog(
             requireContext(),
-            { _, year, month, day -> viewModel.updateEventDate(year, month, day) },
+            { _, year, month, day -> viewModel.updateEventDate(year, month + 1, day) },
             eventDate.year,
-            eventDate.monthValue,
+            eventDate.monthValue - 1,
             eventDate.dayOfMonth
         ).show()
     }
