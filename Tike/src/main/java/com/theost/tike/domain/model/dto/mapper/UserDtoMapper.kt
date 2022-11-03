@@ -19,7 +19,7 @@ class UserDtoMapper : (User) -> UserDto {
             pending = pending,
             blocked = blocked,
             lifestyles = lifestyles.map(Lifestyle::id),
-            isActive = isActive
+            active = isActive
         )
     }
 }

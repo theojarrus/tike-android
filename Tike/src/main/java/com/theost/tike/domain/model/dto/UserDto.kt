@@ -17,7 +17,7 @@ data class UserDto(
     val pending: List<String> = emptyList(),
     val blocked: List<String> = emptyList(),
     val lifestyles: List<String> = emptyList(),
-    val isActive: Boolean = true
+    val active: Boolean = true
 )
 
 fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
@@ -33,6 +33,6 @@ fun UserDto.mapToUser(lifestyles: List<Lifestyle> = emptyList()): User {
         pending = pending,
         blocked = blocked,
         lifestyles = lifestyles,
-        isActive = isActive
+        isActive = active
     )
 }

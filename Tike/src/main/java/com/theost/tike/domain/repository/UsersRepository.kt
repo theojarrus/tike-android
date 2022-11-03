@@ -72,7 +72,7 @@ object UsersRepository : NetworkRepository() {
         return RxFirebaseFirestore.dataChanges(provideUserDocument(uid))
             .map { value ->
                 value.getOrNull()?.toObject(UserDto::class.java)
-                    ?: UserDto(uid = uid, isActive = false)
+                    ?: UserDto(uid = uid, active = false)
             }
             .map { entity -> entity.mapToUser() }
             .subscribeOn(io())
@@ -82,7 +82,7 @@ object UsersRepository : NetworkRepository() {
         return RxFirebaseFirestore.data(provideUserDocument(uid))
             .map { value ->
                 value.getOrNull()?.toObject(UserDto::class.java)
-                    ?: UserDto(uid = uid, isActive = false)
+                    ?: UserDto(uid = uid, active = false)
             }
             .map { entity -> entity.mapToUser() }
             .subscribeOn(io())
