@@ -30,6 +30,16 @@ object FriendsRepository : NetworkRepository() {
                     )
                 )
             )
+        ).andThen(
+            RxFirebaseFirestore.update(
+                provideUsersCollection().document(requesting),
+                mapOf(Pair(UserDto::pending.name, arrayRemove(requested)))
+            )
+        ).andThen(
+            RxFirebaseFirestore.update(
+                provideUsersCollection().document(requested),
+                mapOf(Pair(UserDto::requesting.name, arrayRemove(requesting)))
+            )
         ).subscribeOn(Schedulers.io())
     }
 
@@ -41,6 +51,16 @@ object FriendsRepository : NetworkRepository() {
             RxFirebaseFirestore.update(
                 provideUsersCollection().document(requesting),
                 mapOf(Pair(UserDto::requesting.name, arrayRemove(requested)))
+            )
+        ).andThen(
+            RxFirebaseFirestore.update(
+                provideUsersCollection().document(requesting),
+                mapOf(Pair(UserDto::pending.name, arrayRemove(requested)))
+            )
+        ).andThen(
+            RxFirebaseFirestore.update(
+                provideUsersCollection().document(requested),
+                mapOf(Pair(UserDto::requesting.name, arrayRemove(requesting)))
             )
         ).subscribeOn(Schedulers.io())
     }

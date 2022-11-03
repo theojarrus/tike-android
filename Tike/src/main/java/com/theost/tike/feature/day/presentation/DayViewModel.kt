@@ -11,6 +11,7 @@ import com.theost.tike.domain.model.multi.EventAction
 import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.EventsRepository
 import com.theost.tike.domain.repository.UsersRepository
+import com.theost.tike.feature.actions.EventActionValidator
 import com.theost.tike.feature.actions.UpdateEventInteractor
 import com.theost.tike.feature.day.business.ObserveDayEventsInteractor
 import org.threeten.bp.LocalDate
@@ -19,6 +20,8 @@ class DayViewModel : BaseStateViewModel<DayState>() {
 
     private val eventMapper = EventUiMapper()
     private val userMapper = UserUiMapper()
+
+    private val eventActionValidator = EventActionValidator()
 
     private val observeDayEventsInteractor = ObserveDayEventsInteractor(
         AuthRepository,
@@ -30,7 +33,8 @@ class DayViewModel : BaseStateViewModel<DayState>() {
 
     private val updateEventInteractor = UpdateEventInteractor(
         AuthRepository,
-        EventsRepository
+        EventsRepository,
+        eventActionValidator
     )
 
     fun observeEvents(date: LocalDate?) {

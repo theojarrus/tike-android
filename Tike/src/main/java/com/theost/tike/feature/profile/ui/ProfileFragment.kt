@@ -13,6 +13,7 @@ import com.theost.tike.common.extension.pressBack
 import com.theost.tike.common.recycler.base.BaseAdapter
 import com.theost.tike.common.recycler.element.button.ButtonAdapterDelegate
 import com.theost.tike.common.util.DisplayUtils.showError
+import com.theost.tike.core.model.StateStatus.Error
 import com.theost.tike.core.model.StateStatus.Initial
 import com.theost.tike.core.model.StateViews
 import com.theost.tike.core.ui.BaseStateFragment
@@ -67,8 +68,10 @@ class ProfileFragment : BaseStateFragment<ProfileState, ProfileViewModel>(
 
     override fun render(state: ProfileState): Unit = with(binding) {
         val hasAccess = state.profile?.hasAccess != false
-        name.text = state.profile?.name ?: getString(R.string.no_user)
-        nick.text = state.profile?.nick ?: getString(R.string.no_nick)
+        val isNotActive = state.profile?.isActive == false
+        name.text = state.profile?.name ?: getString(R.string.no_user).takeIf { isNotActive }
+        nick.text = state.profile?.nick ?: getString(R.string.no_nick).takeIf { isNotActive }
+        avatar.isGone = state.status is Error
         accessView.isGone = hasAccess
         blockedView.isGone = state.profile?.isBlocked != true
         actions.isGone = state.profile?.isActive != true || state.profile.isActual == true
@@ -96,7 +99,8 @@ class ProfileFragment : BaseStateFragment<ProfileState, ProfileViewModel>(
         when {
             state.profile?.avatar != null && hasAccess -> avatar.load(state.profile.avatar)
             state.profile?.avatar != null && !hasAccess -> avatar.load(R.drawable.ic_blocked)
-            else -> avatar.load(R.drawable.ic_deleted)
+            isNotActive -> avatar.load(R.drawable.ic_deleted)
+            state.status is Error -> avatar.setImageDrawable(null)
         }
     }
 

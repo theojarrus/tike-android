@@ -73,15 +73,17 @@ class ObserveInboxEventsInteractor(
         type: EventType,
         source: Observable<List<Event>>
     ): Observable<List<EventUi>> {
-        return source.switchMapSingle { events ->
-            if (events.isNotEmpty()) {
-                Single.zip(getInEventsSingles(auid, type, events)) {
-                    it.filterIsInstance<EventUi>()
+        return source
+            .map { events -> events.filter { it.participants.size < it.participantsLimit } }
+            .switchMapSingle { events ->
+                if (events.isNotEmpty()) {
+                    Single.zip(getInEventsSingles(auid, type, events)) {
+                        it.filterIsInstance<EventUi>()
+                    }
+                } else {
+                    Single.just(emptyList())
                 }
-            } else {
-                Single.just(emptyList())
             }
-        }
     }
 
     private fun getInEventsSingles(
@@ -102,15 +104,17 @@ class ObserveInboxEventsInteractor(
         source: Observable<List<Event>>,
         users: KProperty1<Event, List<String>>
     ): Observable<List<EventUi>> {
-        return source.switchMapSingle { events ->
-            if (events.isNotEmpty()) {
-                Single.zip(getOutEventsSingles(auid, type, users, events)) {
-                    buildList { it.filterIsInstance<List<EventUi>>().forEach { addAll(it) } }
+        return source
+            .map { events -> events.filter { it.participants.size < it.participantsLimit } }
+            .switchMapSingle { events ->
+                if (events.isNotEmpty()) {
+                    Single.zip(getOutEventsSingles(auid, type, users, events)) {
+                        buildList { it.filterIsInstance<List<EventUi>>().forEach { addAll(it) } }
+                    }
+                } else {
+                    Single.just(emptyList())
                 }
-            } else {
-                Single.just(emptyList())
             }
-        }
     }
 
     private fun getOutEventsSingles(

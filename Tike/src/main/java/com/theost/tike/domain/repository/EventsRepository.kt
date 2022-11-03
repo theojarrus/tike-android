@@ -3,6 +3,7 @@ package com.theost.tike.domain.repository
 import com.androidhuman.rxfirebase2.firestore.RxFirebaseFirestore
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue.arrayRemove
+import com.google.firebase.firestore.Source.SERVER
 import com.theost.tike.common.extension.append
 import com.theost.tike.common.extension.getOrNull
 import com.theost.tike.domain.api.FirestoreApi.provideProperEventsCollection
@@ -365,6 +366,13 @@ object EventsRepository : NetworkRepository() {
             .subscribeOn(Schedulers.io())
     }
 
+    fun getRemoteEvent(uid: String, id: String): Single<Event> {
+        return RxFirebaseFirestore.data(provideProperEventsCollection(uid).document(id), SERVER)
+            .map { it.value().toObject(EventDto::class.java) }
+            .map { entity -> entity.mapToEvent() }
+            .subscribeOn(Schedulers.io())
+    }
+
     fun deleteProperEvent(uid: String, id: String, participants: List<String>): Completable {
         return Observable.fromIterable(participants).flatMapCompletable {
             RxFirebaseFirestore.delete(provideReferenceEventsCollection(it).document(id))
@@ -378,7 +386,6 @@ object EventsRepository : NetworkRepository() {
         creator: String,
         participantsLimit: Int
     ): Completable {
-        val a = provideReferenceEventsCollection(uid)
         return RxFirebaseFirestore.delete(provideReferenceEventsCollection(uid).document(id))
             .andThen(
                 RxFirebaseFirestore.update(
@@ -417,6 +424,7 @@ object EventsRepository : NetworkRepository() {
                     provideProperEventsCollection(creator).document(id),
                     mapOf(
                         Pair(EventDto::pending.name, arrayRemove(pending)),
+                        Pair(EventDto::participants.name, arrayRemove(pending)),
                         Pair(EventDto::participantsLimit.name, participantsLimit - 1)
                     )
                 )

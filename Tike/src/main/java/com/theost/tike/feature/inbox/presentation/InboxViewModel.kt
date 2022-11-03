@@ -16,6 +16,8 @@ import com.theost.tike.domain.repository.AuthRepository
 import com.theost.tike.domain.repository.EventsRepository
 import com.theost.tike.domain.repository.FriendsRepository
 import com.theost.tike.domain.repository.UsersRepository
+import com.theost.tike.feature.actions.EventActionValidator
+import com.theost.tike.feature.actions.FriendActionValidator
 import com.theost.tike.feature.actions.UpdateEventInteractor
 import com.theost.tike.feature.actions.UpdateFriendInteractor
 import com.theost.tike.feature.inbox.business.ObserveInboxEventsInteractor
@@ -29,6 +31,9 @@ class InboxViewModel : BaseStateViewModel<InboxState>() {
     private val userMapper = UserUiMapper()
     private val eventMapper = EventUiMapper()
     private val inboxMapper = InboxMapper()
+
+    private val eventActionValidator = EventActionValidator()
+    private val friendActionValidator = FriendActionValidator()
 
     private val observeInboxFriendsInteractor = ObserveInboxFriendsInteractor(
         UsersRepository,
@@ -53,12 +58,14 @@ class InboxViewModel : BaseStateViewModel<InboxState>() {
     private val updateFriendInteractor = UpdateFriendInteractor(
         AuthRepository,
         UsersRepository,
-        FriendsRepository
+        FriendsRepository,
+        friendActionValidator
     )
 
     private val updateEventInteractor = UpdateEventInteractor(
         AuthRepository,
-        EventsRepository
+        EventsRepository,
+        eventActionValidator
     )
 
     fun observeInbox() {

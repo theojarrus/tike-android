@@ -19,9 +19,13 @@ abstract class BaseRxViewModel : ViewModel() {
         switchDisposable.add(block())
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    protected fun dispose() {
         compositeDisposable.clear()
         switchDisposable.clear()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispose()
     }
 }

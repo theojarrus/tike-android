@@ -16,13 +16,15 @@ import io.reactivex.Completable
 
 class UpdateEventInteractor(
     private val authRepository: AuthRepository,
-    private val eventsRepository: EventsRepository
+    private val eventsRepository: EventsRepository,
+    private val eventActionValidator: EventActionValidator
 ) {
 
     operator fun invoke(eventAction: EventAction): Completable {
         return authRepository.getActualUser()
             .flatMapCompletable { firebaseUser ->
-                eventsRepository.getEvent(eventAction.creator, eventAction.id)
+                eventsRepository.getRemoteEvent(eventAction.creator, eventAction.id)
+                    .flatMap { event -> eventActionValidator(eventAction, event, firebaseUser.uid) }
                     .flatMapCompletable { actionEvent ->
                         when (eventAction) {
                             is Accept -> getAcceptEventCompletable(

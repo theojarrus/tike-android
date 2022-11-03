@@ -2,6 +2,7 @@ package com.theost.tike.domain.repository
 
 import com.androidhuman.rxfirebase2.firestore.RxFirebaseFirestore
 import com.google.firebase.firestore.FieldPath.documentId
+import com.google.firebase.firestore.Source.SERVER
 import com.theost.tike.common.exception.ExistException
 import com.theost.tike.common.extension.getOrNull
 import com.theost.tike.domain.api.FirestoreApi.provideUserDocument
@@ -83,6 +84,13 @@ object UsersRepository : NetworkRepository() {
                 value.getOrNull()?.toObject(UserDto::class.java)
                     ?: UserDto(uid = uid, isActive = false)
             }
+            .map { entity -> entity.mapToUser() }
+            .subscribeOn(io())
+    }
+
+    fun getRemoteUser(uid: String): Single<User> {
+        return RxFirebaseFirestore.data(provideUserDocument(uid), SERVER)
+            .map { value -> value.value().toObject(UserDto::class.java) }
             .map { entity -> entity.mapToUser() }
             .subscribeOn(io())
     }

@@ -24,36 +24,39 @@ class InboxMapper : (
         pendingOutEvents: InboxList<EventUi>,
         requestingOutEvents: InboxList<EventUi>
     ): InboxList<DelegateItem> {
-        return if (
-            pendingFriends.value != null
-            && requestingFriends.value != null
-            && pendingInEvents.value != null
-            && requestingInEvents.value != null
-            && pendingOutEvents.value != null
-            && requestingOutEvents.value != null
-        ) {
+        val inboxLists = listOf(
+            pendingFriends,
+            requestingFriends,
+            pendingInEvents,
+            requestingInEvents,
+            pendingOutEvents,
+            requestingOutEvents
+        ).map(InboxList<out DelegateItem?>::value)
+        val isNotNull = { !inboxLists.contains(null) }
+        val isNotEmpty = { inboxLists.filterNot(List<DelegateItem?>?::isNullOrEmpty).isNotEmpty() }
+        return if (isNotNull() || isNotEmpty()) {
             val items = buildList {
-                if (pendingFriends.value.isNotEmpty()) {
+                if (!pendingFriends.value.isNullOrEmpty()) {
                     add(TitleUi(R.string.pending_friends))
                     addAll(pendingFriends.value)
                 }
-                if (pendingInEvents.value.isNotEmpty()) {
+                if (!pendingInEvents.value.isNullOrEmpty()) {
                     add(TitleUi(R.string.pending_in_events))
                     addAll(pendingInEvents.value)
                 }
-                if (requestingInEvents.value.isNotEmpty()) {
+                if (!requestingInEvents.value.isNullOrEmpty()) {
                     add(TitleUi(R.string.requesting_in_events))
                     addAll(requestingInEvents.value)
                 }
-                if (requestingFriends.value.isNotEmpty()) {
+                if (!requestingFriends.value.isNullOrEmpty()) {
                     add(TitleUi(R.string.requesting_friends))
                     addAll(requestingFriends.value)
                 }
-                if (pendingOutEvents.value.isNotEmpty()) {
+                if (!pendingOutEvents.value.isNullOrEmpty()) {
                     add(TitleUi(R.string.pending_out_events))
                     addAll(pendingOutEvents.value)
                 }
-                if (requestingOutEvents.value.isNotEmpty()) {
+                if (!requestingOutEvents.value.isNullOrEmpty()) {
                     add(TitleUi(R.string.requesting_out_events))
                     addAll(requestingOutEvents.value)
                 }

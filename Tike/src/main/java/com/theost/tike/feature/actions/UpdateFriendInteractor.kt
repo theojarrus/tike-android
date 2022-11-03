@@ -13,14 +13,22 @@ import io.reactivex.Completable
 class UpdateFriendInteractor(
     private val authRepository: AuthRepository,
     private val usersRepository: UsersRepository,
-    private val friendsRepository: FriendsRepository
+    private val friendsRepository: FriendsRepository,
+    private val friendActionValidator: FriendActionValidator
 ) {
 
     operator fun invoke(friendAction: FriendAction): Completable {
         return authRepository.getActualUser()
-            .flatMap { firebaseUser -> usersRepository.getUser(firebaseUser.uid) }
+            .flatMap { firebaseUser -> usersRepository.getRemoteUser(firebaseUser.uid) }
             .flatMapCompletable { actualUser ->
-                usersRepository.getUser(friendAction.uid)
+                usersRepository.getRemoteUser(friendAction.uid)
+                    .flatMap { actionUser ->
+                        friendActionValidator(
+                            friendAction,
+                            actionUser,
+                            actualUser
+                        )
+                    }
                     .flatMapCompletable { actionUser ->
                         when (friendAction) {
                             is Accept -> friendsRepository.addFriend(
